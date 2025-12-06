@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Exo 2", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a;
+        color: #fff;
+        overflow: hidden;
+        perspective: 1200px;
+      }
+
+      /* Grid Background */
+      .bg-grid {
+        position: absolute;
+        inset: -50%;
+        width: 200%;
+        height: 200%;
+        background-image: linear-gradient(
+            rgba(56, 189, 248, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: rotateX(45deg) scale(2);
+        transform-origin: 50% 50%;
+      }
+
+      /* Main Content Container */
+      .layer-container {
+        position: relative;
+        width: 600px;
+        height: 400px;
+        margin: 100px auto;
+        transform-style: preserve-3d;
+        transform: rotateX(60deg) rotateZ(-30deg) translateY(50px);
+      }
+
+      /* Common Card Style */
+      .layer-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 16px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        font-weight: 700;
+        opacity: 0.9;
+        transition: all 0.5s ease;
+      }
+
+      .layer-label {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      /* Layer 1: Static (Base) */
+      .layer-static {
+        background: rgba(30, 41, 59, 0.9);
+        border: 2px solid #334155;
+        transform: translateZ(0px);
+        color: #94a3b8;
+      }
+
+      /* Layer 2: Relative */
+      .layer-relative {
+        background: rgba(59, 130, 246, 0.2);
+        border: 2px solid #3b82f6;
+        transform: translateZ(80px); /* Lifted */
+        color: #3b82f6;
+        border-style: dashed;
+      }
+      /* Dashed line connecting relative to static */
+      .connector {
+        position: absolute;
+        width: 2px;
+        background: repeating-linear-gradient(
+          to bottom,
+          #3b82f6 0,
+          #3b82f6 5px,
+          transparent 5px,
+          transparent 10px
+        );
+        height: 80px;
+        transform-origin: top;
+        transform: rotateX(-90deg);
+      }
+      .c1 {
+        top: 0;
+        left: 0;
+      }
+      .c2 {
+        top: 0;
+        right: 0;
+      }
+      .c3 {
+        bottom: 0;
+        left: 0;
+      }
+      .c4 {
+        bottom: 0;
+        right: 0;
+      }
+
+      /* Layer 3: Absolute (Pin) */
+      .layer-absolute {
+        width: 150px;
+        height: 150px;
+        background: #f43f5e;
+        box-shadow: 0 0 30px #f43f5e;
+        border-radius: 50%;
+        transform: translateZ(200px) translateX(200px) translateY(-100px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        z-index: 10;
+      }
+
+      /* Layer 4: Fixed (UI Overlay) */
+      .layer-fixed {
+        position: fixed; /* Actually using fixed here? No, stick to 3D for visuals */
+        /* Simulated Viewport Overlay */
+        width: 1200px;
+        height: 675px;
+        /* Reset transforms to make it look like a screen overlay */
+        transform: none;
+        top: 0;
+        left: 0;
+        margin: 0;
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      .fixed-badge {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        background: #10b981;
+        color: #000;
+        padding: 10px 20px;
+        font-weight: 700;
+        border-radius: 8px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        border: 2px solid #fff;
+      }
+
+      /* Title Card */
+      .title-group {
+        position: absolute;
+        bottom: 60px;
+        left: 60px;
+        z-index: 100;
+      }
+
+      .main-title {
+        font-family: "Exo 2", sans-serif;
+        font-size: 5rem;
+        font-weight: 900;
+        line-height: 0.9;
+        margin-bottom: 10px;
+        color: white;
+        text-transform: uppercase;
+      }
+
+      .subtitle {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.5rem;
+        color: #38bdf8;
+        letter-spacing: 4px;
+      }
+
+      .axis-label {
+        position: absolute;
+        color: #64748b;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div
+      id="cover-container"
+      class="relative h-[675px] w-[1200px] overflow-hidden bg-[#0f172a] shadow-2xl rounded-3xl border border-slate-700"
+    >
+      <!-- Background Grid -->
+      <div class="bg-grid"></div>
+
+      <!-- Title -->
+      <div class="title-group">
+        <div class="main-title">CSS<br />Position</div>
+        <div class="subtitle">Layout Coordinates</div>
+      </div>
+
+      <!-- 3D Layers Visual -->
+      <div class="layer-container">
+        <!-- Layer 1: Static Flow -->
+        <div class="layer-card layer-static">
+          <div class="layer-label">Normal Flow (Static)</div>
+          <div class="w-full h-full p-10 grid grid-cols-3 gap-4 opacity-30">
+            <div class="bg-slate-400 rounded"></div>
+            <div class="bg-slate-400 rounded"></div>
+            <div class="bg-slate-400 rounded"></div>
+            <div class="bg-slate-400 rounded"></div>
+            <div class="bg-slate-400 rounded"></div>
+            <div class="bg-slate-400 rounded"></div>
+          </div>
+        </div>
+
+        <!-- Layer 2: Relative -->
+        <div class="layer-card layer-relative">
+          <div class="layer-label">Relative</div>
+          <div class="text-center">Offset<br />top: -20px</div>
+          <!-- Connectors showing it's still linked to space -->
+          <div class="connector c1"></div>
+          <div class="connector c2"></div>
+          <div class="connector c3"></div>
+          <div class="connector c4"></div>
+        </div>
+
+        <!-- Layer 3: Absolute -->
+        <div class="layer-card layer-absolute">
+          <div class="text-center text-sm font-bold">
+            Absolute<br />(Z-Index)
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 4: Fixed (Screen Overlay) -->
+      <div class="layer-fixed">
+        <div class="fixed-badge">position: fixed;</div>
+      </div>
+    </div>
+  </body>
+</html>

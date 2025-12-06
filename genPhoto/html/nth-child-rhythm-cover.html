@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Roboto Mono", monospace;
+        margin: 0;
+        padding: 0;
+        background-color: #2b2d42; /* Dark Slate */
+        color: #edf2f4;
+        overflow: hidden;
+      }
+
+      /* Background Pattern - Subtle Stripes */
+      .bg-stripes {
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.03) 10px,
+          transparent 10px,
+          transparent 20px
+        );
+      }
+
+      /* Main Container */
+      .rhythm-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        z-index: 10;
+        gap: 60px;
+      }
+
+      /* Sequence Row */
+      .sequence-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+        padding: 30px;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      /* Label for the row */
+      .row-label {
+        position: absolute;
+        top: -15px;
+        left: 30px;
+        background: #8d99ae; /* Grey Blue */
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Elements */
+      .el {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.5);
+        background: #4a4e69; /* Muted Purple */
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .el-circle {
+        border-radius: 50%;
+      } /* Represents different type */
+
+      /* Connectors */
+      .el:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        right: -20px;
+        top: 50%;
+        width: 20px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Highlight Styles */
+      /* nth-child(3) -> The 3rd element regardless of type */
+      .highlight-child {
+        background: #ef233c; /* Red */
+        color: #fff;
+        transform: scale(1.2);
+        box-shadow: 0 0 20px rgba(239, 35, 60, 0.6);
+        z-index: 10;
+        border: 2px solid white;
+      }
+
+      /* nth-of-type(3) -> The 3rd SQUARE */
+      .highlight-type {
+        background: #3a86ff; /* Blue */
+        color: #fff;
+        transform: scale(1.2);
+        box-shadow: 0 0 20px rgba(58, 134, 255, 0.6);
+        z-index: 10;
+        border: 2px solid white;
+      }
+
+      /* Index numbers */
+      .idx {
+        position: absolute;
+        bottom: -25px;
+        font-size: 0.7rem;
+        opacity: 0.5;
+      }
+
+      /* Title */
+      .title-block {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .main-title {
+        font-family: "Righteous", cursive;
+        font-size: 4rem;
+        background: linear-gradient(to right, #ef233c, #3a86ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.1;
+      }
+
+      .vs-badge {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #fff;
+        margin: 0 10px;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div
+      id="cover-container"
+      class="relative h-[675px] w-[1200px] overflow-hidden bg-[#2b2d42] shadow-2xl rounded-3xl border border-gray-700"
+    >
+      <div class="bg-stripes"></div>
+
+      <div class="rhythm-container">
+        <div class="title-block">
+          <div class="main-title">
+            :nth-child <span class="vs-badge">vs</span> :nth-of-type
+          </div>
+        </div>
+
+        <!-- Row 1: nth-child(3) -->
+        <div class="sequence-row">
+          <div class="row-label text-[#ef233c] bg-white">:nth-child(3)</div>
+
+          <!-- 1. Circle -->
+          <div class="el el-circle">
+            <div class="idx">1</div>
+          </div>
+
+          <!-- 2. Square -->
+          <div class="el">
+            <div class="idx">2</div>
+          </div>
+
+          <!-- 3. Circle (It is the 3rd child!) -->
+          <div class="el el-circle highlight-child">
+            3
+            <div class="idx">3</div>
+          </div>
+
+          <!-- 4. Square -->
+          <div class="el">
+            <div class="idx">4</div>
+          </div>
+
+          <!-- 5. Square -->
+          <div class="el">
+            <div class="idx">5</div>
+          </div>
+
+          <div
+            class="text-xs absolute right-[-140px] w-[120px] text-left opacity-70"
+          >
+            Target matches index 3 of ALL children
+          </div>
+        </div>
+
+        <!-- Row 2: nth-of-type(3) for SQUARES -->
+        <div class="sequence-row">
+          <div class="row-label text-[#3a86ff] bg-white">
+            .square:nth-of-type(3)
+          </div>
+
+          <!-- 1. Circle (Ignored for type count of square) -->
+          <div class="el el-circle opacity-30"></div>
+
+          <!-- 1. Square (Type Count: 1) -->
+          <div class="el">
+            <div class="idx text-[#3a86ff]">1</div>
+          </div>
+
+          <!-- 2. Circle (Ignored) -->
+          <div class="el el-circle opacity-30"></div>
+
+          <!-- 2. Square (Type Count: 2) -->
+          <div class="el">
+            <div class="idx text-[#3a86ff]">2</div>
+          </div>
+
+          <!-- 3. Square (Type Count: 3!) -->
+          <div class="el highlight-type">
+            3
+            <div class="idx text-white">3</div>
+          </div>
+
+          <div
+            class="text-xs absolute right-[-140px] w-[120px] text-left opacity-70"
+          >
+            Target matches index 3 of TYPE square
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
