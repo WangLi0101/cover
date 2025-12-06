@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans SC", sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+      }
+
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        position: absolute;
+        z-index: 10;
+        transition: all 0.3s ease;
+        width: 260px;
+        height: 140px;
+      }
+
+      .card-title {
+        font-weight: 900;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .card-desc {
+        font-size: 0.95rem;
+        color: #64748b;
+        text-align: center;
+        line-height: 1.4;
+        font-weight: 500;
+      }
+
+      /* Specific Card Styles */
+      .card-optional {
+        border-top: 5px solid #3b82f6;
+      }
+
+      .card-nullish {
+        border-top: 5px solid #8b5cf6;
+      }
+
+      .card-non-null {
+        border-top: 5px solid #10b981;
+      }
+
+      .card-bang-dot {
+        border-top: 5px solid #f59e0b;
+      }
+
+      .card-underscore {
+        border-top: 5px solid #ec4899;
+      }
+
+      .card-exponent {
+        border-top: 5px solid #6366f1;
+      }
+    </style>
+  </head>
+
+  <body class="flex min-h-screen items-center justify-center p-6">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[32px] bg-slate-50 shadow-2xl ring-1 ring-slate-200"
+    >
+      <!-- Background Decoration -->
+      <div
+        class="absolute inset-0"
+        style="
+          background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+          background-size: 32px 32px;
+          opacity: 0.4;
+        "
+      ></div>
+
+      <!-- Header -->
+      <div class="absolute top-12 right-12 z-20 text-right">
+        <h1 class="text-5xl font-black text-slate-900 tracking-tight">
+          TypeScript 符号含义
+        </h1>
+      </div>
+
+      <!-- Main Diagram Area -->
+      <div class="relative w-full h-full mt-0">
+        <!-- Nodes -->
+
+        <!-- 1. Optional Chaining -->
+        <div class="card card-optional" style="top: 120px; left: 100px">
+          <div class="card-title text-blue-600">?.</div>
+          <div class="card-desc">
+            可选链操作符<br /><span class="text-xs opacity-75"
+              >安全访问属性</span
+            >
+          </div>
+        </div>
+
+        <!-- 2. Nullish Coalescing -->
+        <div class="card card-nullish" style="top: 120px; left: 470px">
+          <div class="card-title text-purple-600">??</div>
+          <div class="card-desc">
+            空值合并操作符<br /><span class="text-xs opacity-75"
+              >默认值 (null/undefined)</span
+            >
+          </div>
+        </div>
+
+        <!-- 3. Non-null Assertion -->
+        <div class="card card-non-null" style="top: 120px; left: 840px">
+          <div class="card-title text-emerald-600">!</div>
+          <div class="card-desc">
+            非空断言操作符<br /><span class="text-xs opacity-75"
+              >排除 null/undefined</span
+            >
+          </div>
+        </div>
+
+        <!-- 4. Bang Dot -->
+        <div class="card card-bang-dot" style="top: 380px; left: 100px">
+          <div class="card-title text-amber-600">!.</div>
+          <div class="card-desc">
+            断言访问<br /><span class="text-xs opacity-75"
+              >非空断言 + 属性访问</span
+            >
+          </div>
+        </div>
+
+        <!-- 5. Underscore -->
+        <div class="card card-underscore" style="top: 380px; left: 470px">
+          <div class="card-title text-pink-600">_</div>
+          <div class="card-desc">
+            下划线<br /><span class="text-xs opacity-75"
+              >未使用参数 / 私有 / 库</span
+            >
+          </div>
+        </div>
+
+        <!-- 6. Exponentiation -->
+        <div class="card card-exponent" style="top: 380px; left: 840px">
+          <div class="card-title text-indigo-600">**</div>
+          <div class="card-desc">
+            幂运算符<br /><span class="text-xs opacity-75">指数运算</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

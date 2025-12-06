@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f3f4f6;
+        color: #111;
+        overflow: hidden;
+      }
+
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* Swiss Layout Grid */
+      .swiss-grid {
+        display: grid;
+        grid-template-columns: 200px 1fr 1fr;
+        grid-template-rows: 150px 1fr 100px;
+        height: 675px;
+        width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        border: 12px solid #111;
+      }
+
+      /* Grid Areas */
+      .area-header {
+        grid-column: 1 / -1;
+        border-bottom: 4px solid #111;
+        display: flex;
+        align-items: center;
+        padding: 0 48px;
+        justify-content: space-between;
+      }
+
+      .area-sidebar {
+        grid-column: 1 / 2;
+        grid-row: 2 / 4;
+        border-right: 4px solid #111;
+        background: #e11d48; /* Swiss Red */
+        color: #fff;
+        padding: 32px;
+        writing-mode: vertical-lr;
+        text-orientation: mixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 8rem;
+        letter-spacing: -0.05em;
+        overflow: hidden;
+        line-height: 0.8;
+      }
+
+      .area-content {
+        grid-column: 2 / 4;
+        grid-row: 2 / 3;
+        padding: 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 32px;
+      }
+
+      .area-footer {
+        grid-column: 2 / 4;
+        grid-row: 3 / 4;
+        border-top: 4px solid #111;
+        display: flex;
+        align-items: center;
+        padding: 0 48px;
+        justify-content: space-between;
+        background: #111;
+        color: #fff;
+      }
+
+      /* Typography */
+      .main-title {
+        font-size: 5rem;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 0.9;
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        font-weight: 500;
+        opacity: 0.6;
+      }
+
+      /* Code Blocks as Graphics */
+      .code-graphic {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.25rem;
+        background: #f3f4f6;
+        padding: 16px 24px;
+        border-left: 8px solid #111;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .attr-name {
+        color: #e11d48;
+        font-weight: bold;
+      }
+      .attr-val {
+        color: #111;
+      }
+      .tag-open,
+      .tag-close {
+        color: #9ca3af;
+      }
+
+      /* Decorative Circles */
+      .dot {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #111;
+      }
+
+      .dot-hollow {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 4px solid #111;
+        background: transparent;
+      }
+
+      .meta-symbol {
+        font-size: 12rem;
+        position: absolute;
+        right: -20px;
+        bottom: -60px;
+        opacity: 0.05;
+        font-weight: 900;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div id="cover-container" class="swiss-grid relative overflow-hidden">
+      <!-- Background Decor -->
+      <div class="meta-symbol">&lt;/&gt;</div>
+
+      <!-- Header -->
+      <div class="area-header">
+        <div class="flex gap-4">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot-hollow"></div>
+        </div>
+        <div class="font-mono font-bold text-xl uppercase tracking-widest">
+          HTML Document Head
+        </div>
+      </div>
+
+      <!-- Sidebar (Vertical Text) -->
+      <div class="area-sidebar">META</div>
+
+      <!-- Content -->
+      <div class="area-content">
+        <div>
+          <h1 class="main-title">
+            TAGS<br />
+            <span class="text-[#e11d48]">GUIDE</span>
+          </h1>
+          <p
+            class="mt-4 text-2xl font-bold bg-black text-white inline-block px-2"
+          >
+            SEO &middot; VIEWPORT &middot; CHARSET
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-4 mt-4">
+          <!-- Code 1 -->
+          <div class="code-graphic">
+            <span class="tag-open">&lt;meta</span>
+            <span class="attr-name">charset</span>=<span class="attr-val"
+              >"UTF-8"</span
+            >
+            <span class="tag-close">/&gt;</span>
+          </div>
+
+          <!-- Code 2 -->
+          <div class="code-graphic">
+            <span class="tag-open">&lt;meta</span>
+            <span class="attr-name">name</span>=<span class="attr-val"
+              >"viewport"</span
+            >
+            <span class="attr-name">content</span>=...
+            <span class="tag-close">/&gt;</span>
+          </div>
+
+          <!-- Code 3 -->
+          <div class="code-graphic">
+            <span class="tag-open">&lt;meta</span>
+            <span class="attr-name">name</span>=<span class="attr-val"
+              >"description"</span
+            >
+            <span class="tag-close">/&gt;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="area-footer">
+        <div class="font-mono text-lg">FIG 1.0 // METADATA STRUCTURE</div>
+        <div class="flex gap-8 font-bold text-lg">
+          <span>Information</span>
+          <span>Optimization</span>
+          <span class="text-[#e11d48]">Connection</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

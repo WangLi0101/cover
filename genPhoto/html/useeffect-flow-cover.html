@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Outfit", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0f1218;
+        color: #fff;
+        overflow: hidden;
+      }
+
+      .font-code {
+        font-family: "Fira Code", monospace;
+      }
+
+      /* Background Pattern - Subtle Circuits */
+      .circuit-bg {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+            rgba(97, 218, 251, 0.1) 1px,
+            transparent 1px
+          ),
+          radial-gradient(rgba(97, 218, 251, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        background-position: 0 0, 20px 20px;
+        opacity: 0.3;
+      }
+
+      /* Flow Line Animation */
+      .flow-line {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(97, 218, 251, 0.2) 20%,
+          #61dafb 50%,
+          rgba(97, 218, 251, 0.2) 80%,
+          transparent 100%
+        );
+        transform: translateY(-50%);
+        box-shadow: 0 0 20px rgba(97, 218, 251, 0.5);
+      }
+
+      /* Nodes in the Flow */
+      .node-container {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 900px;
+        height: 300px;
+      }
+
+      .node {
+        width: 180px;
+        height: 180px;
+        background: #1a1e26;
+        border: 2px solid #2d333f;
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .node.active {
+        border-color: #61dafb;
+        box-shadow: 0 0 30px rgba(97, 218, 251, 0.2);
+      }
+
+      .node-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        color: #7dd3fc;
+      }
+
+      .node-title {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #fff;
+      }
+
+      .node-subtitle {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        margin-top: 4px;
+      }
+
+      /* Arrows */
+      .arrow {
+        flex: 1;
+        height: 2px;
+        background: #2d333f;
+        position: relative;
+      }
+      .arrow::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: -4px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid #2d333f;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+      }
+
+      .arrow.active {
+        background: #61dafb;
+        box-shadow: 0 0 10px rgba(97, 218, 251, 0.5);
+      }
+      .arrow.active::after {
+        border-left-color: #61dafb;
+      }
+
+      /* Code Badge */
+      .code-badge {
+        position: absolute;
+        top: -20px;
+        background: #61dafb;
+        color: #000;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-family: "Fira Code", monospace;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transform: translateY(-50%);
+      }
+
+      /* React Atom Decor */
+      .atom-ring {
+        position: absolute;
+        border: 4px solid rgba(97, 218, 251, 0.1);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden bg-[#0f1218] shadow-2xl rounded-3xl border border-[#2d333f]"
+    >
+      <!-- Background -->
+      <div class="circuit-bg"></div>
+
+      <!-- Big Rigns -->
+      <div class="atom-ring w-[600px] h-[600px]"></div>
+      <div class="atom-ring w-[800px] h-[800px] border-dashed"></div>
+
+      <!-- Content -->
+      <div
+        class="relative z-10 w-full h-full flex flex-col items-center justify-center"
+      >
+        <!-- Title Area -->
+        <div class="text-center mb-16 relative">
+          <div class="code-badge left-1/2 -translate-x-1/2 top-[-30px]">
+            React Hook
+          </div>
+          <h1 class="text-7xl font-black tracking-tight text-white mb-4">
+            useEffect
+          </h1>
+          <p
+            class="text-xl text-[#94a3b8] font-code bg-[#1a1e26] px-6 py-2 rounded-full border border-[#2d333f]"
+          >
+            (effect: EffectCallback, deps?: DependencyList)
+          </p>
+        </div>
+
+        <!-- Flow Chart -->
+        <div class="node-container">
+          <!-- Node 1: Render -->
+          <div class="node">
+            <div class="node-icon">🎨</div>
+            <div class="node-title">Render</div>
+            <div class="node-subtitle">UI Painted</div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow active"></div>
+
+          <!-- Node 2: Effect -->
+          <div class="node active">
+            <div
+              class="code-badge"
+              style="top: -15px; background: #fff; color: #000"
+            >
+              Main Execute
+            </div>
+            <div class="node-icon text-[#61dafb]">⚡</div>
+            <div class="node-title text-[#61dafb]">Side Effect</div>
+            <div class="node-subtitle">Async Operation</div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow active"></div>
+
+          <!-- Node 3: Cleanup -->
+          <div class="node">
+            <div class="node-icon">🧹</div>
+            <div class="node-title">Cleanup</div>
+            <div class="node-subtitle">Unmount / Update</div>
+          </div>
+        </div>
+
+        <!-- Dependency Array Dependencies -->
+        <div class="mt-16 flex gap-8">
+          <div
+            class="flex items-center gap-3 bg-[#1a1e26] px-6 py-3 rounded-xl border border-[#2d333f]"
+          >
+            <span class="font-code text-[#61dafb] font-bold">[]</span>
+            <span class="text-sm text-[#94a3b8]">Mount Only</span>
+          </div>
+          <div
+            class="flex items-center gap-3 bg-[#1a1e26] px-6 py-3 rounded-xl border border-[#2d333f]"
+          >
+            <span class="font-code text-[#61dafb] font-bold">[dep]</span>
+            <span class="text-sm text-[#94a3b8]">On Change</span>
+          </div>
+          <div
+            class="flex items-center gap-3 bg-[#1a1e26] px-6 py-3 rounded-xl border border-[#2d333f]"
+          >
+            <span class="font-code text-[#61dafb] font-bold">undefined</span>
+            <span class="text-sm text-[#94a3b8]">Every Render</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

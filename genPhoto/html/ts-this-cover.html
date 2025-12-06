@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans SC", sans-serif;
+        background-color: #09090b;
+        color: #e4e4e7;
+      }
+
+      .font-code {
+        font-family: "Fira Code", monospace;
+      }
+
+      .neon-text {
+        text-shadow: 0 0 10px rgba(56, 189, 248, 0.5),
+          0 0 20px rgba(56, 189, 248, 0.3);
+      }
+
+      .neon-box {
+        background: rgba(24, 24, 27, 0.8);
+        border: 1px solid rgba(63, 63, 70, 0.5);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .neon-border-blue {
+        border-color: #38bdf8;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.2),
+          inset 0 0 10px rgba(56, 189, 248, 0.1);
+      }
+
+      .neon-border-purple {
+        border-color: #c084fc;
+        box-shadow: 0 0 10px rgba(192, 132, 252, 0.2),
+          inset 0 0 10px rgba(192, 132, 252, 0.1);
+      }
+
+      .neon-border-green {
+        border-color: #4ade80;
+        box-shadow: 0 0 10px rgba(74, 222, 128, 0.2),
+          inset 0 0 10px rgba(74, 222, 128, 0.1);
+      }
+
+      .neon-border-pink {
+        border-color: #f472b6;
+        box-shadow: 0 0 10px rgba(244, 114, 182, 0.2),
+          inset 0 0 10px rgba(244, 114, 182, 0.1);
+      }
+
+      .grid-bg {
+        background-image: linear-gradient(
+            rgba(39, 39, 42, 0.5) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(39, 39, 42, 0.5) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(
+          circle at center,
+          black 40%,
+          transparent 100%
+        );
+      }
+
+      .code-snippet {
+        background: #18181b;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 0.85rem;
+        color: #a1a1aa;
+        border-left: 3px solid;
+      }
+    </style>
+  </head>
+
+  <body class="flex min-h-screen items-center justify-center p-6">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[32px] bg-[#09090b] shadow-2xl ring-1 ring-zinc-800"
+    >
+      <!-- Background Grid -->
+      <div class="absolute inset-0 grid-bg opacity-40"></div>
+
+      <!-- Decorative Glows -->
+      <div
+        class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px]"
+      ></div>
+      <div
+        class="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[100px]"
+      ></div>
+
+      <!-- Header -->
+      <div class="absolute top-12 left-12 z-20">
+        <div class="flex items-center gap-4">
+          <div
+            class="h-12 w-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+          ></div>
+          <h1 class="text-5xl font-black text-white tracking-tight font-sans">
+            TypeScript <span class="text-blue-400 font-code">this</span>
+          </h1>
+        </div>
+        <p class="mt-4 text-xl text-zinc-400 font-medium max-w-lg">
+          深入理解上下文绑定与类型安全
+        </p>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="relative w-full h-full z-10">
+        <!-- Center Piece: The 'this' Keyword -->
+        <div
+          class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
+        >
+          <div class="relative">
+            <div
+              class="absolute inset-0 bg-blue-500 blur-[60px] opacity-20"
+            ></div>
+            <div
+              class="relative z-10 font-code text-[120px] font-bold text-white leading-none tracking-tighter neon-text"
+            >
+              this
+            </div>
+            <div class="mt-4 flex justify-center gap-2">
+              <span
+                class="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs text-zinc-400 font-code"
+                >Context</span
+              >
+              <span
+                class="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs text-zinc-400 font-code"
+                >Binding</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature Cards (Orbiting) -->
+
+        <!-- 1. Explicit Declaration -->
+        <div class="absolute top-[140px] right-[150px] w-[320px]">
+          <div class="neon-box p-5 rounded-xl neon-border-blue">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-blue-100">显式声明类型</h3>
+            </div>
+            <div class="code-snippet border-blue-500/50 font-code">
+              (this: <span class="text-blue-400">User</span>, e: Event)
+            </div>
+            <p class="mt-2 text-sm text-zinc-400">
+              在参数列表中定义 this 类型，确保回调安全。
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. Type Inference -->
+        <div class="absolute bottom-[140px] left-[150px] w-[320px]">
+          <div class="neon-box p-5 rounded-xl neon-border-green">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-green-100">自动类型推断</h3>
+            </div>
+            <div class="code-snippet border-green-500/50 font-code">
+              obj.method() <span class="text-green-500">// this -> obj</span>
+            </div>
+            <p class="mt-2 text-sm text-zinc-400">
+              自动识别类或对象方法中的上下文类型。
+            </p>
+          </div>
+        </div>
+
+        <!-- 3. Strict Checks -->
+        <div class="absolute bottom-[140px] right-[150px] w-[320px]">
+          <div class="neon-box p-5 rounded-xl neon-border-pink">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-pink-100">严格模式检查</h3>
+            </div>
+            <div class="code-snippet border-pink-500/50 font-code">
+              --noImplicitThis
+            </div>
+            <p class="mt-2 text-sm text-zinc-400">
+              防止隐式 any，强制明确上下文来源。
+            </p>
+          </div>
+        </div>
+
+        <!-- 4. Chaining -->
+        <div class="absolute top-[140px] left-[150px] w-[320px]">
+          <div class="neon-box p-5 rounded-xl neon-border-purple">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M13 7H7v6h6V7z" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-purple-100">链式调用</h3>
+            </div>
+            <div class="code-snippet border-purple-500/50 font-code">
+              method(): <span class="text-purple-400">this</span>
+            </div>
+            <p class="mt-2 text-sm text-zinc-400">
+              在 Fluent API 中保持类型上下文的一致性。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

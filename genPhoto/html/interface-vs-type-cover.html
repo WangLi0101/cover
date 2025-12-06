@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Fira+Code:wght@500&family=Noto+Sans+SC:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", "Noto Sans SC", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #1e1e1e;
+        color: #fff;
+      }
+
+      .font-code {
+        font-family: "Fira Code", monospace;
+      }
+
+      .split-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .side {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 60px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .side-left {
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        align-items: flex-end;
+        text-align: right;
+      }
+
+      .side-right {
+        background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      /* Diagonal Split Line */
+      .split-line {
+        position: absolute;
+        top: -50px;
+        bottom: -50px;
+        left: 50%;
+        width: 120px;
+        background: #1e1e1e;
+        transform: translateX(-50%) skewX(-15deg);
+        z-index: 10;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .vs-badge {
+        width: 80px;
+        height: 80px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 2rem;
+        color: #1e1e1e;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        transform: skewX(15deg); /* Counteract parent skew */
+        border: 4px solid #1e1e1e;
+      }
+
+      .title {
+        font-size: 4rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        opacity: 0.9;
+        font-weight: 500;
+        margin-bottom: 3rem;
+      }
+
+      .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .feature-item {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-family: "Fira Code", monospace;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
+
+      .side-left .feature-item {
+        border-right: 4px solid #60a5fa;
+      }
+
+      .side-right .feature-item {
+        border-left: 4px solid #fcd34d;
+      }
+
+      /* Background Patterns */
+      .pattern {
+        position: absolute;
+        opacity: 0.1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+      }
+
+      .pattern-left {
+        background-image: radial-gradient(#60a5fa 2px, transparent 2px);
+        background-size: 30px 30px;
+      }
+
+      .pattern-right {
+        background-image: linear-gradient(
+            45deg,
+            #fcd34d 25%,
+            transparent 25%,
+            transparent 75%,
+            #fcd34d 75%,
+            #fcd34d
+          ),
+          linear-gradient(
+            45deg,
+            #fcd34d 25%,
+            transparent 25%,
+            transparent 75%,
+            #fcd34d 75%,
+            #fcd34d
+          );
+        background-size: 40px 40px;
+        background-position: 0 0, 20px 20px;
+      }
+    </style>
+  </head>
+
+  <body class="flex min-h-screen items-center justify-center p-6">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[32px] shadow-2xl ring-1 ring-white/10 bg-[#1e1e1e]"
+    >
+      <div class="split-container">
+        <!-- Left Side: Interface -->
+        <div class="side side-left">
+          <div class="pattern pattern-left"></div>
+          <div class="relative z-10 pr-12">
+            <h2 class="title text-blue-100">Interface</h2>
+            <p class="subtitle text-blue-200">面向对象 & 结构</p>
+
+            <div class="feature-list items-end">
+              <div class="feature-item">extends</div>
+              <div class="feature-item">implements</div>
+              <div class="feature-item">Declaration Merging</div>
+              <div class="feature-item">Object Shape</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="split-line">
+          <div class="vs-badge">VS</div>
+        </div>
+
+        <!-- Right Side: Type Alias -->
+        <div class="side side-right">
+          <div class="pattern pattern-right"></div>
+          <div class="relative z-10 pl-12">
+            <h2 class="title text-amber-100">Type</h2>
+            <p class="subtitle text-amber-200">灵活组合 & 函数</p>
+
+            <div class="feature-list items-start">
+              <div class="feature-item">Union Types (|)</div>
+              <div class="feature-item">Intersection (&)</div>
+              <div class="feature-item">Mapped Types</div>
+              <div class="feature-item">Tuples & Primitives</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
