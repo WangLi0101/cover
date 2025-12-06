@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Fira Code", monospace;
+        background-color: #0d1117;
+        color: #c9d1d9;
+      }
+      .font-pixel {
+        font-family: "VT323", monospace;
+      }
+      .terminal-window {
+        background-color: #0d1117;
+        border: 1px solid #30363d;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      }
+      .terminal-header {
+        background-color: #161b22;
+        border-bottom: 1px solid #30363d;
+      }
+      .traffic-light {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .cursor-blink {
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      /* Syntax Highlighting */
+      .code-cmd { color: #58a6ff; } /* blue */
+      .code-arg { color: #a5d6ff; } /* light blue */
+      .code-comment { color: #8b949e; } /* gray */
+      .code-success { color: #3fb950; } /* green */
+      .code-error { color: #f85149; } /* red */
+      .code-warn { color: #d29922; } /* yellow */
+    </style>
+  </head>
+  <body class="flex min-h-screen items-center justify-center p-6">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[16px] bg-[#010409] shadow-2xl"
+    >
+      <!-- Terminal Window -->
+      <div class="w-full h-full flex flex-col terminal-window rounded-[16px] overflow-hidden">
+        
+        <!-- Header Bar -->
+        <div class="terminal-header h-12 flex items-center px-4 justify-between">
+          <div class="flex gap-2">
+            <div class="traffic-light bg-[#ff5f56]"></div>
+            <div class="traffic-light bg-[#ffbd2e]"></div>
+            <div class="traffic-light bg-[#27c93f]"></div>
+          </div>
+          <div class="text-xs text-slate-500 font-bold tracking-widest">node — -zsh — 80x24</div>
+          <div class="w-14"></div> <!-- Spacer for centering -->
+        </div>
+
+        <!-- Terminal Content -->
+        <div class="flex-1 p-10 relative">
+          
+          <!-- Background Watermark -->
+          <div class="absolute right-10 bottom-10 opacity-10 pointer-events-none">
+            <svg width="300" height="300" viewBox="0 0 24 24" fill="currentColor" class="text-white">
+               <path d="M12.0002 1.99976L2.00049 7.99976V19.9998L12.0002 25.9998L21.9999 19.9998V7.99976L12.0002 1.99976ZM12.0002 4.31976L19.0999 8.57976L12.0002 12.8398L4.90049 8.57976L12.0002 4.31976ZM4.00049 10.1398L11.0002 14.3398V23.0798L4.00049 18.8798V10.1398ZM13.0002 23.0798V14.3398L20.0002 10.1398V18.8798L13.0002 23.0798Z" transform="translate(0 -2) scale(0.9)"/>
+            </svg>
+          </div>
+
+          <div class="grid grid-cols-12 gap-8 h-full">
+            
+            <!-- Left Column: Commands & Title -->
+            <div class="col-span-7 flex flex-col justify-center gap-6">
+              
+              <!-- Title Block -->
+              <div>
+                <div class="text-sm text-[#8b949e] mb-2">$ man fs</div>
+                <h1 class="text-8xl font-bold text-[#c9d1d9] tracking-tighter mb-4">
+                  Node.js <br/>
+                  <span class="text-[#58a6ff]">File System</span>
+                </h1>
+                <p class="text-xl text-[#8b949e] border-l-4 border-[#30363d] pl-4">
+                  The fs module enables interacting with the file system in a way modeled on standard POSIX functions.
+                </p>
+              </div>
+
+              <!-- Command List -->
+              <div class="mt-8 space-y-3 font-mono text-lg">
+                <div class="flex items-center gap-3">
+                  <span class="text-[#3fb950]">✔</span>
+                  <span class="code-cmd">fs.readFile</span>
+                  <span class="text-[#8b949e] text-sm">// Read file content</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-[#3fb950]">✔</span>
+                  <span class="code-cmd">fs.writeFile</span>
+                  <span class="text-[#8b949e] text-sm">// Write to file</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-[#d29922]">⚠</span>
+                  <span class="code-cmd">fs.unlink</span>
+                  <span class="text-[#8b949e] text-sm">// Delete file (Careful!)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-[#58a6ff]">ℹ</span>
+                  <span class="code-cmd">fs.promises</span>
+                  <span class="text-[#8b949e] text-sm">// Async/Await API</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Column: Code Simulation -->
+            <div class="col-span-5 flex items-center">
+              <div class="w-full bg-[#010409] border border-[#30363d] rounded-lg p-6 shadow-inner relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#58a6ff] to-[#3fb950]"></div>
+                
+                <div class="font-mono text-sm leading-relaxed">
+                  <div class="mb-4">
+                    <span class="text-[#8b949e]"># Import Module</span><br/>
+                    <span class="code-cmd">const</span> fs = <span class="code-cmd">require</span>(<span class="code-arg">'fs/promises'</span>);
+                  </div>
+
+                  <div class="mb-4">
+                    <span class="text-[#8b949e]"># Async Operation</span><br/>
+                    <span class="code-cmd">async function</span> <span class="text-[#d2a8ff]">main</span>() {<br/>
+                    &nbsp;&nbsp;<span class="code-cmd">try</span> {<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-cmd">const</span> data = <span class="code-cmd">await</span> fs.<span class="text-[#d2a8ff]">readFile</span>(<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-arg">'./config.json'</span><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;);<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="text-[#d2a8ff]">log</span>(<span class="code-success">'Success!'</span>);<br/>
+                    &nbsp;&nbsp;} <span class="code-cmd">catch</span> (err) {<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="code-error">error</span>(err);<br/>
+                    &nbsp;&nbsp;}<br/>
+                    }
+                  </div>
+
+                  <div class="flex items-center gap-2 mt-6 border-t border-[#30363d] pt-4">
+                    <span class="text-[#3fb950]">➜</span>
+                    <span class="text-[#58a6ff]">~</span>
+                    <span class="cursor-blink w-2 h-5 bg-[#c9d1d9]"></span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

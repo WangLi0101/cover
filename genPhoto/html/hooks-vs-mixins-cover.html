@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hooks vs Mixins Cover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Fira Code", "monospace"],
+            },
+            colors: {
+              hooksBlue: "#61DAFB",
+              mixinsPurple: "#DD0031",
+              darkBg: "#1A1A1A",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    <!-- Cover Container (16:9 Ratio: 1200x675) -->
+    <div
+      id="cover-container"
+      class="relative w-[1200px] h-[675px] bg-[#1A1A1A] overflow-hidden flex flex-col items-center justify-center shadow-2xl border-b-8 border-gray-700"
+    >
+      <!-- Background Split -->
+      <div class="absolute inset-0 flex">
+        <div class="w-1/2 bg-[#1A1A1A] relative overflow-hidden">
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-[#DD0031]/10 to-transparent"
+          ></div>
+        </div>
+        <div class="w-1/2 bg-[#1F1F1F] relative overflow-hidden">
+          <div
+            class="absolute inset-0 bg-gradient-to-bl from-[#61DAFB]/10 to-transparent"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Divider Line -->
+      <div class="absolute top-0 bottom-0 left-1/2 w-px bg-gray-700 z-10"></div>
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1A1A1A] px-4 py-2 rounded-full border border-gray-700 text-gray-400 font-bold text-xl"
+      >
+        VS
+      </div>
+
+      <!-- Main Content -->
+      <div class="relative z-10 w-full h-full flex items-center">
+        <!-- Left: Mixins (The Past) -->
+        <div
+          class="w-1/2 px-16 flex flex-col items-center justify-center text-center opacity-70"
+        >
+          <h2 class="text-5xl font-black text-[#DD0031] mb-4 tracking-tight">
+            Mixins
+          </h2>
+          <p class="text-gray-400 font-mono text-lg mb-8">Legacy Pattern</p>
+
+          <div
+            class="w-full max-w-md space-y-4 text-left font-mono text-sm text-gray-500"
+          >
+            <div
+              class="p-4 rounded border border-dashed border-gray-700 bg-black/20"
+            >
+              <span class="text-[#DD0031]">mixins:</span> [<span
+                class="text-yellow-600"
+                >UserMixin</span
+              >]
+              <div class="mt-2 text-xs opacity-60">
+                // Implicit dependencies
+              </div>
+              <div class="text-xs opacity-60">// Name collisions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Hooks (The Future) -->
+        <div
+          class="w-1/2 px-16 flex flex-col items-center justify-center text-center"
+        >
+          <h2 class="text-5xl font-black text-[#61DAFB] mb-4 tracking-tight">
+            Hooks
+          </h2>
+          <p class="text-gray-300 font-mono text-lg mb-8">Modern Composition</p>
+
+          <div
+            class="w-full max-w-md space-y-4 text-left font-mono text-sm text-gray-300"
+          >
+            <div
+              class="p-4 rounded border border-[#61DAFB]/30 bg-[#61DAFB]/10 shadow-[0_0_30px_rgba(97,218,251,0.1)]"
+            >
+              <span class="text-purple-400">const</span> {
+              <span class="text-[#61DAFB]">user</span> } =
+              <span class="text-yellow-300">useUser</span>()
+              <div class="mt-2 text-xs text-[#61DAFB] opacity-80">
+                // Explicit data flow
+              </div>
+              <div class="text-xs text-[#61DAFB] opacity-80">
+                // Flexible reuse
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Comparison Table Abstract -->
+      <div
+        class="absolute bottom-12 w-full px-24 flex justify-between text-xs font-mono text-gray-500 uppercase tracking-widest"
+      >
+        <div class="flex gap-8">
+          <span class="line-through decoration-red-500">Implicit</span>
+          <span class="line-through decoration-red-500">Conflict Prone</span>
+        </div>
+        <div class="flex gap-8 text-[#61DAFB]">
+          <span>Explicit</span>
+          <span>Composable</span>
+          <span>Type Safe</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

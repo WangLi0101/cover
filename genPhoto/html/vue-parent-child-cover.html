@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans SC", sans-serif;
+        background-color: #f8fafc;
+      }
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+          linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+      }
+      .card-shadow {
+        box-shadow: 8px 8px 0px 0px rgba(15, 23, 42, 0.05);
+      }
+      .bento-card {
+        background: white;
+        border: 2px solid #f1f5f9;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen items-center justify-center p-6 text-slate-900">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[48px] bg-white shadow-2xl ring-1 ring-slate-100"
+    >
+      <!-- Background Grid & Accents -->
+      <div class="absolute inset-0 bg-grid opacity-60"></div>
+      
+      <!-- Abstract Shapes -->
+      <div class="absolute -right-20 -top-20 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-emerald-50 to-transparent blur-3xl opacity-80"></div>
+      <div class="absolute -bottom-20 -left-20 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-blue-50 to-transparent blur-3xl opacity-80"></div>
+
+      <div class="relative z-10 flex h-full w-full flex-col p-20 justify-between">
+        
+        <!-- Header -->
+        <div class="flex items-start justify-between">
+          <div class="flex flex-col gap-4">
+            <div class="flex gap-3">
+               <span class="flex items-center gap-2 rounded-full bg-emerald-100/80 px-4 py-1.5 text-sm font-bold text-emerald-700 border border-emerald-200">
+                <div class="h-2 w-2 rounded-full bg-emerald-500"></div> Vue 3
+              </span>
+              <span class="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-sm font-bold text-slate-600 border border-slate-200">
+                <div class="h-2 w-2 rounded-full bg-slate-400"></div> Vue 2
+              </span>
+            </div>
+            <h1 class="mt-2 max-w-3xl text-7xl font-black tracking-tight text-slate-900 leading-[1.15]">
+              组件通信 <br/>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-blue-600">父子传值全攻略</span>
+            </h1>
+          </div>
+          
+          <!-- Right Header Tags -->
+          <div class="flex flex-col items-end gap-3 font-mono text-sm font-bold text-slate-500">
+            <div class="flex items-center gap-3 rounded-lg border border-slate-100 bg-white/80 px-5 py-3 shadow-sm backdrop-blur-sm">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                Props / defineProps
+            </div>
+            <div class="flex items-center gap-3 rounded-lg border border-slate-100 bg-white/80 px-5 py-3 shadow-sm backdrop-blur-sm">
+                <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+                $emit / defineEmits
+            </div>
+            <div class="flex items-center gap-3 rounded-lg border border-slate-100 bg-white/80 px-5 py-3 shadow-sm backdrop-blur-sm">
+                <span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span>
+                v-model
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Visual Content -->
+        <div class="flex items-center justify-between gap-10 mt-8">
+          
+          <!-- Parent Card -->
+          <div class="bento-card card-shadow flex h-72 flex-1 flex-col justify-between p-10">
+            <div class="absolute right-0 top-0 h-40 w-40 -translate-y-1/3 translate-x-1/3 rounded-full bg-blue-50/80"></div>
+            <div class="relative z-10">
+              <div class="font-mono text-xs font-bold uppercase tracking-wider text-blue-600">Source</div>
+              <h3 class="mt-1 text-4xl font-bold text-slate-800">父组件</h3>
+            </div>
+            <div class="relative z-10 space-y-3 font-mono text-sm text-slate-600">
+              <div class="flex items-center gap-3 bg-slate-50 p-2 rounded border border-slate-100">
+                <span class="text-blue-500 font-bold">→</span> :message="msg"
+              </div>
+              <div class="flex items-center gap-3 bg-slate-50 p-2 rounded border border-slate-100">
+                <span class="text-blue-500 font-bold">←</span> @update="fn"
+              </div>
+            </div>
+          </div>
+
+          <!-- Flow Arrows -->
+          <div class="flex flex-col items-center justify-center gap-8 shrink-0">
+             <div class="flex flex-col items-center gap-2 text-slate-400">
+                <span class="font-mono text-[10px] font-bold tracking-widest uppercase text-emerald-600">Data Flow</span>
+                <div class="h-[2px] w-32 bg-gradient-to-r from-blue-200 to-emerald-200 relative">
+                    <div class="absolute right-0 top-1/2 -translate-y-1/2 h-2 w-2 bg-emerald-300 rotate-45 transform translate-x-1"></div>
+                </div>
+             </div>
+             <div class="flex flex-col items-center gap-2 text-slate-400">
+                <div class="h-[2px] w-32 bg-gradient-to-r from-blue-200 to-emerald-200 relative">
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 h-2 w-2 bg-blue-300 rotate-45 transform -translate-x-1"></div>
+                </div>
+                <span class="font-mono text-[10px] font-bold tracking-widest uppercase text-blue-600">Event Flow</span>
+             </div>
+          </div>
+
+          <!-- Child Card -->
+          <div class="bento-card card-shadow flex h-72 flex-1 flex-col justify-between p-10">
+            <div class="absolute right-0 top-0 h-40 w-40 -translate-y-1/3 translate-x-1/3 rounded-full bg-emerald-50/80"></div>
+            <div class="relative z-10">
+              <div class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-600">Target</div>
+              <h3 class="mt-1 text-4xl font-bold text-slate-800">子组件</h3>
+            </div>
+            <div class="relative z-10 space-y-3 font-mono text-sm text-slate-600">
+              <div class="flex items-center gap-3 bg-slate-50 p-2 rounded border border-slate-100">
+                <span class="text-emerald-500 font-bold">↓</span> defineProps()
+              </div>
+              <div class="flex items-center gap-3 bg-slate-50 p-2 rounded border border-slate-100">
+                <span class="text-emerald-500 font-bold">↑</span> emit('update')
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

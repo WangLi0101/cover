@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Work+Sans:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Work Sans", sans-serif;
+        background-color: #f0f0f0; /* Light gray background */
+      }
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+      
+      /* Neo-Brutalism Utilities */
+      .neo-box {
+        background: white;
+        border: 3px solid #000;
+        box-shadow: 8px 8px 0px #000;
+        transition: all 0.2s ease;
+      }
+      
+      .neo-badge {
+        border: 2px solid #000;
+        box-shadow: 2px 2px 0px #000;
+      }
+
+      .neo-card {
+        border: 3px solid #000;
+      }
+
+      .pattern-dots {
+        background-image: radial-gradient(#000 2px, transparent 2px);
+        background-size: 30px 30px;
+      }
+
+      .code-keyword { color: #d946ef; font-weight: bold; } /* Fuchsia */
+      .code-type { color: #2563eb; font-weight: bold; } /* Blue */
+      .code-func { color: #16a34a; font-weight: bold; } /* Green */
+    </style>
+  </head>
+  <body class="flex min-h-screen items-center justify-center p-6 text-black">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden bg-[#f4f3ef] border-[4px] border-black"
+    >
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 pattern-dots opacity-10"></div>
+
+      <!-- Left Side: Content & Types -->
+      <div class="flex flex-col w-1/2 p-16 justify-between z-10">
+        
+        <!-- Header -->
+        <div>
+          <div class="flex gap-3 mb-6">
+             <span class="neo-badge bg-yellow-400 px-4 py-1 font-mono font-bold text-sm">TYPESCRIPT</span>
+             <span class="neo-badge bg-blue-400 px-4 py-1 font-mono font-bold text-sm text-white">RUNTIME CHECK</span>
+          </div>
+          
+          <h1 class="text-7xl font-black leading-[0.9] tracking-tighter mb-4">
+            TYPE<br>
+            <span class="text-blue-600">GUARDS</span>
+          </h1>
+          <h2 class="text-3xl font-bold text-gray-500 border-l-4 border-black pl-4">
+            类型守卫
+          </h2>
+          <p class="mt-6 font-mono font-bold text-lg max-w-md">
+            > Narrowing types safely at runtime.
+          </p>
+        </div>
+
+        <!-- List of Guards -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="h-12 w-12 bg-black text-white flex items-center justify-center font-bold text-xl border-2 border-black">1</div>
+            <div class="neo-box px-6 py-2 bg-white flex-1 font-mono font-bold">typeof (Primitives)</div>
+          </div>
+           <div class="flex items-center gap-4">
+            <div class="h-12 w-12 bg-blue-600 text-white flex items-center justify-center font-bold text-xl border-2 border-black">2</div>
+            <div class="neo-box px-6 py-2 bg-white flex-1 font-mono font-bold">instanceof (Classes)</div>
+          </div>
+           <div class="flex items-center gap-4">
+            <div class="h-12 w-12 bg-yellow-400 text-black flex items-center justify-center font-bold text-xl border-2 border-black">3</div>
+            <div class="neo-box px-6 py-2 bg-white flex-1 font-mono font-bold">is Predicate</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Side: Visual / Code -->
+      <div class="relative w-1/2 bg-blue-600 border-l-[4px] border-black flex items-center justify-center">
+        
+        <!-- Abstract Shapes -->
+        <div class="absolute top-10 right-10 h-32 w-32 bg-yellow-400 rounded-full border-[3px] border-black"></div>
+        <div class="absolute bottom-20 left-20 h-20 w-20 bg-white rotate-45 border-[3px] border-black"></div>
+
+        <!-- Code Card -->
+        <div class="neo-box w-[480px] bg-white p-8 -rotate-3 hover:rotate-0 transition-transform relative z-10">
+          <div class="absolute -top-3 -left-3 bg-black text-white px-3 py-1 font-mono font-bold text-xs border-2 border-white shadow-lg">
+            CUSTOM TYPE GUARD
+          </div>
+          <div class="font-mono text-lg leading-relaxed">
+            <div><span class="code-keyword">interface</span> <span class="code-type">Cat</span> { meow(): <span class="code-type">void</span> }</div>
+            <div class="h-4"></div>
+            <div><span class="code-keyword">function</span> <span class="code-func">isCat</span>(pet: <span class="code-type">any</span>): pet <span class="code-keyword">is</span> <span class="code-type">Cat</span> {</div>
+            <div class="pl-4"><span class="code-keyword">return</span> (pet <span class="code-keyword">as</span> <span class="code-type">Cat</span>).meow</div>
+            <div class="pl-8">!== <span class="code-keyword">undefined</span>;</div>
+            <div>}</div>
+            <div class="h-4"></div>
+            <div class="border-t-2 border-dashed border-gray-300 pt-4 text-sm text-gray-500 font-bold">
+              // Helps TS narrow "any" to "Cat"
+            </div>
+          </div>
+        </div>
+
+        <!-- Badge Bottom Right -->
+        <div class="absolute bottom-8 right-8 bg-black text-white px-4 py-2 font-mono font-bold text-xl border-2 border-white shadow-[4px_4px_0px_white]">
+          SAFE
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Component Wrapper Cover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Fira Code", "monospace"],
+            },
+            colors: {
+              vueGreen: "#42b883",
+              vueDark: "#35495e",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    <!-- Cover Container (16:9 Ratio: 1200x675) -->
+    <div
+      id="cover-container"
+      class="relative w-[1200px] h-[675px] bg-[#1a1a1a] overflow-hidden flex flex-col items-center justify-center p-12 shadow-2xl"
+    >
+      <!-- Background Elements -->
+      <div
+        class="absolute top-0 right-0 w-[600px] h-[600px] bg-[#42b883] rounded-full opacity-10 blur-[120px] transform translate-x-1/4 -translate-y-1/4"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#35495e] rounded-full opacity-20 blur-[100px] transform -translate-x-1/4 translate-y-1/4"
+      ></div>
+
+      <!-- Diagonal Lines -->
+      <div
+        class="absolute inset-0 opacity-5"
+        style="
+          background-image: repeating-linear-gradient(
+            45deg,
+            #42b883 0,
+            #42b883 1px,
+            transparent 0,
+            transparent 50%
+          );
+          background-size: 20px 20px;
+        "
+      ></div>
+
+      <!-- Main Layout -->
+      <div class="relative z-10 flex w-full max-w-6xl gap-12 items-center">
+        <!-- Left Side: Title & Concepts -->
+        <div class="flex-1 space-y-8">
+          <div
+            class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#42b883]/10 border border-[#42b883]/30"
+          >
+            <svg
+              class="w-6 h-6 text-[#42b883]"
+              viewBox="0 0 128 128"
+              width="24"
+              height="24"
+            >
+              <path
+                fill="#42b883"
+                d="M78.8,10L64,35.4L49.2,10H0l64,110l64-110C128,10,78.8,10,78.8,10z"
+              />
+              <path
+                fill="#35495e"
+                d="M78.8,10L64,35.4L49.2,10H25.6l38.4,66l38.4-66H78.8z"
+              />
+            </svg>
+            <span class="text-[#42b883] font-bold tracking-wide"
+              >Vue.js Patterns</span
+            >
+          </div>
+
+          <h1
+            class="text-6xl font-black text-white leading-tight tracking-tight"
+          >
+            组件<span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-[#42b883] to-emerald-300"
+              >二次封装</span
+            ><br />
+            最佳实践
+          </h1>
+
+          <div class="flex flex-col gap-4">
+            <div
+              class="flex items-center gap-4 text-gray-300 bg-white/5 p-4 rounded-lg border border-white/10"
+            >
+              <div
+                class="w-10 h-10 rounded bg-[#42b883]/20 flex items-center justify-center text-[#42b883] font-bold"
+              >
+                1
+              </div>
+              <div>
+                <div class="font-bold text-white">Props 透传</div>
+                <div class="text-sm text-gray-400 font-mono">
+                  v-bind="$attrs"
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-4 text-gray-300 bg-white/5 p-4 rounded-lg border border-white/10"
+            >
+              <div
+                class="w-10 h-10 rounded bg-[#42b883]/20 flex items-center justify-center text-[#42b883] font-bold"
+              >
+                2
+              </div>
+              <div>
+                <div class="font-bold text-white">Slots 转发</div>
+                <div class="text-sm text-gray-400 font-mono">
+                  v-for="(s,n) in $slots"
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-4 text-gray-300 bg-white/5 p-4 rounded-lg border border-white/10"
+            >
+              <div
+                class="w-10 h-10 rounded bg-[#42b883]/20 flex items-center justify-center text-[#42b883] font-bold"
+              >
+                3
+              </div>
+              <div>
+                <div class="font-bold text-white">Expose 暴露</div>
+                <div class="text-sm text-gray-400 font-mono">
+                  ref forwarding
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Visual Representation -->
+        <div class="flex-1 relative">
+          <!-- Outer Component -->
+          <div
+            class="absolute inset-0 bg-[#35495e] rounded-xl transform rotate-6 opacity-50 translate-x-4 translate-y-4"
+          ></div>
+          <div
+            class="relative bg-[#1e1e1e] border-2 border-[#42b883] rounded-xl p-6 shadow-2xl"
+          >
+            <div
+              class="absolute -top-3 left-6 bg-[#1e1e1e] px-2 text-[#42b883] font-mono text-sm font-bold border border-[#42b883] rounded"
+            >
+              Wrapper.vue
+            </div>
+
+            <!-- Code Snippet -->
+            <div class="font-mono text-sm leading-relaxed">
+              <div class="flex gap-2 mb-4">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <div class="text-gray-300">
+                <span class="text-purple-400">&lt;template&gt;</span><br />
+                &nbsp;&nbsp;<span class="text-[#42b883]">&lt;el-input</span
+                ><br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">v-bind</span
+                >="<span class="text-yellow-300">$attrs</span>"<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">ref</span
+                >="<span class="text-yellow-300">inputRef</span>"<br />
+                &nbsp;&nbsp;<span class="text-[#42b883]">&gt;</span><br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400"
+                  >&lt;template</span
+                >
+                <span class="text-blue-400">v-for</span>="..."<span
+                  class="text-purple-400"
+                  >&gt;</span
+                ><br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                  class="text-purple-400"
+                  >&lt;slot</span
+                >
+                ... <span class="text-purple-400">/&gt;</span><br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400"
+                  >&lt;/template&gt;</span
+                ><br />
+                &nbsp;&nbsp;<span class="text-[#42b883]">&lt;/el-input&gt;</span
+                ><br />
+                <span class="text-purple-400">&lt;/template&gt;</span>
+              </div>
+            </div>
+
+            <!-- Inner Component Box -->
+            <div
+              class="mt-6 border-2 border-dashed border-gray-600 rounded-lg p-4 bg-[#35495e]/20 relative"
+            >
+              <div
+                class="absolute -top-3 right-4 bg-[#1e1e1e] px-2 text-gray-400 font-mono text-xs"
+              >
+                Inner Component
+              </div>
+              <div
+                class="flex items-center justify-center h-12 text-gray-500 font-mono text-sm"
+              >
+                &lt;el-input /&gt;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

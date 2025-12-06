@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .code-font {
+        font-family: "Monaco", "Consolas", monospace;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 flex items-center justify-center min-h-screen">
+    <div
+      id="cover-container"
+      class="relative w-[1200px] h-[675px] bg-[#1e1e1e] overflow-hidden flex flex-col items-center justify-center"
+    >
+      <!-- Background Gradients -->
+      <div
+        class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-br from-[#42B883]/10 to-transparent"
+      ></div>
+      <div
+        class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-[#35495E]/20 to-transparent"
+      ></div>
+
+      <!-- Diagonal Split Line -->
+      <div class="absolute inset-0 flex items-center justify-center opacity-20">
+        <div
+          class="w-px h-full bg-gradient-to-b from-transparent via-white to-transparent transform rotate-12"
+        ></div>
+      </div>
+
+      <!-- Content Container -->
+      <div
+        class="relative z-10 w-full max-w-6xl px-12 flex items-center justify-between"
+      >
+        <!-- Left: ref -->
+        <div class="flex-1 flex flex-col items-center space-y-8">
+          <div class="relative group">
+            <!-- Wrapper Box Visual -->
+            <div
+              class="w-48 h-48 rounded-2xl border-4 border-[#42B883] flex items-center justify-center bg-[#42B883]/5 relative"
+            >
+              <div
+                class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#42B883] text-white text-sm font-bold rounded-full code-font"
+              >
+                .value
+              </div>
+              <!-- Inner Value -->
+              <div
+                class="w-24 h-24 bg-white rounded-lg shadow-[0_0_30px_rgba(66,184,131,0.4)] flex items-center justify-center text-3xl font-bold text-[#35495E]"
+              >
+                0
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <h2 class="text-6xl font-black text-white mb-2 tracking-tighter">
+              ref
+            </h2>
+            <p
+              class="text-[#42B883] font-medium text-lg uppercase tracking-widest"
+            >
+              Wrapper Object
+            </p>
+            <div
+              class="mt-6 flex flex-col gap-2 text-gray-400 text-sm code-font"
+            >
+              <span class="px-3 py-1 bg-white/5 rounded"
+                >Primitives & Objects</span
+              >
+              <span class="px-3 py-1 bg-white/5 rounded">Destructure: ❌</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: VS -->
+        <div class="flex flex-col items-center justify-center z-20 mx-8">
+          <div
+            class="w-16 h-16 rounded-full bg-[#35495E] border-4 border-[#1e1e1e] flex items-center justify-center shadow-2xl"
+          >
+            <span class="text-white font-bold italic text-xl">VS</span>
+          </div>
+        </div>
+
+        <!-- Right: reactive -->
+        <div class="flex-1 flex flex-col items-center space-y-8">
+          <div class="relative group">
+            <!-- Proxy Object Visual -->
+            <div class="w-48 h-48 relative">
+              <!-- Object Structure -->
+              <div
+                class="absolute inset-0 border-2 border-[#35495E] rounded-2xl bg-[#35495E]/5 flex flex-col p-4 gap-3"
+              >
+                <div class="h-8 bg-[#35495E]/20 rounded w-3/4"></div>
+                <div class="h-8 bg-[#35495E]/20 rounded w-1/2"></div>
+                <div class="h-8 bg-[#35495E]/20 rounded w-full"></div>
+              </div>
+              <!-- Connection Nodes -->
+              <div
+                class="absolute -right-2 top-1/4 w-4 h-4 bg-[#35495E] rounded-full"
+              ></div>
+              <div
+                class="absolute -left-2 bottom-1/4 w-4 h-4 bg-[#35495E] rounded-full"
+              ></div>
+
+              <!-- Direct Access Badge -->
+              <div
+                class="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#35495E] text-white text-sm font-bold rounded-full code-font"
+              >
+                Proxy
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <h2 class="text-6xl font-black text-white mb-2 tracking-tighter">
+              reactive
+            </h2>
+            <p
+              class="text-[#35495E] font-medium text-lg uppercase tracking-widest"
+            >
+              Deep Proxy
+            </p>
+            <div
+              class="mt-6 flex flex-col gap-2 text-gray-400 text-sm code-font"
+            >
+              <span class="px-3 py-1 bg-white/5 rounded">Objects Only</span>
+              <span class="px-3 py-1 bg-white/5 rounded">Destructure: ❌</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Title -->
+      <div class="absolute bottom-12 w-full text-center">
+        <h1
+          class="text-2xl text-gray-500 font-light tracking-[0.5em] uppercase"
+        >
+          Vue 3 Composition API
+        </h1>
+      </div>
+    </div>
+  </body>
+</html>

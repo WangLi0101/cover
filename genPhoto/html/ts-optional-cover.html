@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeScript Utility Type Cover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Work Sans', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        tsDark: '#00273F',
+                        tsAccent: '#007ACC',
+                        lightCode: '#D4D4D4',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-8">
+
+    <!-- Cover Container (16:9 Ratio: 1200x675) -->
+    <div id="cover-container" class="relative w-[1200px] h-[675px] bg-[#00273F] overflow-hidden flex flex-col items-center justify-center shadow-2xl border-8 border-white/10">
+        
+        <!-- Abstract Shapes -->
+        <div class="absolute top-[-150px] left-[-150px] w-[500px] h-[500px] rounded-full border-[60px] border-[#007ACC]/20 blur-[60px]"></div>
+        <div class="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] rounded-full bg-[#007ACC]/20 blur-[80px]"></div>
+
+        <!-- Geometric Grid -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" 
+             style="background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .3) 25%, rgba(255, 255, 255, .3) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .3) 75%, rgba(255, 255, 255, .3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .3) 25%, rgba(255, 255, 255, .3) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .3) 75%, rgba(255, 255, 255, .3) 76%, transparent 77%, transparent); background-size: 50px 50px;">
+        </div>
+
+        <!-- Main Layout -->
+        <div class="relative z-10 w-full px-24 flex items-center justify-between">
+            
+            <!-- Left: Title Section -->
+            <div class="space-y-6 max-w-xl">
+                <div class="flex items-center gap-4 mb-4">
+                     <div class="w-14 h-14 bg-white rounded-md flex items-center justify-center shadow-lg">
+                         <svg class="w-10 h-10 text-[#007ACC]" viewBox="0 0 128 128">
+                            <path fill="currentColor" d="M2.2,15.5v96.9h123.6V15.5H2.2z M95.5,102.2H75.3V64.1H75v38.1H55.4V25.8h20.3v37.4h0.3V25.8h19.5V102.2z M45.2,102.2H24.9V39.8h-9.6V25.8h29.9v14h-9.6V102.2z"/>
+                        </svg>
+                    </div>
+                    <span class="font-mono text-[#007ACC] font-bold text-lg tracking-widest uppercase bg-white/10 px-3 py-1 rounded">Type Challenge</span>
+                </div>
+
+                <h1 class="text-7xl font-extrabold text-white leading-none">
+                    Utility<br>
+                    <span class="text-[#007ACC]">Types</span>
+                </h1>
+                
+                <div class="flex items-center gap-4 pt-4">
+                    <div class="text-gray-400 font-mono text-xl">
+                        Implementing <span class="text-white font-bold bg-[#007ACC] px-2 py-1 rounded">Optional&lt;T, K&gt;</span>
+                    </div>
+                </div>
+
+                <p class="text-gray-400 text-lg leading-relaxed border-l-2 border-[#007ACC] pl-4 mt-6 max-w-md">
+                    Mastering Omit, Pick, and Partial to build powerful generic tools.
+                </p>
+            </div>
+
+            <!-- Right: Code Logic Diagram -->
+            <div class="relative">
+                <!-- Glassmorphism Card -->
+                <div class="w-[480px] bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+                    <!-- Decorative Header -->
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#007ACC] to-purple-500"></div>
+
+                    <div class="space-y-6 font-mono text-sm">
+                        <!-- Step 1 -->
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-8 rounded-full bg-[#007ACC] text-white flex items-center justify-center font-bold">1</div>
+                            <div class="flex-1 bg-black/30 p-3 rounded border border-white/5 text-gray-300">
+                                <span class="text-purple-400">Omit</span>&lt;T, K&gt;
+                                <span class="block text-xs text-gray-500 mt-1">// Exclude keys K from T</span>
+                            </div>
+                        </div>
+
+                        <!-- Plus Symbol -->
+                        <div class="flex justify-center text-gray-500 text-xl font-bold">+</div>
+
+                        <!-- Step 2 -->
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-8 rounded-full bg-[#007ACC] text-white flex items-center justify-center font-bold">2</div>
+                            <div class="flex-1 bg-black/30 p-3 rounded border border-white/5 text-gray-300">
+                                <span class="text-purple-400">Partial</span>&lt;<span class="text-purple-400">Pick</span>&lt;T, K&gt;&gt;
+                                <span class="block text-xs text-gray-500 mt-1">// Make keys K optional</span>
+                            </div>
+                        </div>
+
+                         <!-- Equal Symbol -->
+                        <div class="flex justify-center text-gray-500 text-xl font-bold">=</div>
+
+                        <!-- Result -->
+                        <div class="flex items-center gap-4">
+                             <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">3</div>
+                            <div class="flex-1 bg-[#007ACC]/20 p-3 rounded border border-[#007ACC]/50 text-white font-bold">
+                                Optional&lt;T, K&gt;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Tags -->
+        <div class="absolute bottom-8 w-full flex justify-center gap-4">
+            <span class="px-3 py-1 bg-white/5 rounded-full text-gray-400 text-xs font-mono border border-white/10">#Generics</span>
+            <span class="px-3 py-1 bg-white/5 rounded-full text-gray-400 text-xs font-mono border border-white/10">#MappedTypes</span>
+            <span class="px-3 py-1 bg-white/5 rounded-full text-gray-400 text-xs font-mono border border-white/10">#AdvancedTS</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

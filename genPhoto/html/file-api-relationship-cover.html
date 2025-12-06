@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+    rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Noto Sans SC", sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    .font-mono {
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: absolute;
+      z-index: 10;
+      transition: all 0.3s ease;
+      width: 220px;
+      height: 120px;
+    }
+
+    .card-title {
+      font-weight: 900;
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    .arrow {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .arrow-line {
+      stroke: #94a3b8;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .arrow-head {
+      fill: #94a3b8;
+    }
+
+    .label-pill {
+      background-color: #fff;
+      color: #475569;
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      position: absolute;
+      z-index: 20;
+      font-family: "JetBrains Mono", monospace;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Specific Card Styles */
+    .card-file {
+      border-top: 5px solid #3b82f6;
+    }
+
+    .card-blob {
+      border-top: 5px solid #8b5cf6;
+    }
+
+    .card-buffer {
+      border-top: 5px solid #10b981;
+    }
+
+    .card-base64 {
+      border-top: 5px solid #f59e0b;
+    }
+
+    .card-url {
+      border-top: 5px solid #ec4899;
+    }
+
+    .card-reader {
+      border-top: 5px solid #6366f1;
+      border-style: solid;
+      background-color: #f8fafc;
+      border-style: dashed;
+    }
+  </style>
+</head>
+
+<body class="flex min-h-screen items-center justify-center p-6">
+  <div id="cover-container"
+    class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[32px] bg-slate-50 shadow-2xl ring-1 ring-slate-200">
+
+    <!-- Background Decoration -->
+    <div class="absolute inset-0"
+      style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 32px 32px; opacity: 0.4;">
+    </div>
+
+    <!-- Header -->
+    <div class="absolute top-12 right-12 z-20 text-right">
+      <h1 class="text-5xl font-black text-slate-900 tracking-tight">
+        Web 文件 API 关系图谱
+      </h1>
+    </div>
+
+    <!-- Main Diagram Area -->
+    <div class="relative w-full h-full mt-0">
+
+      <!-- SVG Layer for Arrows -->
+      <svg class="absolute inset-0 w-full h-full arrow">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="arrow-head" />
+          </marker>
+        </defs>
+
+        <!-- 1. File -> Blob -->
+        <!-- File Bottom (210, 200) -> Blob Top (210, 280) -->
+        <path d="M210 200 L210 280" class="arrow-line" marker-end="url(#arrowhead)" />
+
+        <!-- 2. Blob -> ArrayBuffer -->
+        <!-- Blob Bottom (210, 400) -> Buffer Top (210, 500) -->
+        <path d="M210 400 L210 500" class="arrow-line" marker-end="url(#arrowhead)" />
+
+        <!-- 3. Blob -> Object URL -->
+        <!-- Blob Right (320, 340) -> URL Left (500, 340) -->
+        <path d="M320 340 L500 340" class="arrow-line" marker-end="url(#arrowhead)" />
+
+        <!-- 4. Blob -> FileReader -->
+        <!-- Blob Right (320, 340) -> Curve -> Reader Top (610, 500) -->
+        <path d="M320 360 C 380 360, 610 360, 610 500" class="arrow-line" marker-end="url(#arrowhead)" />
+
+        <!-- 5. FileReader -> Base64 -->
+        <!-- Reader Right (720, 560) -> Base64 Left (880, 560) -->
+        <path d="M720 560 L880 560" class="arrow-line" marker-end="url(#arrowhead)" />
+
+        <!-- 6. ArrayBuffer -> Base64 (via btoa) -->
+        <!-- Buffer Bottom (210, 620) -> Down -> Right -> Up -> Base64 Bottom (990, 620) -->
+        <path d="M210 620 L210 650 L990 650 L990 620" class="arrow-line" marker-end="url(#arrowhead)" />
+
+      </svg>
+
+      <!-- Nodes (Positions adjusted to match SVG) -->
+
+      <!-- File: (100, 80) -->
+      <div class="card card-file" style="top: 80px; left: 100px;">
+        <div class="card-title text-blue-600">File</div>
+        <div class="card-desc">用户文件<br /><span class="text-xs opacity-75">name, size, type</span></div>
+      </div>
+
+      <!-- Label: extends -->
+      <div class="label-pill" style="top: 240px; left: 210px;">继承 (extends)</div>
+
+      <!-- Blob: (100, 280) -->
+      <div class="card card-blob" style="top: 280px; left: 100px;">
+        <div class="card-title text-purple-600">Blob</div>
+        <div class="card-desc">二进制大对象<br /><span class="text-xs opacity-75">原始数据</span></div>
+      </div>
+
+      <!-- Label: .arrayBuffer() -->
+      <div class="label-pill" style="top: 450px; left: 210px;">.arrayBuffer()</div>
+
+      <!-- Label: URL.createObjectURL() -->
+      <div class="label-pill" style="top: 340px; left: 410px;">URL.createObjectURL()</div>
+
+      <!-- ArrayBuffer: (100, 500) -->
+      <div class="card card-buffer" style="top: 500px; left: 100px;">
+        <div class="card-title text-emerald-600">ArrayBuffer</div>
+        <div class="card-desc">二进制缓冲区<br /><span class="text-xs opacity-75">固定长度</span></div>
+      </div>
+
+      <!-- Object URL: (500, 280) -->
+      <div class="card card-url" style="top: 280px; left: 500px;">
+        <div class="card-title text-pink-600">Object URL</div>
+        <div class="card-desc">引用地址<br /><span class="text-xs opacity-75 font-mono">blob:http://...</span></div>
+      </div>
+
+      <!-- FileReader: (500, 500) -->
+      <div class="card card-reader" style="top: 500px; left: 500px;">
+        <div class="card-title text-indigo-600">FileReader</div>
+        <div class="card-desc">读取器<br /><span class="text-xs opacity-75">异步 API</span></div>
+      </div>
+
+      <!-- Label: .readAsDataURL() -->
+      <div class="label-pill" style="top: 560px; left: 800px;">.readAsDataURL()</div>
+
+      <!-- Base64: (880, 500) -->
+      <div class="card card-base64" style="top: 500px; left: 880px;">
+        <div class="card-title text-amber-600">Base64</div>
+        <div class="card-desc">Data URL<br /><span class="text-xs opacity-75 font-mono">data:image...</span></div>
+      </div>
+
+      <!-- Label: btoa -->
+      <div class="label-pill" style="top: 650px; left: 600px;">btoa(String.fromCharCode(...))</div>
+
+    </div>
+
+  </div>
+</body>
+
+</html>

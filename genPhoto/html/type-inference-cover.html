@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type Inference Cover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        tsBlue: '#3178C6',
+                        typePurple: '#C586C0',
+                        stringGreen: '#CE9178',
+                        darkBg: '#1E1E1E',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+
+    <!-- Cover Container (16:9 Ratio: 1200x675) -->
+    <div id="cover-container" class="relative w-[1200px] h-[675px] bg-[#1E1E1E] overflow-hidden flex flex-col items-center justify-center shadow-2xl border-t-8 border-[#3178C6]">
+        
+        <!-- Background Flow Lines -->
+        <div class="absolute inset-0 opacity-10 overflow-hidden">
+             <svg class="w-full h-full" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M-100 337.5C200 337.5 400 100 600 337.5C800 575 1000 337.5 1300 337.5" stroke="#3178C6" stroke-width="2"/>
+                <path d="M-100 387.5C200 387.5 400 150 600 387.5C800 625 1000 387.5 1300 387.5" stroke="#C586C0" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <!-- Main Content -->
+        <div class="relative z-10 w-full px-20 flex items-center justify-between">
+            
+            <!-- Left: Title -->
+            <div class="space-y-6 max-w-lg">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3178C6]/10 border border-[#3178C6]/30 text-[#3178C6] font-mono text-sm">
+                    <span class="w-2 h-2 rounded-full bg-[#3178C6]"></span>
+                    Template Literal Types
+                </div>
+                
+                <h1 class="text-7xl font-black text-white leading-tight tracking-tight">
+                    从<span class="text-[#3178C6]">字段</span>到<br>
+                    <span class="text-[#C586C0]">函数</span>的推导
+                </h1>
+                
+                <p class="text-gray-400 text-xl leading-relaxed border-l-4 border-[#3178C6] pl-6">
+                    Inferring function signatures from object keys using mapped types.
+                </p>
+            </div>
+
+            <!-- Right: Type Transformation Visualization -->
+            <div class="relative flex items-center gap-4">
+                
+                <!-- Input: Object Key -->
+                <div class="flex flex-col items-center gap-4">
+                    <div class="w-40 h-32 bg-[#252526] rounded-xl border border-gray-700 flex flex-col items-center justify-center shadow-xl">
+                        <div class="text-gray-500 text-xs font-mono mb-2">Key</div>
+                        <div class="text-[#9CDCFE] font-mono text-2xl font-bold">"age"</div>
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="w-24 h-[2px] bg-gradient-to-r from-gray-700 to-[#3178C6] relative">
+                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 text-[#C586C0] font-mono text-xs whitespace-nowrap">
+                        `${K}Changed`
+                    </div>
+                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#3178C6] rotate-45 transform translate-x-1"></div>
+                </div>
+
+                <!-- Output: Event Name -->
+                <div class="flex flex-col items-center gap-4">
+                    <div class="w-56 h-32 bg-[#252526] rounded-xl border border-[#3178C6] flex flex-col items-center justify-center shadow-[0_0_30px_rgba(49,120,198,0.2)]">
+                        <div class="text-gray-500 text-xs font-mono mb-2">Event Name</div>
+                        <div class="text-[#CE9178] font-mono text-2xl font-bold">"ageChanged"</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Code Snippet at Bottom -->
+        <div class="absolute bottom-12 w-full flex justify-center">
+            <div class="bg-black/30 backdrop-blur-sm px-8 py-4 rounded-lg border border-white/10 font-mono text-sm text-gray-300">
+                <span class="text-[#569CD6]">type</span> <span class="text-[#4EC9B0]">Event</span> = <span class="text-[#CE9178]">&nbsp;`${keyof T}Changed`&nbsp;</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

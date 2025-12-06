@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Shallow Reactivity Cover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        vueGreen: '#42B883',
+                        vueDark: '#35495E',
+                        surfaceBlue: '#3BA7F0',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+
+    <!-- Cover Container (16:9 Ratio: 1200x675) -->
+    <div id="cover-container" class="relative w-[1200px] h-[675px] bg-white overflow-hidden flex flex-col items-center justify-center shadow-2xl border-t-8 border-[#42B883]">
+        
+        <!-- Water Surface Effect Background -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-[#3BA7F0]/5 to-transparent"></div>
+            <!-- Waves -->
+            <svg class="absolute bottom-0 left-0 w-full h-48 text-[#3BA7F0]/10" viewBox="0 0 1200 200" preserveAspectRatio="none">
+                <path d="M0,100 C150,200 350,0 500,100 C650,200 850,0 1000,100 C1150,200 1350,0 1500,100 V200 H0 Z" fill="currentColor" />
+            </svg>
+            <svg class="absolute bottom-0 left-0 w-full h-32 text-[#42B883]/10" viewBox="0 0 1200 200" preserveAspectRatio="none">
+                <path d="M0,100 C200,0 400,200 600,100 C800,0 1000,200 1200,100 V200 H0 Z" fill="currentColor" />
+            </svg>
+        </div>
+
+        <!-- Main Content -->
+        <div class="relative z-10 w-full px-20 flex items-center justify-between">
+            
+            <!-- Left: Title & Concept -->
+            <div class="space-y-8 max-w-lg">
+                <div class="flex items-center gap-3">
+                    <svg class="w-10 h-10 text-[#42B883]" viewBox="0 0 128 128" width="24" height="24">
+                        <path fill="#42b883" d="M78.8,10L64,35.4L49.2,10H0l64,110l64-110C128,10,78.8,10,78.8,10z" />
+                        <path fill="#35495e" d="M78.8,10L64,35.4L49.2,10H25.6l38.4,66l38.4-66H78.8z" />
+                    </svg>
+                    <span class="text-[#35495E] font-bold tracking-wide text-lg uppercase">Performance</span>
+                </div>
+
+                <h1 class="text-6xl font-black text-[#35495E] leading-tight tracking-tight">
+                    <span class="text-[#3BA7F0]">shallow</span>Reactive<br>
+                    <span class="text-[#3BA7F0]">shallow</span>Ref
+                </h1>
+                
+                <p class="text-gray-500 text-xl leading-relaxed border-l-4 border-[#3BA7F0] pl-6">
+                    Optimizing reactivity by tracking only the surface level changes.
+                </p>
+            </div>
+
+            <!-- Right: Visual Representation (Surface vs Deep) -->
+            <div class="relative w-[500px] h-[400px]">
+                
+                <!-- Surface Layer (Reactive) -->
+                <div class="absolute top-10 left-1/2 -translate-x-1/2 w-64 h-24 bg-[#3BA7F0] rounded-xl shadow-lg z-20 flex items-center justify-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="text-white font-bold text-lg flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Reactive Surface
+                    </div>
+                    <!-- Ripples -->
+                    <div class="absolute -inset-2 border-2 border-[#3BA7F0]/30 rounded-2xl animate-ping"></div>
+                </div>
+
+                <!-- Deep Layers (Non-Reactive) -->
+                <div class="absolute top-28 left-1/2 -translate-x-1/2 w-64 h-48 bg-gray-100 rounded-b-xl border-x-2 border-b-2 border-gray-200 z-10 flex flex-col items-center justify-center gap-4 pt-8">
+                    <div class="w-48 h-8 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500 font-mono">
+                        Nested Object (Raw)
+                    </div>
+                    <div class="w-40 h-8 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500 font-mono">
+                        Deep Property (Raw)
+                    </div>
+                    <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mt-2">
+                        No Deep Conversion
+                    </div>
+                </div>
+
+                <!-- Arrow Indicator -->
+                <div class="absolute top-20 right-10 flex flex-col items-center">
+                    <div class="text-[#3BA7F0] font-bold text-sm mb-1">Update</div>
+                    <svg class="w-6 h-6 text-[#3BA7F0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </div>
+                 <div class="absolute bottom-20 right-10 flex flex-col items-center opacity-30">
+                    <div class="text-gray-400 font-bold text-sm mb-1">Update</div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

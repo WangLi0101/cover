@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTT Race Cover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        race: ['Racing Sans One', 'cursive'],
+                        tech: ['Chakra Petch', 'sans-serif'],
+                    },
+                    colors: {
+                        speedYellow: '#FFD600',
+                        speedRed: '#FF003C',
+                        trackDark: '#111111',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-8">
+
+    <!-- Cover Container (16:9 Ratio: 1200x675) -->
+    <div id="cover-container" class="relative w-[1200px] h-[675px] bg-[#111111] overflow-hidden flex flex-col items-center justify-center shadow-2xl border-x-8 border-[#FFD600]">
+        
+        <!-- Speed Lines Background -->
+        <div class="absolute inset-0 opacity-20 overflow-hidden pointer-events-none">
+             <div class="absolute top-1/4 -left-20 w-[150%] h-2 bg-[#FFD600] transform -rotate-12 blur-sm"></div>
+             <div class="absolute top-3/4 -left-20 w-[150%] h-4 bg-[#FF003C] transform -rotate-12 blur-md"></div>
+             <div class="absolute top-1/2 -left-20 w-[150%] h-1 bg-white transform -rotate-12 opacity-50"></div>
+             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent to-[#111111]"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="relative z-10 w-full max-w-5xl flex items-center justify-between px-12">
+            
+            <!-- Left: Title & Stats -->
+            <div class="space-y-8 transform skew-x-[-10deg]">
+                <div>
+                    <div class="inline-block bg-[#FF003C] text-white px-4 py-1 font-tech font-bold text-lg uppercase tracking-widest mb-2 skew-x-[10deg]">
+                        Network Performance
+                    </div>
+                    <h1 class="text-8xl font-race text-white leading-none tracking-tighter drop-shadow-[4px_4px_0px_#FFD600]">
+                        FIND<br>
+                        FASTEST<br>
+                        <span class="text-[#FFD600]">IP</span>
+                    </h1>
+                </div>
+                
+                <div class="flex gap-8 skew-x-[10deg]">
+                    <div class="bg-[#1A1A1A] border border-gray-800 p-4 w-32 text-center group hover:border-[#FFD600] transition-colors">
+                        <div class="text-3xl font-tech font-bold text-white group-hover:text-[#FFD600]">10</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">Concurrency</div>
+                    </div>
+                    <div class="bg-[#1A1A1A] border border-gray-800 p-4 w-32 text-center group hover:border-[#FF003C] transition-colors">
+                        <div class="text-3xl font-tech font-bold text-white group-hover:text-[#FF003C]">MIN</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider font-bold">Latency</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Race Visualization -->
+            <div class="relative w-[500px] h-[400px]">
+                <!-- Track Lines -->
+                <div class="absolute inset-0 flex flex-col justify-center gap-8 opacity-30">
+                    <div class="w-full h-px bg-white"></div>
+                    <div class="w-full h-px bg-white"></div>
+                    <div class="w-full h-px bg-white"></div>
+                    <div class="w-full h-px bg-white"></div>
+                    <div class="w-full h-px bg-white"></div>
+                </div>
+
+                <!-- Finish Line -->
+                <div class="absolute right-10 top-0 bottom-0 w-4 flex flex-col opacity-80">
+                    <div class="h-4 bg-white"></div><div class="h-4 bg-black"></div>
+                    <div class="h-4 bg-black"></div><div class="h-4 bg-white"></div>
+                    <div class="h-4 bg-white"></div><div class="h-4 bg-black"></div>
+                    <div class="h-4 bg-black"></div><div class="h-4 bg-white"></div>
+                    <div class="h-4 bg-white"></div><div class="h-4 bg-black"></div>
+                    <div class="h-4 bg-black"></div><div class="h-4 bg-white"></div>
+                    <div class="h-4 bg-white"></div><div class="h-4 bg-black"></div>
+                    <div class="h-4 bg-black"></div><div class="h-4 bg-white"></div>
+                    <div class="h-4 bg-white"></div><div class="h-4 bg-black"></div>
+                    <div class="h-4 bg-black"></div><div class="h-4 bg-white"></div>
+                    <div class="h-4 bg-white"></div><div class="h-4 bg-black"></div>
+                    <div class="h-4 bg-black"></div><div class="h-4 bg-white"></div>
+                    <div class="h-4 bg-white"></div><div class="h-4 bg-black"></div>
+                </div>
+
+                <!-- Racers (Data Packets) -->
+                <div class="absolute left-0 top-[60px] flex items-center gap-2 transform translate-x-[300px]">
+                    <div class="w-12 h-6 bg-[#FFD600] skew-x-[-20deg] shadow-[0_0_20px_#FFD600]"></div>
+                    <span class="text-[#FFD600] font-mono text-xs font-bold">IP 1</span>
+                </div>
+                <div class="absolute left-0 top-[140px] flex items-center gap-2 transform translate-x-[150px] opacity-50">
+                    <div class="w-12 h-6 bg-gray-500 skew-x-[-20deg]"></div>
+                    <span class="text-gray-500 font-mono text-xs font-bold">IP 2</span>
+                </div>
+                <div class="absolute left-0 top-[220px] flex items-center gap-2 transform translate-x-[400px] z-10">
+                    <div class="w-16 h-8 bg-[#FF003C] skew-x-[-20deg] shadow-[0_0_30px_#FF003C] flex items-center justify-center">
+                        <span class="text-white font-bold text-xs italic">WIN</span>
+                    </div>
+                    <span class="text-[#FF003C] font-mono text-xs font-bold">IP 3</span>
+                </div>
+                <div class="absolute left-0 top-[300px] flex items-center gap-2 transform translate-x-[100px] opacity-50">
+                    <div class="w-12 h-6 bg-gray-500 skew-x-[-20deg]"></div>
+                    <span class="text-gray-500 font-mono text-xs font-bold">IP 4</span>
+                </div>
+
+                <!-- Speed Blur Effect -->
+                <div class="absolute inset-0 bg-gradient-to-r from-[#111111] via-transparent to-transparent pointer-events-none"></div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer Code -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 px-6 py-2 bg-black/80 border border-white/10 rounded text-gray-400 font-mono text-xs">
+            Promise.race([ fetch(ip1), fetch(ip2), ... ])
+        </div>
+
+    </div>
+
+</body>
+</html>

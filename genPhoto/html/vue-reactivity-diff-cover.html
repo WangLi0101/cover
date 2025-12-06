@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .code {
+        font-family: "Fira Code", monospace;
+      }
+      .grid-bg {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 20px 20px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#1A1A1A] flex items-center justify-center min-h-screen overflow-hidden"
+  >
+    <div
+      id="cover-container"
+      class="relative w-[1200px] h-[675px] bg-[#1A1A1A] overflow-hidden flex flex-col items-center justify-center border-8 border-[#42B883]"
+    >
+      <!-- Background Grid -->
+      <div class="absolute inset-0 grid-bg"></div>
+
+      <!-- Central Title -->
+      <div class="relative z-10 text-center mb-16">
+        <h1 class="text-5xl font-extrabold text-white tracking-tight mb-4">
+          Reactivity <span class="text-[#42B883]">Evolution</span>
+        </h1>
+        <div class="h-1 w-32 bg-[#42B883] mx-auto rounded-full"></div>
+      </div>
+
+      <!-- Main Comparison Container -->
+      <div
+        class="relative z-10 flex w-full max-w-5xl gap-8 items-stretch justify-center"
+      >
+        <!-- Left: Vue 2 (Getter/Setter) -->
+        <div
+          class="flex-1 bg-[#2C2C2C] rounded-xl p-8 border border-gray-700 flex flex-col items-center relative overflow-hidden group hover:border-[#42B883] transition-colors duration-300"
+        >
+          <div
+            class="absolute -right-12 -top-12 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-colors"
+          ></div>
+
+          <h2 class="text-2xl font-bold text-gray-300 mb-6">Vue 2</h2>
+
+          <!-- Code Visualization -->
+          <div class="w-full space-y-3">
+            <div class="code text-sm text-gray-400">
+              Object.defineProperty()
+            </div>
+
+            <div class="flex flex-col gap-2 mt-4">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <div
+                  class="flex-1 h-8 bg-[#1A1A1A] rounded flex items-center px-3 border border-gray-600"
+                >
+                  <span class="code text-xs text-blue-300"
+                    >get() { dep.depend() }</span
+                  >
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <div
+                  class="flex-1 h-8 bg-[#1A1A1A] rounded flex items-center px-3 border border-gray-600"
+                >
+                  <span class="code text-xs text-blue-300"
+                    >set() { dep.notify() }</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-auto pt-6 flex gap-2">
+            <span
+              class="px-3 py-1 bg-red-500/10 text-red-400 text-xs font-bold rounded border border-red-500/20"
+              >No Array Index</span
+            >
+            <span
+              class="px-3 py-1 bg-red-500/10 text-red-400 text-xs font-bold rounded border border-red-500/20"
+              >No Add/Del</span
+            >
+          </div>
+        </div>
+
+        <!-- Arrow Icon -->
+        <div class="flex items-center justify-center text-gray-500">
+          <svg
+            class="w-12 h-12 animate-pulse"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 5l7 7-7 7M5 5l7 7-7 7"
+            ></path>
+          </svg>
+        </div>
+
+        <!-- Right: Vue 3 (Proxy) -->
+        <div
+          class="flex-1 bg-[#2C2C2C] rounded-xl p-8 border border-gray-700 flex flex-col items-center relative overflow-hidden group hover:border-[#42B883] transition-colors duration-300"
+        >
+          <div
+            class="absolute -left-12 -bottom-12 w-32 h-32 bg-[#42B883]/10 rounded-full blur-2xl group-hover:bg-[#42B883]/20 transition-colors"
+          ></div>
+
+          <h2 class="text-2xl font-bold text-[#42B883] mb-6">Vue 3</h2>
+
+          <!-- Code Visualization -->
+          <div class="w-full space-y-3">
+            <div class="code text-sm text-gray-400">
+              new Proxy(target, handler)
+            </div>
+
+            <div
+              class="relative mt-4 p-4 bg-[#1A1A1A] rounded border border-[#42B883]/50"
+            >
+              <div
+                class="absolute -top-2 -right-2 px-2 py-0.5 bg-[#42B883] text-[#1A1A1A] text-[10px] font-bold rounded"
+              >
+                Lazy
+              </div>
+              <div class="text-center text-[#42B883] text-sm font-bold code">
+                Intercepter
+              </div>
+              <div class="mt-2 text-center text-gray-500 text-xs">
+                Trap all operations
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-auto pt-6 flex gap-2">
+            <span
+              class="px-3 py-1 bg-[#42B883]/10 text-[#42B883] text-xs font-bold rounded border border-[#42B883]/20"
+              >Full Support</span
+            >
+            <span
+              class="px-3 py-1 bg-[#42B883]/10 text-[#42B883] text-xs font-bold rounded border border-[#42B883]/20"
+              >Better Perf</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

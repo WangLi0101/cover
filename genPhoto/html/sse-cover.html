@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SSE Cover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Source+Code+Pro:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Source Code Pro", "monospace"],
+            },
+            colors: {
+              sseBlue: "#3B82F6",
+              serverBg: "#1E293B",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    <!-- Cover Container (16:9 Ratio: 1200x675) -->
+    <div
+      id="cover-container"
+      class="relative w-[1200px] h-[675px] bg-white overflow-hidden flex flex-col items-center justify-center shadow-2xl border-b-8 border-[#3B82F6]"
+    >
+      <!-- Abstract Data Stream Background -->
+      <div
+        class="absolute inset-0 opacity-5 flex flex-col gap-4 p-8 overflow-hidden pointer-events-none"
+      >
+        <div
+          class="flex gap-2 text-xs font-mono whitespace-nowrap animate-[slideLeft_20s_linear_infinite]"
+        >
+          <span>data: {"id": 1, "msg": "hello"}</span>
+          <span>event: update</span> <span>retry: 1000</span>
+          <span>data: [stream]</span> <span>:keep-alive</span>
+        </div>
+        <div
+          class="flex gap-2 text-xs font-mono whitespace-nowrap animate-[slideRight_25s_linear_infinite] ml-20"
+        >
+          <span>Content-Type: text/event-stream</span>
+          <span>Cache-Control: no-cache</span>
+          <span>Connection: keep-alive</span>
+        </div>
+        <div
+          class="flex gap-2 text-xs font-mono whitespace-nowrap animate-[slideLeft_22s_linear_infinite]"
+        >
+          <span>data: {"status": "ok"}</span> <span>event: message</span>
+          <span>id: 1024</span> <span>data: ping</span>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="relative z-10 w-full px-20 flex items-center justify-between">
+        <!-- Left: Title -->
+        <div class="space-y-6 max-w-xl">
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#3B82F6] font-bold text-sm tracking-wide"
+          >
+            <span
+              class="w-2 h-2 rounded-full bg-[#3B82F6] animate-pulse"
+            ></span>
+            REALTIME COMMUNICATION
+          </div>
+
+          <h1
+            class="text-7xl font-black text-gray-900 leading-tight tracking-tight"
+          >
+            Server-Sent<br />
+            <span class="text-[#3B82F6]">Events</span>
+          </h1>
+
+          <p
+            class="text-gray-500 text-xl leading-relaxed border-l-4 border-gray-200 pl-6"
+          >
+            基于 HTTP 的单向实时通信方案<br />
+            轻量级 • 自动重连 • 文本流
+          </p>
+        </div>
+
+        <!-- Right: Visual Diagram -->
+        <div class="relative w-[400px] h-[320px]">
+          <!-- Server Node -->
+          <div
+            class="absolute top-0 right-0 w-32 h-32 bg-[#1E293B] rounded-xl shadow-xl flex flex-col items-center justify-center text-white z-20 border-2 border-gray-700"
+          >
+            <svg
+              class="w-10 h-10 mb-2 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
+              ></path>
+            </svg>
+            <span class="font-bold text-sm">Server</span>
+          </div>
+
+          <!-- Client Node -->
+          <div
+            class="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-xl shadow-xl flex flex-col items-center justify-center text-gray-800 z-20 border-2 border-gray-200"
+          >
+            <svg
+              class="w-10 h-10 mb-2 text-[#3B82F6]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
+            </svg>
+            <span class="font-bold text-sm">Client</span>
+          </div>
+
+          <!-- Connection Pipe -->
+          <svg
+            class="absolute inset-0 pointer-events-none"
+            width="100%"
+            height="100%"
+          >
+            <!-- Path line -->
+            <path
+              id="streamPath"
+              d="M280 110 C 150 110, 150 210, 110 210"
+              fill="none"
+              stroke="#E2E8F0"
+              stroke-width="4"
+              stroke-dasharray="8 4"
+            />
+
+            <!-- Animated Particles (Data Packets) -->
+            <circle r="6" fill="#3B82F6">
+              <animateMotion
+                repeatCount="indefinite"
+                dur="1.5s"
+                keyPoints="0;1"
+                keyTimes="0;1"
+              >
+                <mpath href="#streamPath" />
+              </animateMotion>
+            </circle>
+            <circle r="6" fill="#3B82F6">
+              <animateMotion
+                repeatCount="indefinite"
+                dur="1.5s"
+                begin="0.5s"
+                keyPoints="0;1"
+                keyTimes="0;1"
+              >
+                <mpath href="#streamPath" />
+              </animateMotion>
+            </circle>
+            <circle r="6" fill="#3B82F6">
+              <animateMotion
+                repeatCount="indefinite"
+                dur="1.5s"
+                begin="1s"
+                keyPoints="0;1"
+                keyTimes="0;1"
+              >
+                <mpath href="#streamPath" />
+              </animateMotion>
+            </circle>
+          </svg>
+
+          <!-- Labels -->
+          <div
+            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-3 py-1 rounded-full shadow border border-gray-100 text-xs font-mono text-gray-500"
+          >
+            HTTP / text/event-stream
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Tech Badges -->
+      <div
+        class="absolute bottom-12 left-0 w-full flex justify-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 bg-orange-500 rounded flex items-center justify-center text-white font-bold text-xs"
+          >
+            H5
+          </div>
+          <span class="font-bold text-gray-400">HTML5</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 bg-yellow-400 rounded flex items-center justify-center text-black font-bold text-xs"
+          >
+            JS
+          </div>
+          <span class="font-bold text-gray-400">EventSource API</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white font-bold text-xs"
+          >
+            ND
+          </div>
+          <span class="font-bold text-gray-400">Node.js</span>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @keyframes slideLeft {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+      @keyframes slideRight {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+    </style>
+  </body>
+</html>

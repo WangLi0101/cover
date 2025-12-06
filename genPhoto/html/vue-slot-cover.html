@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Noto+Sans+SC:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+        background: radial-gradient(circle at top, #1f2937, #0b1120 65%);
+      }
+      .glass {
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(18px);
+      }
+      .grid-overlay {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+      .tag {
+        letter-spacing: 0.2em;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen items-center justify-center p-6 text-white">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[32px] border border-white/20 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900"
+    >
+      <div class="absolute inset-0 grid-overlay opacity-40"></div>
+      <div
+        class="absolute -right-20 top-10 h-64 w-64 rounded-full bg-emerald-400/30 blur-3xl"
+      ></div>
+      <div
+        class="absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl"
+      ></div>
+
+      <div class="relative z-10 flex h-full w-full flex-col justify-between px-14 py-12">
+        <div class="flex items-start justify-between gap-6">
+          <div>
+            <p class="tag text-xs text-emerald-400">DEFAULT · NAMED · SCOPED</p>
+            <h1 class="mt-3 text-4xl font-semibold tracking-tight">
+              Vue 插槽进化指南
+            </h1>
+            <p class="mt-2 text-base text-slate-300">
+              精炼对比 Vue 2 / Vue 3 插槽语法糖 · 命名 · 数据传递
+            </p>
+          </div>
+          <div class="glass rounded-2xl px-5 py-4 text-right">
+            <p class="text-xs uppercase text-slate-400">核心关键词</p>
+            <p class="text-2xl font-bold text-emerald-300">v-slot</p>
+            <p class="text-xs text-slate-300">命名 · 作用域 · Props</p>
+          </div>
+        </div>
+
+        <div class="grid flex-1 grid-cols-2 gap-6 py-4">
+          <div class="glass flex flex-col justify-between rounded-3xl border border-white/10 p-7">
+            <div>
+              <p class="text-xs uppercase text-slate-400">Vue 2 · 插槽写法</p>
+              <h3 class="mt-3 text-2xl font-semibold">slot / slot-scope</h3>
+              <ul class="mt-4 space-y-2 text-sm text-slate-300">
+                <li>· slot 属性指定名称</li>
+                <li>· slot-scope 暴露 props</li>
+                <li>· 模板嵌套深时维护成本高</li>
+              </ul>
+            </div>
+            <div class="mt-6 grid gap-3 text-sm text-slate-200">
+              <div class="rounded-2xl border border-white/10 px-4 py-3">
+                <p class="text-xs text-slate-400">默认插槽</p>
+                <p class="text-base">&lt;slot&gt;&lt;/slot&gt; 包裹默认内容</p>
+              </div>
+              <div class="rounded-2xl border border-white/10 px-4 py-3">
+                <p class="text-xs text-slate-400">具名插槽</p>
+                <p class="text-base">slot="header" 分散于父模版</p>
+              </div>
+              <div class="rounded-2xl border border-white/10 px-4 py-3">
+                <p class="text-xs text-slate-400">作用域插槽</p>
+                <p class="text-base">slot-scope="slotProps" 读取 message</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass flex flex-col justify-between rounded-3xl border border-emerald-400/40 p-7">
+            <div>
+              <p class="text-xs uppercase text-emerald-300">Vue 3 · 插槽写法</p>
+              <h3 class="mt-3 text-2xl font-semibold text-emerald-100">v-slot / #</h3>
+              <ul class="mt-4 space-y-2 text-sm text-emerald-100">
+                <li>· 统一由 v-slot 指令驱动</li>
+                <li>· 语法糖 #header 更直观</li>
+                <li>· props 可直接解构</li>
+              </ul>
+            </div>
+            <div class="mt-6 grid gap-3 text-sm text-emerald-50">
+              <div class="rounded-2xl border border-emerald-400/30 px-4 py-3">
+                <p class="text-xs text-emerald-200">默认插槽</p>
+                <p class="text-base">写法与 Vue 2 保持一致</p>
+              </div>
+              <div class="rounded-2xl border border-emerald-400/30 px-4 py-3">
+                <p class="text-xs text-emerald-200">具名插槽</p>
+                <p class="text-base">&lt;template #header&gt; 更直观</p>
+              </div>
+              <div class="rounded-2xl border border-emerald-400/30 px-4 py-3">
+                <p class="text-xs text-emerald-200">作用域插槽</p>
+                <p class="text-base">v-slot="{ message }" 直接解构</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 text-xs">
+          <span class="glass rounded-full border border-white/20 px-4 py-1.5 text-slate-200">
+            插槽语法演进
+          </span>
+          <span class="glass rounded-full border border-emerald-400/50 px-4 py-1.5 text-emerald-100">
+            语法糖更统一
+          </span>
+          <span class="glass rounded-full border border-white/20 px-4 py-1.5 text-slate-200">
+            Props 暴露清晰
+          </span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Space+Grotesk:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        background-color: #ffffff;
+        color: #1e293b;
+      }
+      .font-mono {
+        font-family: "Fira Code", monospace;
+      }
+      .blueprint-grid {
+        background-size: 50px 50px;
+        background-image:
+          linear-gradient(to right, rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+      }
+      .blueprint-card {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid #3b82f6;
+        box-shadow: 8px 8px 0px 0px #3b82f6;
+      }
+      .type-badge {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #2563eb;
+      }
+      /* Syntax Highlighting */
+      .code-keyword { color: #d946ef; } /* fuchsia-500 */
+      .code-type { color: #059669; } /* emerald-600 */
+      .code-generic { color: #ef4444; font-weight: bold; } /* red-500 */
+      .code-func { color: #3b82f6; } /* blue-500 */
+    </style>
+  </head>
+  <body class="flex min-h-screen items-center justify-center p-6">
+    <div
+      id="cover-container"
+      class="relative flex h-[675px] w-[1200px] overflow-hidden rounded-[24px] bg-white shadow-2xl ring-1 ring-slate-200"
+    >
+      <!-- Background Grid -->
+      <div class="absolute inset-0 blueprint-grid"></div>
+      
+      <!-- Decorative Elements -->
+      <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
+      <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-50 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2"></div>
+
+      <div class="relative z-10 grid grid-cols-12 h-full w-full p-16 gap-10">
+        
+        <!-- Left Content -->
+        <div class="col-span-7 flex flex-col justify-between">
+          
+          <!-- Header -->
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <span class="px-3 py-1 rounded bg-blue-100 text-blue-700 text-sm font-bold font-mono border border-blue-200">
+                &lt;T&gt;
+              </span>
+              <span class="px-3 py-1 rounded bg-emerald-100 text-emerald-700 text-sm font-bold font-mono border border-emerald-200">
+                REUSABLE
+              </span>
+            </div>
+            <h1 class="text-7xl font-black tracking-tight leading-none text-slate-900 mb-6">
+              TypeScript <br/>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">Generics</span>
+            </h1>
+            <p class="text-xl text-slate-500 font-medium max-w-md leading-relaxed">
+              Build flexible, reusable, and type-safe components that work with any data type.
+            </p>
+          </div>
+
+          <!-- Code Snippet -->
+          <div class="blueprint-card p-6 rounded-xl relative">
+            <div class="absolute -top-3 -right-3 bg-blue-600 text-white text-xs font-bold px-3 py-1 shadow-lg">
+              TEMPLATE
+            </div>
+            <div class="font-mono text-sm leading-relaxed text-slate-700">
+              <div class="mb-2"><span class="code-keyword">function</span> <span class="code-func">identity</span>&lt;<span class="code-generic">T</span>&gt;(arg: <span class="code-generic">T</span>): <span class="code-generic">T</span> {</div>
+              <div class="pl-4 mb-2"><span class="code-keyword">return</span> arg;</div>
+              <div>}</div>
+              <div class="my-4 border-t border-dashed border-blue-200"></div>
+              <div><span class="code-keyword">let</span> output = <span class="code-func">identity</span>&lt;<span class="code-type">string</span>&gt;(<span class="code-string">"Hello"</span>);</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Content: Visual Metaphor -->
+        <div class="col-span-5 flex flex-col justify-center items-center relative">
+          
+          <!-- The "Machine" Metaphor -->
+          <div class="relative w-full h-[400px] flex flex-col items-center justify-center">
+            
+            <!-- Input Slot -->
+            <div class="absolute top-0 flex flex-col items-center animate-bounce duration-[3000ms]">
+              <div class="bg-white border-2 border-slate-300 rounded-lg px-4 py-2 shadow-sm mb-2 text-slate-500 font-mono text-sm">
+                Type Input
+              </div>
+              <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-slate-300"></div>
+            </div>
+
+            <!-- The Generic Box -->
+            <div class="w-48 h-48 bg-white border-4 border-blue-500 rounded-2xl shadow-2xl flex items-center justify-center relative z-10">
+              <div class="absolute inset-0 bg-blue-50 opacity-50 rounded-xl"></div>
+              <span class="text-8xl font-black text-blue-600 relative z-20">&lt;T&gt;</span>
+              
+              <!-- Connection Lines -->
+              <div class="absolute -left-12 top-1/2 w-12 h-1 bg-blue-200"></div>
+              <div class="absolute -right-12 top-1/2 w-12 h-1 bg-blue-200"></div>
+            </div>
+
+            <!-- Output Slots -->
+            <div class="absolute bottom-0 w-full flex justify-between px-4">
+              <!-- String Output -->
+              <div class="flex flex-col items-center">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-emerald-400 mb-2"></div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2 text-emerald-600 font-mono font-bold shadow-sm">
+                  String
+                </div>
+              </div>
+              
+              <!-- Number Output -->
+              <div class="flex flex-col items-center">
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-fuchsia-400 mb-2"></div>
+                <div class="bg-fuchsia-50 border border-fuchsia-200 rounded-lg px-4 py-2 text-fuchsia-600 font-mono font-bold shadow-sm">
+                  Number
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>
