@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Space+Grotesk:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #18181b; /* Neutral-950 */
+        overflow: hidden;
+        color: #e4e4e7;
+      }
+
+      /* Retro Grid Background */
+      .retro-grid {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(transparent 95%, rgba(255, 255, 255, 0.05) 50%),
+          linear-gradient(90deg, transparent 95%, rgba(255, 255, 255, 0.05) 50%);
+        background-size: 40px 40px;
+        transform: perspective(500px) rotateX(20deg);
+        opacity: 0.5;
+      }
+
+      /* Prototype Chain Visualization */
+      .chain-container {
+        position: absolute;
+        top: 50%;
+        right: 80px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        z-index: 10;
+      }
+
+      .chain-node {
+        width: 280px;
+        background: #27272a;
+        border: 2px solid #3f3f46;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      
+      /* Active/Found Node */
+      .node-found {
+        border-color: #22c55e; /* Green */
+        background: rgba(22, 163, 74, 0.1);
+        box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
+      }
+      
+      /* Start Node */
+      .node-start {
+        border-color: #3b82f6; /* Blue */
+      }
+
+      .node-icon {
+        width: 40px;
+        height: 40px;
+        background: #3f3f46;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+      .node-found .node-icon { background: #22c55e; color: black; }
+      .node-start .node-icon { background: #3b82f6; color: white; }
+
+      .node-content {
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+      }
+      .proto-label {
+        font-size: 0.7rem;
+        color: #a1a1aa;
+        text-transform: uppercase;
+      }
+
+      /* Connecting Links */
+      .link-arrow {
+        position: absolute;
+        top: -42px; /* Adjust based on gap */
+        left: 50%;
+        transform: translateX(-50%);
+        height: 40px;
+        width: 2px;
+        background: #52525b;
+      }
+      .link-arrow::after {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0; 
+        height: 0; 
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 8px solid #52525b;
+      }
+      .link-label {
+         position: absolute;
+         top: -30px;
+         left: 10px;
+         font-family: 'Fira Code', monospace;
+         font-size: 0.7rem;
+         color: #71717a;
+      }
+
+      /* Code Card */
+      .code-card {
+        position: absolute;
+        bottom: 60px;
+        left: 60px;
+        background: #09090b;
+        border: 1px solid #3f3f46;
+        border-radius: 16px;
+        padding: 24px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.85rem;
+        color: #d4d4d8;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        width: 450px;
+        z-index: 20;
+      }
+      .kwd { color: #c084fc; }
+      .func { color: #60a5fa; }
+      .var { color: #fbbf24; }
+      .op { color: #f472b6; }
+
+      /* Search Loop Animation */
+      .search-loop {
+         position: absolute;
+         right: -40px;
+         top: 50%;
+         transform: translateY(-50%);
+         width: 30px;
+         height: 180px;
+         border-right: 2px dashed #71717a;
+         border-top: 2px dashed #71717a;
+         border-bottom: 2px dashed #71717a;
+         border-radius: 0 20px 20px 0;
+      }
+      .search-label {
+         position: absolute;
+         right: -140px;
+         top: 50%;
+         transform: translateY(-50%);
+         color: #a1a1aa;
+         font-size: 0.8rem;
+         width: 100px;
+      }
+
+      /* Main Title */
+      .title-container {
+        position: absolute;
+        top: 80px;
+        left: 60px;
+        z-index: 30;
+      }
+      .main-title {
+        font-size: 4.5rem;
+        font-weight: 900;
+        line-height: 1;
+        color: #fff;
+        margin-bottom: 16px;
+      }
+      .main-title span {
+         color: #22c55e; /* Green */
+         font-family: 'Fira Code', monospace;
+      }
+      .subtitle {
+        font-size: 1.4rem;
+        color: #a1a1aa;
+        font-weight: 500;
+      }
+
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div
+      id="cover-container"
+      class="relative h-[675px] w-[1200px] overflow-hidden bg-zinc-900 shadow-2xl rounded-[40px] border border-zinc-700"
+    >
+      <!-- Background -->
+      <div class="retro-grid"></div>
+
+      <!-- Title -->
+      <div class="title-container">
+        <div class="main-title">
+          Manual<br>
+          <span>instanceof</span>
+        </div>
+        <div class="subtitle">
+           Walking the Prototype Chain
+        </div>
+      </div>
+
+      <!-- Code Snippet -->
+      <div class="code-card">
+         <div class="mb-4 text-xs text-zinc-500 border-b border-zinc-800 pb-2">core_logic.js</div>
+         <div>
+            <span class="kwd">while</span> (proto !== <span class="kwd">null</span>) {<br>
+            &nbsp;&nbsp;<span class="kwd">if</span> (proto === parent.<span class="var">prototype</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kwd">return</span> <span class="kwd">true</span>;<br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;proto = Object.<span class="func">getPrototypeOf</span>(proto);<br>
+            }
+         </div>
+      </div>
+
+      <!-- Prototype Chain Visual -->
+      <div class="chain-container">
+         
+         <!-- Target Prototype -->
+         <div class="chain-node node-found">
+            <div class="node-icon">🎯</div>
+            <div class="node-content">
+               <span class="proto-label">Target</span>
+               <span>Parent.prototype</span>
+            </div>
+         </div>
+
+         <!-- Intermediate Prototype -->
+         <div class="chain-node">
+            <div class="link-arrow"><span class="link-label">__proto__</span></div>
+            <div class="search-loop"></div>
+            <div class="search-label">Traversing Up...</div>
+            
+            <div class="node-icon">🔗</div>
+            <div class="node-content">
+               <span class="proto-label">Prototype</span>
+               <span>...</span>
+            </div>
+         </div>
+
+         <!-- Instance -->
+         <div class="chain-node node-start">
+            <div class="link-arrow"><span class="link-label">__proto__</span></div>
+            <div class="node-icon">📦</div>
+            <div class="node-content">
+               <span class="proto-label">Start</span>
+               <span>instance</span>
+            </div>
+         </div>
+
+      </div>
+
+    </div>
+  </body>
+</html>

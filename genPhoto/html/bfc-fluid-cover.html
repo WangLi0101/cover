@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Outfit", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a; /* Slate-900 */
+        overflow: hidden;
+        color: white;
+      }
+
+      /* Vibrant Gradients Background */
+      .bg-gradient-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.6;
+        z-index: 0;
+      }
+      .orb-1 {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, #f472b6, #db2777); /* Pink */
+        top: -200px;
+        right: -100px;
+        animation: float 10s ease-in-out infinite;
+      }
+      .orb-2 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, #8b5cf6, #7c3aed); /* Violet */
+        bottom: -150px;
+        left: -100px;
+        animation: float 12s ease-in-out infinite reverse;
+      }
+      .orb-3 {
+         width: 300px;
+         height: 300px;
+         background: radial-gradient(circle, #38bdf8, #0284c7); /* Sky */
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         opacity: 0.3;
+      }
+
+      /* Glass Card Container */
+      .glass-container {
+        position: absolute;
+        top: 50%;
+        right: 80px;
+        transform: translateY(-50%) perspective(1000px) rotateY(-5deg);
+        width: 550px;
+        height: 450px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 30px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        z-index: 10;
+        overflow: hidden; /* The key BFC property visualization */
+      }
+
+      /* The "Flow" Visuals inside */
+      .flow-content {
+        flex: 1;
+        position: relative;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 20px;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        padding: 20px;
+      }
+
+      /* Float Element */
+      .float-el {
+        float: left;
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(135deg, #f472b6, #db2777);
+        border-radius: 16px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.2rem;
+        box-shadow: 0 10px 20px rgba(219, 39, 119, 0.4);
+        position: relative;
+        z-index: 2;
+      }
+      
+      /* Text Lines */
+      .text-line {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        margin-bottom: 16px;
+        width: 100%;
+      }
+      .w-80 { width: 80%; }
+      .w-60 { width: 60%; }
+      .w-90 { width: 90%; }
+
+      /* Code Badge */
+      .code-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        color: #38bdf8;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 20;
+      }
+
+      /* Decorative Elements */
+      .particle {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.4;
+      }
+      .p1 { width: 8px; height: 8px; top: 10%; left: 10%; }
+      .p2 { width: 12px; height: 12px; bottom: 20%; right: 10%; }
+      .p3 { width: 6px; height: 6px; top: 40%; right: 40%; }
+
+      /* Title Section - Left Side */
+      .title-group {
+        position: absolute;
+        top: 50%;
+        left: 80px;
+        transform: translateY(-50%);
+        z-index: 20;
+        max-width: 500px;
+      }
+
+      .super-title {
+        font-size: 6rem;
+        font-weight: 900;
+        line-height: 0.9;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #fff, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -2px;
+      }
+      
+      .sub-title {
+        font-size: 1.8rem;
+        color: #94a3b8;
+        font-weight: 500;
+        margin-bottom: 40px;
+      }
+
+      .feature-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      
+      .pill {
+        padding: 10px 20px;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+      }
+      .pill-icon { color: #f472b6; }
+
+      /* Animations */
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
+
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div
+      id="cover-container"
+      class="relative h-[675px] w-[1200px] overflow-hidden bg-slate-900 shadow-2xl rounded-[40px] border border-slate-700"
+    >
+      <!-- Background Effects -->
+      <div class="bg-gradient-orb orb-1"></div>
+      <div class="bg-gradient-orb orb-2"></div>
+      <div class="bg-gradient-orb orb-3"></div>
+
+      <!-- Title Section -->
+      <div class="title-group">
+        <div class="super-title">BFC<br>Layout</div>
+        <div class="sub-title">Block Formatting Context</div>
+        
+        <div class="feature-pills">
+           <div class="pill">
+              <span class="pill-icon">⚡</span> Independent
+           </div>
+           <div class="pill">
+              <span class="pill-icon">🛡️</span> Isolation
+           </div>
+           <div class="pill">
+              <span class="pill-icon">📐</span> Anti-Collapse
+           </div>
+        </div>
+      </div>
+
+      <!-- Glass Card Visual -->
+      <div class="glass-container">
+         <div class="code-badge">overflow: hidden</div>
+         
+         <div class="flow-content">
+            <div class="float-el">FLOAT</div>
+            
+            <!-- Simulating text flow wrapping around -->
+            <div class="text-line w-60"></div>
+            <div class="text-line w-80"></div>
+            <div class="text-line w-90"></div>
+            <div class="text-line"></div>
+            <div class="text-line w-80"></div>
+            <div class="text-line w-60"></div>
+            
+            <div style="clear:both"></div>
+            <div class="mt-8 pt-4 border-t border-white/10 text-sm text-slate-400 font-mono">
+               // Boundary is respected<br>
+               // Float is contained
+            </div>
+         </div>
+         
+         <div class="particle p1"></div>
+         <div class="particle p2"></div>
+         <div class="particle p3"></div>
+      </div>
+
+    </div>
+  </body>
+</html>
