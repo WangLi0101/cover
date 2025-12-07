@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f3ff; /* Violet-50 */
+        overflow: hidden;
+      }
+
+      /* Abstract shapes */
+      .bg-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.6;
+      }
+      .blob-1 { width: 600px; height: 600px; background: #c4b5fd; top: -200px; left: -100px; } /* Violet-300 */
+      .blob-2 { width: 500px; height: 500px; background: #fca5a5; bottom: -100px; right: -50px; } /* Red-300 */
+
+      /* Cards Container - Right Side Grid */
+      .cards-grid {
+        position: absolute;
+        top: 50%;
+        right: 60px;
+        transform: translateY(-50%);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 600px;
+        perspective: 1000px;
+      }
+
+      .selector-card {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: transform 0.3s ease;
+        border: 2px solid rgba(255,255,255,0.8);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .selector-card:nth-child(1) { transform: rotate(-2deg); z-index: 2; border-color: #8b5cf6; background: #f5f3ff; }
+      .selector-card:nth-child(2) { transform: rotate(1deg) translateY(20px); z-index: 1; border-color: #ec4899; background: #fdf2f8; }
+      .selector-card:nth-child(3) { transform: rotate(2deg) translateY(-10px); z-index: 1; border-color: #10b981; background: #ecfdf5; }
+      .selector-card:nth-child(4) { transform: rotate(-1deg) translateY(10px); z-index: 2; border-color: #f59e0b; background: #fffbeb; }
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-bottom: 4px;
+      }
+      
+      .card-title {
+        font-weight: 700;
+        color: #1f293b;
+        font-size: 1.1rem;
+      }
+      
+      .card-code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        background: rgba(255,255,255,0.6);
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: #4b5563;
+      }
+      
+      /* Specific card styles */
+      .c1 .card-icon { background: #8b5cf6; color: white; }
+      .c2 .card-icon { background: #ec4899; color: white; }
+      .c3 .card-icon { background: #10b981; color: white; }
+      .c4 .card-icon { background: #f59e0b; color: white; }
+
+      /* Decorative elements */
+      .cursor-pointer {
+         position: absolute;
+         width: 30px;
+         height: 30px;
+         background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%231f2937" viewBox="0 0 24 24"><path d="M3.5 3.5L10 20.5L13.5 13.5L20.5 10L3.5 3.5Z"/></svg>') no-repeat center/contain;
+         top: -10px;
+         left: -10px;
+         filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+         z-index: 10;
+      }
+
+      /* Main Title */
+      .title-container {
+        position: absolute;
+        top: 50%;
+        left: 60px;
+        transform: translateY(-50%);
+        z-index: 30;
+        max-width: 450px;
+      }
+      .main-title {
+        font-size: 5rem;
+        font-weight: 900;
+        line-height: 1;
+        color: #4c1d95; /* Violet-900 */
+        margin-bottom: 20px;
+      }
+      .subtitle {
+        font-size: 1.5rem;
+        color: #6d28d9; /* Violet-700 */
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      /* Floating Tags */
+      .tag {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      }
+      .t-blue { background: #dbeafe; color: #1e40af; }
+      .t-purple { background: #f3e8ff; color: #6b21a8; }
+      .t-green { background: #dcfce7; color: #166534; }
+
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div
+      id="cover-container"
+      class="relative h-[675px] w-[1200px] overflow-hidden bg-white/60 shadow-2xl rounded-[40px] border border-white"
+    >
+      <!-- Background Shapes -->
+      <div class="bg-blob blob-1"></div>
+      <div class="bg-blob blob-2"></div>
+
+      <!-- Left: Title Section -->
+      <div class="title-container">
+        <div class="main-title">
+          CSS<br>
+          Selectors
+        </div>
+        <div class="subtitle">
+           Targeting HTML Elements<br>
+           with Precision
+        </div>
+        <div class="mt-8">
+           <div class="tag t-blue">.class</div>
+           <div class="tag t-purple">#id</div>
+           <div class="tag t-green">:hover</div>
+           <div class="tag t-blue">::before</div>
+           <div class="tag t-purple">[attr]</div>
+           <div class="tag t-green">div > p</div>
+        </div>
+      </div>
+
+      <!-- Right: Cards Grid -->
+      <div class="cards-grid">
+         <!-- Card 1: ID & Class -->
+         <div class="selector-card c1">
+            <div class="cursor-pointer"></div>
+            <div class="card-icon">#</div>
+            <div class="card-title">Basic</div>
+            <div class="card-code">
+               #header { ... }<br>
+               .button { ... }
+            </div>
+         </div>
+
+         <!-- Card 2: Pseudo-class -->
+         <div class="selector-card c2">
+            <div class="card-icon">:</div>
+            <div class="card-title">State</div>
+            <div class="card-code">
+               btn:hover { ... }<br>
+               input:focus { ... }
+            </div>
+         </div>
+
+         <!-- Card 3: Combinators -->
+         <div class="selector-card c3">
+            <div class="card-icon">+</div>
+            <div class="card-title">Relation</div>
+            <div class="card-code">
+               div > p { ... }<br>
+               h1 + span { ... }
+            </div>
+         </div>
+         
+         <!-- Card 4: Attribute -->
+         <div class="selector-card c4">
+            <div class="card-icon">[]</div>
+            <div class="card-title">Attribute</div>
+            <div class="card-code">
+               input[type="text"]<br>
+               a[href^="https"]
+            </div>
+         </div>
+      </div>
+
+    </div>
+  </body>
+</html>

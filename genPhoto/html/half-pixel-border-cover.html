@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8fafc; /* Slate-50 */
+        overflow: hidden;
+      }
+
+      /* Pixel Grid Background */
+      .bg-grid {
+        position: absolute;
+        width: 150%;
+        height: 150%;
+        background-image: linear-gradient(#e2e8f0 1px, transparent 1px),
+          linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.5;
+        transform: rotate(-10deg) translate(-100px, -100px);
+      }
+
+      /* Abstract shapes */
+      .bg-shape {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+      }
+      .shape-1 {
+        width: 600px;
+        height: 600px;
+        background: #93c5fd; /* Blue-300 */
+        top: -200px;
+        left: -100px;
+      }
+      .shape-2 {
+        width: 500px;
+        height: 500px;
+        background: #c4b5fd; /* Violet-300 */
+        bottom: -150px;
+        right: -50px;
+      }
+
+      /* Demonstration Cards */
+      .cards-container {
+        position: absolute;
+        top: 50%;
+        right: 80px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .card {
+        width: 480px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        padding: 24px;
+        position: relative;
+        overflow: visible;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      /* 1. Scale Method */
+      .card-scale {
+        border: 1px solid transparent; /* Placeholder */
+      }
+      /* Simulate the 0.5px border using the pseudo-element method from the markdown */
+      .card-scale::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        border: 2px solid #3b82f6; /* 2px scaled down by 0.5 = 1px visual on 2x screen, or 0.5 on 1x */
+        border-radius: 32px; /* 16 * 2 */
+        transform-origin: 0 0;
+        transform: scale(0.5);
+        pointer-events: none;
+      }
+
+      .icon-scale {
+        background: #eff6ff;
+        color: #3b82f6;
+      }
+
+      /* 2. Gradient Method */
+      .card-gradient {
+         /* Using border-image for bottom border demonstration */
+         border-bottom: 2px solid transparent; 
+         /* Actually simulating the visual style here directly */
+         position: relative;
+      }
+      /* Visualizing the bottom border gradient technique */
+      .gradient-line {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px; /* Simulating '1px' which will be half-filled */
+        background: linear-gradient(to bottom, #10b981 50%, transparent 50%);
+      }
+
+      .icon-gradient {
+        background: #ecfdf5;
+        color: #10b981;
+      }
+
+      .card-content {
+        flex: 1;
+      }
+      .card-title {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 1.2rem;
+      }
+      .card-code {
+        font-family: monospace;
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 4px;
+        background: #f1f5f9;
+        padding: 4px 8px;
+        border-radius: 6px;
+        display: inline-block;
+      }
+
+      /* Magnifier Effect */
+      .magnifier {
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        width: 100px;
+        height: 100px;
+        background: white;
+        border-radius: 50%;
+        border: 4px solid #3b82f6;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        overflow: hidden;
+      }
+      .magnifier-grid {
+        width: 200%;
+        height: 200%;
+        background-image: linear-gradient(#e2e8f0 1px, transparent 1px),
+          linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+        background-size: 10px 10px;
+        position: absolute;
+        transform: rotate(-10deg);
+      }
+      .magnifier-line {
+        position: absolute;
+        width: 120%;
+        height: 2px; /* The 'thin' line */
+        background: #3b82f6;
+        transform: rotate(-10deg);
+      }
+
+      /* Main Title Overlay */
+      .title-container {
+        position: absolute;
+        bottom: 60px;
+        left: 60px;
+        z-index: 30;
+      }
+
+      .main-title {
+        font-size: 5rem;
+        font-weight: 900;
+        line-height: 1;
+        color: #0f172a;
+        letter-spacing: -2px;
+      }
+      
+      .main-title span {
+        color: #3b82f6;
+      }
+
+      .subtitle {
+        font-size: 1.8rem;
+        color: #475569;
+        margin-top: 16px;
+        font-weight: 600;
+      }
+
+      /* Floating Pills */
+      .pill {
+        position: absolute;
+        background: #0f172a;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-family: monospace;
+        font-weight: bold;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        z-index: 10;
+      }
+      
+      .pill-1 {
+        top: 80px;
+        left: 60px;
+        transform: rotate(-3deg);
+      }
+      .pill-2 {
+        top: 140px;
+        left: 100px;
+        background: #fff;
+        color: #0f172a;
+        transform: rotate(2deg);
+        border: 2px solid #e2e8f0;
+      }
+
+    </style>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div
+      id="cover-container"
+      class="relative h-[675px] w-[1200px] overflow-hidden bg-white/60 shadow-2xl rounded-[40px] border border-white"
+    >
+      <!-- Background -->
+      <div class="bg-grid"></div>
+      <div class="bg-shape shape-1"></div>
+      <div class="bg-shape shape-2"></div>
+
+      <!-- Code Pills -->
+      <div class="pill pill-1">transform: scale(0.5)</div>
+      <div class="pill pill-2">border-image: linear-gradient</div>
+
+      <!-- Demonstration Cards -->
+      <div class="cards-container">
+        
+        <!-- Method 1: Scale -->
+        <div class="card card-scale">
+          <div class="magnifier">
+             <div class="magnifier-grid"></div>
+             <div class="magnifier-line"></div>
+          </div>
+          <div class="card-icon icon-scale">S</div>
+          <div class="card-content">
+            <div class="card-title">Scale Transform</div>
+            <div class="card-code">width: 200%; transform: scale(0.5);</div>
+          </div>
+        </div>
+
+        <!-- Method 2: Gradient -->
+        <div class="card card-gradient">
+          <div class="gradient-line"></div>
+          <div class="card-icon icon-gradient">G</div>
+          <div class="card-content">
+            <div class="card-title">Linear Gradient</div>
+            <div class="card-code">transparent 50%, color 50%</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Main Title -->
+      <div class="title-container">
+        <div class="main-title">
+          <span>0.5px</span><br />
+          Border
+        </div>
+        <div class="subtitle">高清屏下的 1px 解决方案</div>
+      </div>
+    </div>
+  </body>
+</html>
