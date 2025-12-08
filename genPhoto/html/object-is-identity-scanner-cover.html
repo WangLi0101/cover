@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object.is Scanner Cover</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --bg-color: #000510;
+      --grid-color: rgba(0, 255, 255, 0.1);
+      --cyan: #00f3ff;
+      --red: #ff004c;
+      --green: #00ff66;
+      --text-main: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1200px;
+      height: 630px;
+      background-color: var(--bg-color);
+      font-family: 'Rajdhani', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: var(--text-main);
+    }
+
+    #cover-container {
+      width: 1200px;
+      height: 630px;
+      position: relative;
+      background: linear-gradient(180deg, #000510 0%, #001220 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Background Grid */
+    .grid-floor {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 40px 40px;
+      transform: perspective(500px) rotateX(60deg) translateY(100px) translateZ(-200px);
+      opacity: 0.5;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      from {
+        background-position: 0 0;
+      }
+
+      to {
+        background-position: 0 40px;
+      }
+    }
+
+    /* Scanner UI */
+    .scanner-border {
+      position: relative;
+      width: 904px;
+      height: 484px;
+      background: rgba(0, 243, 255, 0.3);
+      /* This acts as the border */
+      clip-path: polygon(50px 0, calc(100% - 50px) 0,
+          100% 50px, 100% calc(100% - 50px),
+          calc(100% - 50px) 100%, 50px 100%,
+          0 calc(100% - 50px), 0 50px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+    }
+
+    .scanner-content {
+      width: 900px;
+      height: 480px;
+      background: rgba(0, 20, 40, 0.8);
+      clip-path: polygon(50px 0, calc(100% - 50px) 0,
+          100% 50px, 100% calc(100% - 50px),
+          calc(100% - 50px) 100%, 50px 100%,
+          0 calc(100% - 50px), 0 50px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .scanner-header {
+      width: 100%;
+      height: 60px;
+      border-bottom: 2px solid rgba(0, 243, 255, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 50px;
+      /* Aligned with cut corner start */
+      box-sizing: border-box;
+      background: rgba(0, 243, 255, 0.05);
+    }
+
+    .header-text {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--cyan);
+    }
+
+    .scan-status {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--cyan);
+      animation: blink 2s infinite;
+    }
+
+    /* Main Display Area */
+    .display-area {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    /* Target Object */
+    .target-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .target-ring {
+      position: absolute;
+      border: 2px dashed var(--cyan);
+      border-radius: 50%;
+      animation: rotateRing 10s linear infinite;
+    }
+
+    .r1 {
+      width: 100%;
+      height: 100%;
+    }
+
+    .r2 {
+      width: 80%;
+      height: 80%;
+      animation-direction: reverse;
+      border-style: solid;
+      border-color: rgba(0, 243, 255, 0.3);
+    }
+
+    .target-value {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 64px;
+      color: #fff;
+      text-shadow: 0 0 20px var(--cyan);
+    }
+
+    /* Analysis Panels */
+    .panel {
+      width: 250px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-title {
+      font-size: 20px;
+      color: #888;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+
+    .panel-code {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 18px;
+    }
+
+    .result {
+      font-size: 32px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .fail {
+      color: var(--red);
+      text-shadow: 0 0 10px rgba(255, 0, 76, 0.5);
+    }
+
+    .pass {
+      color: var(--green);
+      text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+    }
+
+    /* Animations */
+    @keyframes rotateRing {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Connecting Lines */
+    .connector {
+      position: absolute;
+      height: 2px;
+      background: var(--cyan);
+      top: 50%;
+      width: 50px;
+    }
+
+    .c-left {
+      left: 240px;
+    }
+
+    .c-right {
+      right: 240px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cover-container">
+    <div class="grid-floor"></div>
+
+    <div class="scanner-border">
+      <div class="scanner-content">
+        <div class="scanner-header">
+          <div class="header-text">IDENTITY SCANNER</div>
+          <div class="scan-status">SYSTEM: ACTIVE</div>
+        </div>
+
+        <div class="display-area">
+
+          <!-- Strict Equality -->
+          <div class="panel" style="border-right: 4px solid var(--red);">
+            <div class="panel-title">Standard Scan</div>
+            <div class="panel-code">NaN === NaN</div>
+            <div class="result fail">FALSE</div>
+            <div style="font-size: 14px; opacity: 0.6; margin-top: 5px;">Error: Type Mismatch?</div>
+          </div>
+
+          <!-- Target -->
+          <div class="target-container">
+            <div class="target-ring r1"></div>
+            <div class="target-ring r2"></div>
+            <div class="target-value">NaN</div>
+
+            <div class="connector c-left"></div>
+            <div class="connector c-right"></div>
+          </div>
+
+          <!-- Object.is -->
+          <div class="panel" style="border-left: 4px solid var(--green); text-align: right; align-items: flex-end;">
+            <div class="panel-title">Deep Scan</div>
+            <div class="panel-code">Object.is(NaN, NaN)</div>
+            <div class="result pass">TRUE</div>
+            <div style="font-size: 14px; opacity: 0.6; margin-top: 5px;">Identity Confirmed</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
