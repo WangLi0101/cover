@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Grid Layout</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --bg-dark: #050511;
+        --grid-line: rgba(255, 255, 255, 0.05);
+        --accent-cyan: #00f0ff;
+        --accent-pink: #ff003c;
+        --accent-yellow: #fcee0a;
+        --glass-bg: rgba(20, 20, 35, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+      }
+
+      body {
+        margin: 0;
+        padding: 60px;
+        background-color: var(--bg-dark);
+        font-family: "Space Grotesk", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
+        /* Infinite flowing grid background */
+        background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      /* Ambient Glows */
+      .glow-orb {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.4;
+        z-index: 0;
+        animation: pulse-move 10s infinite alternate;
+      }
+      .orb-1 {
+        background: var(--accent-cyan);
+        top: -100px;
+        left: -200px;
+      }
+      .orb-2 {
+        background: var(--accent-pink);
+        bottom: -100px;
+        right: -200px;
+        animation-delay: -5s;
+      }
+      @keyframes pulse-move {
+        0% {
+          transform: scale(1) translate(0, 0);
+        }
+        100% {
+          transform: scale(1.1) translate(50px, 50px);
+        }
+      }
+
+      /* Card Container */
+      .card {
+        width: 1000px;
+        min-height: 1200px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 30px;
+        backdrop-filter: blur(30px);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 70px;
+        box-sizing: border-box;
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+        z-index: 10;
+      }
+
+      /* Header Elements */
+      .header-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        border-radius: 100px;
+        color: var(--accent-cyan);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        margin-bottom: 30px;
+        width: fit-content;
+      }
+      .header-badge::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background: var(--accent-cyan);
+        border-radius: 50%;
+        margin-right: 10px;
+        box-shadow: 0 0 10px var(--accent-cyan);
+      }
+
+      h1 {
+        font-size: 80px;
+        line-height: 0.9;
+        color: white;
+        margin-bottom: 20px;
+        font-weight: 700;
+        letter-spacing: -2px;
+      }
+      h1 span {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+        color: transparent;
+      }
+
+      h2 {
+        font-size: 40px;
+        color: white;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      p {
+        font-size: 24px;
+        color: #a0a0b0;
+        line-height: 1.6;
+        margin-bottom: 40px;
+        max-width: 800px;
+      }
+
+      /* Visual Demo Box (The "Grid") */
+      .demo-container {
+        width: 100%;
+        height: 350px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      .grid-visual {
+        display: grid;
+        gap: 20px;
+        width: 100%;
+        height: 100%;
+      }
+
+      .grid-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .grid-item.active {
+        background: rgba(0, 240, 255, 0.15);
+        border-color: var(--accent-cyan);
+        color: var(--accent-cyan);
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+      }
+
+      .grid-item.pink {
+        background: rgba(255, 0, 60, 0.15);
+        border-color: var(--accent-pink);
+        color: var(--accent-pink);
+      }
+
+      /* Code Block */
+      .code-block {
+        background: #0d0d15;
+        border-radius: 16px;
+        padding: 30px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #e0e0e0;
+        border-left: 4px solid var(--accent-cyan);
+      }
+
+      .c-prop {
+        color: #f9a8d4;
+      }
+      .c-val {
+        color: #86efac;
+      }
+      .c-sel {
+        color: #93c5fd;
+      }
+      .c-comment {
+        color: #6b7280;
+        font-style: italic;
+      }
+
+      /* Footer */
+      .card-footer {
+        margin-top: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "JetBrains Mono", monospace;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* Decorations */
+      .grid-ruler-x {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 20px;
+        background-image: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.2) 1px,
+          transparent 1px
+        );
+        background-size: 50px 100%;
+      }
+      .grid-ruler-y {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 20px;
+        background-image: linear-gradient(
+          rgba(255, 255, 255, 0.2) 1px,
+          transparent 1px
+        );
+        background-size: 100% 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- CARD 1: GRID CONTAINER -->
+    <div class="card">
+      <div class="glow-orb orb-1"></div>
+      <div class="header-badge">CSS LAYOUT ENGINE</div>
+
+      <h1>
+        Display:
+        <span style="color: var(--accent-cyan); -webkit-text-stroke: 0"
+          >Grid</span
+        ><br /><span>Introduction</span>
+      </h1>
+
+      <p>
+        CSS Grid 布局是 Web
+        最强大的二维布局系统。它可以同时处理行和列，通过将容器及其子元素划分为网格来构建布局。
+      </p>
+
+      <div class="demo-container">
+        <div class="grid-ruler-x"></div>
+        <div class="grid-ruler-y"></div>
+        <div
+          class="grid-visual"
+          style="
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 1fr 1fr;
+          "
+        >
+          <div class="grid-item active">1fr</div>
+          <div class="grid-item active">2fr (Flexible)</div>
+          <div class="grid-item active">1fr</div>
+          <div class="grid-item">Cell 4</div>
+          <div class="grid-item">Cell 5</div>
+          <div class="grid-item">Cell 6</div>
+        </div>
+      </div>
+
+      <h2>基本语法</h2>
+      <div class="code-block">
+        <span class="c-sel">.container</span> {
+        <span class="c-prop">display</span>: <span class="c-val">grid</span>;
+        <span class="c-prop">grid-template-columns</span>:
+        <span class="c-val">100px 1fr 20%</span>;
+        <span class="c-prop">grid-template-rows</span>:
+        <span class="c-val">auto 200px</span>; <span class="c-prop">gap</span>:
+        <span class="c-val">20px</span>; }
+      </div>
+
+      <div class="card-footer">
+        <span>LEVEL 01</span>
+        <span>GRID BASICS</span>
+      </div>
+    </div>
+
+    <!-- CARD 2: GRID TEMPLATE AREAS -->
+    <div class="card">
+      <div class="glow-orb orb-2"></div>
+      <div
+        class="header-badge"
+        style="color: var(--accent-pink); border-color: rgba(255, 0, 60, 0.3)"
+      >
+        <div
+          style="
+            background: var(--accent-pink);
+            box-shadow: 0 0 10px var(--accent-pink);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+          "
+        ></div>
+        VISUAL MAPPING
+      </div>
+
+      <h1>
+        Grid<br /><span
+          style="color: var(--accent-pink); -webkit-text-stroke: 0"
+          >Template Areas</span
+        >
+      </h1>
+
+      <p>
+        通过引用网格区域名称来定义布局。这种方式非常直观，仿佛在 CSS
+        中直接绘制线框图。
+      </p>
+
+      <div class="demo-container">
+        <div
+          class="grid-visual"
+          style="
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            grid-template-rows: 60px 1fr 60px;
+            grid-template-areas:
+              'header header header'
+              'nav    main   aside'
+              'footer footer footer';
+            gap: 10px;
+            font-size: 14px;
+          "
+        >
+          <div class="grid-item pink" style="grid-area: header">Header</div>
+          <div class="grid-item" style="grid-area: nav">Nav</div>
+          <div class="grid-item active" style="grid-area: main">
+            Main Content
+          </div>
+          <div class="grid-item" style="grid-area: aside">Aside</div>
+          <div class="grid-item pink" style="grid-area: footer">Footer</div>
+        </div>
+      </div>
+
+      <h2>代码示例</h2>
+      <div class="code-block" style="border-left-color: var(--accent-pink)">
+        <span class="c-sel">.layout</span> {
+        <span class="c-prop">grid-template-areas</span>:
+        <span class="c-val">"header header header"</span>
+        <span class="c-val">"nav main aside"</span>
+        <span class="c-val">"footer footer footer"</span>; }
+        <span class="c-sel">.item-a</span> {
+        <span class="c-prop">grid-area</span>:
+        <span class="c-val">header</span>; }
+      </div>
+
+      <div class="card-footer">
+        <span>LEVEL 02</span>
+        <span>TEMPLATE AREAS</span>
+      </div>
+    </div>
+
+    <!-- CARD 3: ALIGNMENT & PLACE ITEMS -->
+    <div class="card">
+      <div
+        class="glow-orb orb-1"
+        style="background: var(--accent-yellow); top: 40%"
+      ></div>
+      <div
+        class="header-badge"
+        style="
+          color: var(--accent-yellow);
+          border-color: rgba(252, 238, 10, 0.3);
+        "
+      >
+        <div
+          style="
+            background: var(--accent-yellow);
+            box-shadow: 0 0 10px var(--accent-yellow);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+          "
+        ></div>
+        ALIGNMENT CONTROL
+      </div>
+
+      <h1>
+        Place<br /><span
+          style="color: var(--accent-yellow); -webkit-text-stroke: 0"
+          >Items</span
+        >
+      </h1>
+
+      <p>
+        超级简写属性！在一个声明中同时控制
+        <span style="color: white; font-weight: bold">align-items</span> (垂直)
+        和
+        <span style="color: white; font-weight: bold">justify-items</span>
+        (水平)。完美的居中变得轻而易举。
+      </p>
+
+      <div class="demo-container" style="display: flex; gap: 20px">
+        <!-- Box 1: Start Start -->
+        <div
+          style="
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            place-items: start start;
+          "
+        >
+          <div class="grid-item active" style="width: 50px; height: 50px">
+            TL
+          </div>
+        </div>
+        <!-- Box 2: Center Center -->
+        <div
+          style="
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            place-items: center center;
+          "
+        >
+          <div
+            class="grid-item active"
+            style="
+              width: 50px;
+              height: 50px;
+              background: rgba(252, 238, 10, 0.2);
+              border-color: var(--accent-yellow);
+              color: var(--accent-yellow);
+              box-shadow: 0 0 20px rgba(252, 238, 10, 0.2);
+            "
+          >
+            CT
+          </div>
+        </div>
+        <!-- Box 3: End End -->
+        <div
+          style="
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            place-items: end end;
+          "
+        >
+          <div class="grid-item active" style="width: 50px; height: 50px">
+            BR
+          </div>
+        </div>
+      </div>
+
+      <h2>居中神器</h2>
+      <div class="code-block" style="border-left-color: var(--accent-yellow)">
+        <span class="c-sel">.center-box</span> {
+        <span class="c-prop">display</span>: <span class="c-val">grid</span>;
+        <span class="c-comment">/* align-items / justify-items */</span>
+        <span class="c-prop">place-items</span>:
+        <span class="c-val">center</span>; }
+      </div>
+
+      <div class="card-footer">
+        <span>LEVEL 03</span>
+        <span>PERFECT CENTER</span>
+      </div>
+    </div>
+  </body>
+</html>

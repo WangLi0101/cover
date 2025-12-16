@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS 单位详解</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-dark: #0a0a0f;
+        --card-bg: rgba(15, 15, 25, 0.95);
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --text-white: #ffffff;
+        --text-light: rgba(255, 255, 255, 0.85);
+        --text-muted: rgba(255, 255, 255, 0.5);
+        --accent-cyan: #00d4ff;
+        --accent-purple: #a855f7;
+        --accent-pink: #ec4899;
+        --accent-green: #10b981;
+        --accent-orange: #f97316;
+        --accent-yellow: #fbbf24;
+        --glow-cyan: rgba(0, 212, 255, 0.4);
+        --glow-purple: rgba(168, 85, 247, 0.4);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 60px;
+        background: var(--bg-dark);
+        font-family: "Inter", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
+        min-height: 100vh;
+        background-image: radial-gradient(
+            circle at 50% 0%,
+            rgba(0, 212, 255, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 0% 50%,
+            rgba(168, 85, 247, 0.06) 0%,
+            transparent 50%
+          ),
+          linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+        background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+        background-position: center;
+      }
+
+      .card {
+        width: 900px;
+        min-height: 1100px;
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 32px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+        box-sizing: border-box;
+        box-shadow: 0 0 60px rgba(0, 212, 255, 0.1),
+          0 0 120px rgba(168, 85, 247, 0.05),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-cyan),
+          var(--accent-purple),
+          var(--accent-pink),
+          var(--accent-cyan)
+        );
+        background-size: 300% 100%;
+      }
+
+      .corner-decor {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        opacity: 0.3;
+      }
+      .corner-decor.top-left {
+        top: 20px;
+        left: 20px;
+        border-top: 2px solid var(--accent-cyan);
+        border-left: 2px solid var(--accent-cyan);
+      }
+      .corner-decor.top-right {
+        top: 20px;
+        right: 20px;
+        border-top: 2px solid var(--accent-purple);
+        border-right: 2px solid var(--accent-purple);
+      }
+      .corner-decor.bottom-left {
+        bottom: 20px;
+        left: 20px;
+        border-bottom: 2px solid var(--accent-purple);
+        border-left: 2px solid var(--accent-purple);
+      }
+      .corner-decor.bottom-right {
+        bottom: 20px;
+        right: 20px;
+        border-bottom: 2px solid var(--accent-cyan);
+        border-right: 2px solid var(--accent-cyan);
+      }
+
+      .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+        z-index: 0;
+      }
+      .float-1 {
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          var(--glow-cyan) 0%,
+          transparent 70%
+        );
+        top: -100px;
+        right: -100px;
+      }
+      .float-2 {
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          var(--glow-purple) 0%,
+          transparent 70%
+        );
+        bottom: -50px;
+        left: -50px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 100px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--accent-cyan);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        backdrop-filter: blur(10px);
+        z-index: 10;
+        position: relative;
+      }
+      .tag::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: var(--accent-cyan);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--accent-cyan);
+      }
+
+      h1 {
+        font-size: 64px;
+        font-weight: 800;
+        color: var(--text-white);
+        margin-bottom: 30px;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        position: relative;
+        z-index: 10;
+        text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+      }
+      h1 .gradient {
+        background: linear-gradient(
+          135deg,
+          var(--accent-cyan),
+          var(--accent-purple)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-top: 40px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        z-index: 10;
+      }
+      h2 .icon {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(
+          135deg,
+          var(--accent-cyan),
+          var(--accent-purple)
+        );
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      p {
+        font-size: 20px;
+        color: var(--text-light);
+        line-height: 1.8;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 10;
+      }
+
+      .glass-panel {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 32px;
+        margin: 16px 0;
+        position: relative;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+      }
+
+      /* Unit Card */
+      .unit-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 28px;
+        margin: 16px 0;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      .unit-badge {
+        width: 80px;
+        height: 80px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 24px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .unit-badge.cyan {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 255, 0.2),
+          rgba(0, 212, 255, 0.05)
+        );
+        border: 2px solid var(--accent-cyan);
+        color: var(--accent-cyan);
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+      }
+      .unit-badge.purple {
+        background: linear-gradient(
+          135deg,
+          rgba(168, 85, 247, 0.2),
+          rgba(168, 85, 247, 0.05)
+        );
+        border: 2px solid var(--accent-purple);
+        color: var(--accent-purple);
+        box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+      }
+      .unit-badge.green {
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.2),
+          rgba(16, 185, 129, 0.05)
+        );
+        border: 2px solid var(--accent-green);
+        color: var(--accent-green);
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+      }
+      .unit-badge.orange {
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.2),
+          rgba(249, 115, 22, 0.05)
+        );
+        border: 2px solid var(--accent-orange);
+        color: var(--accent-orange);
+        box-shadow: 0 0 30px rgba(249, 115, 22, 0.2);
+      }
+      .unit-badge.pink {
+        background: linear-gradient(
+          135deg,
+          rgba(236, 72, 153, 0.2),
+          rgba(236, 72, 153, 0.05)
+        );
+        border: 2px solid var(--accent-pink);
+        color: var(--accent-pink);
+        box-shadow: 0 0 30px rgba(236, 72, 153, 0.2);
+      }
+      .unit-badge.yellow {
+        background: linear-gradient(
+          135deg,
+          rgba(251, 191, 36, 0.2),
+          rgba(251, 191, 36, 0.05)
+        );
+        border: 2px solid var(--accent-yellow);
+        color: var(--accent-yellow);
+        box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+      }
+      .unit-content {
+        flex: 1;
+      }
+      .unit-content h3 {
+        color: var(--text-white);
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .unit-content p {
+        font-size: 16px;
+        color: var(--text-muted);
+        margin: 0;
+        line-height: 1.6;
+      }
+      .unit-content .formula {
+        display: inline-block;
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        color: var(--accent-cyan);
+        margin-top: 12px;
+      }
+
+      /* Code Block */
+      .code-container {
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        margin-top: 20px;
+        position: relative;
+        z-index: 10;
+      }
+      .code-header {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .file-name {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .file-icon {
+        color: var(--accent-orange);
+      }
+      .dots {
+        display: flex;
+        gap: 8px;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .dot.red {
+        background: #ef4444;
+      }
+      .dot.yellow {
+        background: #f59e0b;
+      }
+      .dot.green {
+        background: #10b981;
+      }
+
+      pre {
+        margin: 0;
+        padding: 24px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #e2e8f0;
+        overflow-x: auto;
+        white-space: pre-wrap;
+      }
+
+      .k {
+        color: #f472b6;
+      }
+      .t {
+        color: #38bdf8;
+      }
+      .s {
+        color: #4ade80;
+      }
+      .f {
+        color: #c084fc;
+      }
+      .c {
+        color: #64748b;
+        font-style: italic;
+      }
+      .n {
+        color: #fbbf24;
+      }
+      .v {
+        color: #22d3ee;
+      }
+      .o {
+        color: #f97316;
+      }
+
+      /* Viewport Diagram */
+      .viewport-diagram {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        padding: 40px;
+        position: relative;
+        z-index: 10;
+      }
+      .viewport-box {
+        width: 200px;
+        height: 280px;
+        border: 3px solid var(--accent-cyan);
+        border-radius: 24px;
+        position: relative;
+        background: rgba(0, 212, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .viewport-box .notch {
+        width: 60px;
+        height: 20px;
+        background: var(--bg-dark);
+        border-radius: 0 0 12px 12px;
+        margin: 0 auto;
+      }
+      .viewport-box .screen {
+        flex: 1;
+        margin: 10px;
+        border: 1px dashed rgba(0, 212, 255, 0.5);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        color: var(--accent-cyan);
+      }
+      .viewport-label {
+        text-align: center;
+        margin-top: 16px;
+      }
+      .viewport-label .title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-white);
+      }
+      .viewport-label .desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+      .arrow-h {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: var(--accent-purple);
+        font-size: 12px;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .arrow-h.top {
+        top: 30px;
+      }
+      .arrow-h.bottom {
+        bottom: 30px;
+      }
+      .arrow-v {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        color: var(--accent-orange);
+        font-size: 12px;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .arrow-v.left {
+        left: -50px;
+        writing-mode: vertical-rl;
+      }
+      .arrow-v.right {
+        right: -50px;
+        writing-mode: vertical-rl;
+      }
+
+      /* Comparison Grid */
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin: 20px 0;
+        position: relative;
+        z-index: 10;
+      }
+      .comparison-item {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+      }
+      .comparison-item .unit-name {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .comparison-item .unit-desc {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .footer {
+        margin-top: auto;
+        padding-top: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--glass-border);
+        position: relative;
+        z-index: 10;
+      }
+      .footer-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .footer-num {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 48px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--accent-cyan),
+          var(--accent-purple)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+      }
+      .footer-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .footer-right {
+        text-align: right;
+      }
+      .footer-title {
+        font-size: 14px;
+        color: var(--text-white);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .footer-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .highlight {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 255, 0.2),
+          rgba(168, 85, 247, 0.2)
+        );
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: var(--accent-cyan);
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- CARD 1: em & rem -->
+    <div class="card">
+      <div class="corner-decor top-left"></div>
+      <div class="corner-decor top-right"></div>
+      <div class="corner-decor bottom-left"></div>
+      <div class="corner-decor bottom-right"></div>
+      <div class="floating-element float-1"></div>
+      <div class="floating-element float-2"></div>
+
+      <div class="tag">CSS Units</div>
+
+      <h1>CSS <span class="gradient">相对单位</span><br />em & rem</h1>
+
+      <p>
+        CSS 中的相对单位让布局更加灵活，能够根据上下文自动调整大小。
+        <span class="highlight">em</span> 和
+        <span class="highlight">rem</span> 是最常用的字体相对单位。
+      </p>
+
+      <div class="unit-card">
+        <div class="unit-badge cyan">em</div>
+        <div class="unit-content">
+          <h3>相对于父元素</h3>
+          <p>
+            em 是相对于<strong style="color: var(--accent-cyan)">父元素</strong
+            >的字体大小进行缩放的单位。在不同的元素层级中，em
+            会根据父元素的字体大小进行级联。
+          </p>
+          <div class="formula">父元素 16px → 1em = 16px, 2em = 32px</div>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span class="file-name"
+            ><span class="file-icon">📄</span> em-example.html</span
+          >
+          <div class="dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+        </div>
+        <pre>&lt;<span class="t">div</span> <span class="v">style</span>=<span class="s">"font-size: 16px;"</span>&gt;
+  &lt;<span class="t">p</span> <span class="v">style</span>=<span class="s">"font-size: 2em;"</span>&gt;
+    此段落的字体大小是 <span class="n">32px</span>
+  &lt;/<span class="t">p</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+      </div>
+
+      <div class="unit-card" style="margin-top: 30px">
+        <div class="unit-badge purple">rem</div>
+        <div class="unit-content">
+          <h3>相对于根元素</h3>
+          <p>
+            rem 是相对于<strong style="color: var(--accent-purple)"
+              >根元素 &lt;html&gt;</strong
+            >
+            的字体大小，而不是父元素。这使得样式更加可预测和一致。
+          </p>
+          <div
+            class="formula"
+            style="
+              background: rgba(168, 85, 247, 0.1);
+              border-color: rgba(168, 85, 247, 0.3);
+              color: var(--accent-purple);
+            "
+          >
+            根元素 16px → 1rem = 16px (全局统一)
+          </div>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span class="file-name"
+            ><span class="file-icon">📄</span> rem-example.html</span
+          >
+          <div class="dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+        </div>
+        <pre>&lt;<span class="t">p</span> <span class="v">style</span>=<span class="s">"font-size: 2rem;"</span>&gt;
+  此段落的字体大小是 <span class="n">32px</span>，无论它在文档的哪一层级。
+&lt;/<span class="t">p</span>&gt;</pre>
+      </div>
+
+      <div class="footer">
+        <div class="footer-left">
+          <span class="footer-num">01</span>
+          <span class="footer-label">Font Units</span>
+        </div>
+        <div class="footer-right">
+          <div class="footer-title">推荐使用 rem 避免级联问题</div>
+          <div class="footer-sub">Predictable Sizing</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2: vh & vw -->
+    <div class="card">
+      <div class="corner-decor top-left"></div>
+      <div class="corner-decor top-right"></div>
+      <div class="corner-decor bottom-left"></div>
+      <div class="corner-decor bottom-right"></div>
+      <div
+        class="floating-element float-1"
+        style="
+          background: radial-gradient(
+            circle,
+            rgba(16, 185, 129, 0.3) 0%,
+            transparent 70%
+          );
+        "
+      ></div>
+      <div
+        class="floating-element float-2"
+        style="
+          background: radial-gradient(
+            circle,
+            rgba(249, 115, 22, 0.25) 0%,
+            transparent 70%
+          );
+        "
+      ></div>
+
+      <div
+        class="tag"
+        style="
+          background: rgba(16, 185, 129, 0.1);
+          color: #10b981;
+          border-color: rgba(16, 185, 129, 0.3);
+        "
+      >
+        Viewport Units
+      </div>
+
+      <h1><span class="gradient">视口单位</span><br />vh & vw</h1>
+
+      <p>
+        视口单位让元素尺寸相对于浏览器窗口大小进行计算，是响应式布局的利器。
+      </p>
+
+      <div class="glass-panel viewport-diagram">
+        <div style="position: relative">
+          <div class="viewport-box">
+            <div class="notch"></div>
+            <div class="screen">
+              <div style="text-align: center">
+                <div style="font-size: 11px; opacity: 0.7">100vw × 100vh</div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              position: absolute;
+              right: -80px;
+              top: 50%;
+              transform: translateY(-50%);
+              writing-mode: vertical-rl;
+              color: var(--accent-green);
+              font-family: 'JetBrains Mono';
+              font-size: 14px;
+            "
+          >
+            100vh ↕
+          </div>
+          <div
+            style="
+              position: absolute;
+              bottom: -40px;
+              left: 50%;
+              transform: translateX(-50%);
+              color: var(--accent-orange);
+              font-family: 'JetBrains Mono';
+              font-size: 14px;
+            "
+          >
+            ← 100vw →
+          </div>
+          <div class="viewport-label">
+            <div class="title">Viewport</div>
+            <div class="desc">浏览器可视区域</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-card">
+        <div class="unit-badge green">vh</div>
+        <div class="unit-content">
+          <h3>Viewport Height - 视口高度</h3>
+          <p>1vh 等于视口高度的 1%。如果视口高度是 1000px，那么 1vh = 10px。</p>
+          <div
+            class="formula"
+            style="
+              background: rgba(16, 185, 129, 0.1);
+              border-color: rgba(16, 185, 129, 0.3);
+              color: var(--accent-green);
+            "
+          >
+            height: 50vh → 视口高度的 50%
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-card">
+        <div class="unit-badge orange">vw</div>
+        <div class="unit-content">
+          <h3>Viewport Width - 视口宽度</h3>
+          <p>1vw 等于视口宽度的 1%。如果视口宽度是 1200px，那么 1vw = 12px。</p>
+          <div
+            class="formula"
+            style="
+              background: rgba(249, 115, 22, 0.1);
+              border-color: rgba(249, 115, 22, 0.3);
+              color: var(--accent-orange);
+            "
+          >
+            width: 50vw → 视口宽度的 50%
+          </div>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span class="file-name"
+            ><span class="file-icon">📄</span> viewport.css</span
+          >
+          <div class="dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+        </div>
+        <pre><span class="t">.hero-section</span> {
+  <span class="v">height</span>: <span class="n">100vh</span>;   <span class="c">/* 全屏高度 */</span>
+  <span class="v">width</span>: <span class="n">100vw</span>;    <span class="c">/* 全屏宽度 */</span>
+}
+
+<span class="t">.half-screen</span> {
+  <span class="v">height</span>: <span class="n">50vh</span>;    <span class="c">/* 半屏高度 */</span>
+  <span class="v">width</span>: <span class="n">80vw</span>;     <span class="c">/* 80% 视口宽度 */</span>
+}</pre>
+      </div>
+
+      <div class="footer">
+        <div class="footer-left">
+          <span class="footer-num">02</span>
+          <span class="footer-label">Viewport</span>
+        </div>
+        <div class="footer-right">
+          <div class="footer-title">响应式布局的核心单位</div>
+          <div class="footer-sub">Responsive Design</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3: dvh, lvh, svh -->
+    <div class="card">
+      <div class="corner-decor top-left"></div>
+      <div class="corner-decor top-right"></div>
+      <div class="corner-decor bottom-left"></div>
+      <div class="corner-decor bottom-right"></div>
+      <div
+        class="floating-element float-1"
+        style="
+          background: radial-gradient(
+            circle,
+            rgba(236, 72, 153, 0.3) 0%,
+            transparent 70%
+          );
+        "
+      ></div>
+      <div
+        class="floating-element float-2"
+        style="
+          background: radial-gradient(
+            circle,
+            rgba(251, 191, 36, 0.25) 0%,
+            transparent 70%
+          );
+        "
+      ></div>
+
+      <div
+        class="tag"
+        style="
+          background: rgba(236, 72, 153, 0.1);
+          color: #ec4899;
+          border-color: rgba(236, 72, 153, 0.3);
+        "
+      >
+        Dynamic Viewport
+      </div>
+
+      <h1>动态视口单位<br /><span class="gradient">dvh / lvh / svh</span></h1>
+
+      <p>
+        在移动设备上，浏览器工具栏和软键盘会影响实际可视区域。CSS
+        提供了三种动态视口单位来应对不同场景。
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comparison-item">
+          <div class="unit-name" style="color: var(--accent-pink)">dvh</div>
+          <div class="unit-desc">
+            <strong>Dynamic</strong><br />
+            动态视口高度<br />
+            实时响应UI变化
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="unit-name" style="color: var(--accent-yellow)">lvh</div>
+          <div class="unit-desc">
+            <strong>Large</strong><br />
+            最大视口高度<br />
+            不含动态UI元素
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="unit-name" style="color: var(--accent-green)">svh</div>
+          <div class="unit-desc">
+            <strong>Small</strong><br />
+            最小视口高度<br />
+            包含所有UI元素
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-card">
+        <div class="unit-badge pink">dvh</div>
+        <div class="unit-content">
+          <h3>Dynamic Viewport Height</h3>
+          <p>
+            动态视口高度，当软键盘出现或浏览器工具栏变化时会<strong
+              style="color: var(--accent-pink)"
+              >实时调整</strong
+            >。适合需要精确填充当前可视区域的场景。
+          </p>
+        </div>
+      </div>
+
+      <div class="unit-card">
+        <div class="unit-badge yellow">lvh</div>
+        <div class="unit-content">
+          <h3>Large Viewport Height</h3>
+          <p>
+            最大视口高度，指<strong style="color: var(--accent-yellow)"
+              >不受动态 UI 元素</strong
+            >（如软键盘、浏览器工具栏）影响的初始视口大小。
+          </p>
+        </div>
+      </div>
+
+      <div class="unit-card">
+        <div class="unit-badge green">svh</div>
+        <div class="unit-content">
+          <h3>Small Viewport Height</h3>
+          <p>
+            最小视口高度，<strong style="color: var(--accent-green)"
+              >包括所有 UI 元素</strong
+            >（地址栏、工具栏等）影响后的最小可视区域。
+          </p>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span class="file-name"
+            ><span class="file-icon">📄</span> dynamic-viewport.css</span
+          >
+          <div class="dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+        </div>
+        <pre><span class="c">/* 动态适应当前可视区域 */</span>
+<span class="t">.modal</span> { <span class="v">height</span>: <span class="n">100dvh</span>; }
+
+<span class="c">/* 使用最大可能高度 */</span>
+<span class="t">.hero</span> { <span class="v">min-height</span>: <span class="n">100lvh</span>; }
+
+<span class="c">/* 保守地使用最小高度 */</span>
+<span class="t">.safe-area</span> { <span class="v">height</span>: <span class="n">100svh</span>; }</pre>
+      </div>
+
+      <div class="footer">
+        <div class="footer-left">
+          <span class="footer-num">03</span>
+          <span class="footer-label">Mobile First</span>
+        </div>
+        <div class="footer-right">
+          <div class="footer-title">移动端全屏布局的最佳选择</div>
+          <div class="footer-sub">Modern CSS Units</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

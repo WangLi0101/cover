@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue 组件二次封装 - Cyberpunk Glitch</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-black: #080808;
+        --bg-panel: rgba(20, 20, 25, 0.8);
+        --text-white: #f0f0f0;
+        --text-gray: #888;
+        --neon-pink: #ff2a6d;
+        --neon-cyan: #05d9e8;
+        --neon-yellow: #f9e01f;
+        --neon-green: #39ff14;
+        --grid-line: rgba(255, 255, 255, 0.03);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 60px;
+        background-color: var(--bg-black);
+        font-family: "JetBrains Mono", monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
+        min-height: 100vh;
+        background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .card {
+        width: 1000px;
+        min-height: 620px;
+        background: rgba(10, 10, 14, 0.98);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 50px 60px;
+        box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+      }
+
+      /* Noise texture */
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Glitch Title */
+      .glitch-wrapper {
+        position: relative;
+        margin-bottom: 50px;
+        text-align: center;
+        z-index: 10;
+      }
+      .glitch-title {
+        font-family: "Rubik Glitch", cursive;
+        font-size: 64px;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 3px 0 0 rgba(255, 42, 109, 0.7),
+          -3px 0 0 rgba(5, 217, 232, 0.7);
+      }
+
+      /* Panels */
+      .panel-row {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+      }
+
+      .panel-box {
+        flex: 1;
+        background: rgba(25, 25, 30, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 28px;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .icon-warn {
+        background: var(--neon-yellow);
+        color: #000;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .icon-check {
+        background: var(--neon-green);
+        color: #000;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .title-pink {
+        color: var(--neon-pink);
+      }
+      .title-cyan {
+        color: var(--neon-cyan);
+      }
+      .title-green {
+        color: var(--neon-green);
+      }
+
+      /* Code area */
+      .code-area {
+        background: rgba(0, 0, 0, 0.4);
+        border-left: 3px solid;
+        padding: 18px 20px;
+        border-radius: 4px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #ccc;
+      }
+      .code-area.pink {
+        border-color: var(--neon-pink);
+      }
+      .code-area.cyan {
+        border-color: var(--neon-cyan);
+      }
+      .code-area.green {
+        border-color: var(--neon-green);
+      }
+      .code-area.yellow {
+        border-color: var(--neon-yellow);
+      }
+
+      .comment {
+        color: #6a9955;
+        font-style: italic;
+      }
+      .result {
+        margin-top: 12px;
+      }
+      .arrow {
+        color: #888;
+      }
+      .val-pink {
+        color: var(--neon-pink);
+        font-weight: bold;
+      }
+      .val-green {
+        color: var(--neon-green);
+        font-weight: bold;
+      }
+      .val-cyan {
+        color: var(--neon-cyan);
+        font-weight: bold;
+      }
+
+      /* Syntax */
+      .s-pink {
+        color: var(--neon-pink);
+      }
+      .s-cyan {
+        color: var(--neon-cyan);
+      }
+      .s-green {
+        color: var(--neon-green);
+      }
+      .s-yellow {
+        color: var(--neon-yellow);
+      }
+      .s-white {
+        color: #fff;
+      }
+      .s-gray {
+        color: #888;
+      }
+
+      /* VS Badge */
+      .vs-badge {
+        font-weight: 900;
+        font-size: 24px;
+        color: var(--neon-yellow);
+        background: #000;
+        border: 2px solid var(--neon-yellow);
+        padding: 10px 16px;
+        transform: skewX(-8deg);
+        box-shadow: 0 0 20px rgba(249, 224, 31, 0.3);
+        z-index: 20;
+      }
+
+      /* Full width code block */
+      .full-code {
+        background: #0c0c0f;
+        border: 1px solid #222;
+        border-radius: 8px;
+        padding: 28px;
+        margin-top: 30px;
+        position: relative;
+        z-index: 10;
+      }
+      .full-code pre {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.65;
+        color: #ddd;
+        white-space: pre-wrap;
+      }
+      .code-label {
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--neon-cyan);
+        color: #000;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 4px 12px;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
+
+      /* Step blocks */
+      .step-row {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 40px;
+        position: relative;
+        z-index: 10;
+      }
+      .step-block {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 16px 20px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .step-num {
+        background: var(--neon-cyan);
+        color: #000;
+        font-weight: bold;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        font-size: 16px;
+      }
+      .step-text {
+        font-size: 16px;
+        color: #fff;
+      }
+
+      /* Tip box */
+      .tip-box {
+        background: rgba(5, 217, 232, 0.08);
+        border: 1px solid var(--neon-cyan);
+        border-radius: 8px;
+        padding: 18px 24px;
+        margin-top: 24px;
+        position: relative;
+        z-index: 10;
+        font-size: 15px;
+        color: #ccc;
+      }
+      .tip-box strong {
+        color: var(--neon-cyan);
+      }
+
+      /* Success banner */
+      .success-banner {
+        text-align: center;
+        color: var(--neon-green);
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 30px;
+        text-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: auto;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        justify-content: space-between;
+        color: #555;
+        font-size: 13px;
+        position: relative;
+        z-index: 10;
+      }
+      .footer-tag {
+        color: var(--neon-cyan);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- CARD 1: 概述 - 三个核心问题 -->
+    <div class="card">
+      <div class="glitch-wrapper">
+        <div class="glitch-title">COMPONENT 二次封装</div>
+      </div>
+
+      <p
+        style="
+          color: #aaa;
+          font-size: 18px;
+          text-align: center;
+          margin-bottom: 40px;
+          position: relative;
+          z-index: 10;
+        "
+      >
+        Vue 3 组件二次封装需要解决的 <span class="s-cyan">3 个核心问题</span>
+      </p>
+
+      <div class="step-row">
+        <div class="step-block">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <span class="s-cyan">Props</span> 如何穿透
+          </div>
+        </div>
+        <div class="step-block">
+          <div class="step-num">2</div>
+          <div class="step-text"><span class="s-cyan">插槽</span> 如何穿透</div>
+        </div>
+        <div class="step-block">
+          <div class="step-num">3</div>
+          <div class="step-text"><span class="s-cyan">方法</span> 如何暴露</div>
+        </div>
+      </div>
+
+      <div class="panel-row">
+        <div class="panel-box">
+          <div class="panel-header">
+            <span class="icon-warn">⚠</span>
+            <span class="title-pink">$attrs</span>
+          </div>
+          <div class="code-area pink">
+            <div>父组件传递的 <span class="s-cyan">未声明</span> 属性</div>
+            <div class="comment">// 未被 defineProps 声明的属性</div>
+            <div class="comment">// 包括未声明的事件监听器</div>
+          </div>
+        </div>
+        <div class="vs-badge">+</div>
+        <div class="panel-box">
+          <div class="panel-header">
+            <span class="icon-check">✓</span>
+            <span class="title-green">$slots</span>
+          </div>
+          <div class="code-area green">
+            <div>父组件传递的 <span class="s-cyan">所有插槽</span> 内容</div>
+            <div class="comment">// 包括默认插槽和具名插槽</div>
+            <div class="comment">// 需要手动转发给内部组件</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>01 / 04</span>
+        <span class="footer-tag">Vue Component Wrapping</span>
+      </div>
+    </div>
+
+    <!-- CARD 2: Props 穿透 -->
+    <div class="card">
+      <div class="glitch-wrapper">
+        <div class="glitch-title">Props 穿透</div>
+      </div>
+
+      <p
+        style="
+          color: #aaa;
+          font-size: 16px;
+          margin-bottom: 30px;
+          position: relative;
+          z-index: 10;
+        "
+      >
+        通过 <span class="s-cyan">$attrs</span> 透传未声明的属性，合并 props 和
+        $attrs 一起传递
+      </p>
+
+      <div class="full-code">
+        <span class="code-label">Template</span>
+        <pre><span class="s-pink">&lt;template&gt;</span>
+  <span class="s-gray">&lt;!-- 关键：合并 props 和 $attrs --&gt;</span>
+  <span class="s-pink">&lt;el-input</span> <span class="s-cyan">v-bind</span>=<span class="s-green">"{ ...props, ...$attrs }"</span> <span class="s-pink">/&gt;</span>
+<span class="s-pink">&lt;/template&gt;</span></pre>
+      </div>
+
+      <div class="full-code" style="margin-top: 24px">
+        <span
+          class="code-label"
+          style="background: var(--neon-yellow); color: #000"
+          >Script</span
+        >
+        <pre><span class="s-pink">&lt;script setup lang="ts"&gt;</span>
+<span class="s-pink">import</span> { InputProps } <span class="s-pink">from</span> <span class="s-green">"element-plus"</span>;
+
+<span class="s-gray">// 使用 Partial 获取完整的 TS 类型提示</span>
+<span class="s-pink">const</span> props = <span class="s-cyan">defineProps</span><span class="s-yellow">&lt;Partial&lt;InputProps&gt;&gt;</span>();
+<span class="s-pink">&lt;/script&gt;</span></pre>
+      </div>
+
+      <div class="tip-box">
+        <strong>TIP:</strong>
+        <code style="background: #222; padding: 2px 6px; border-radius: 3px"
+          >v-bind="{ ...props, ...$attrs }"</code
+        >
+        会将声明的 props 和未声明的 $attrs 一起透传给内部组件
+      </div>
+
+      <div class="footer">
+        <span>02 / 04</span>
+        <span class="footer-tag">$attrs Passthrough</span>
+      </div>
+    </div>
+
+    <!-- CARD 3: 插槽穿透 - 两种方法 -->
+    <div class="card">
+      <div class="glitch-wrapper">
+        <div class="glitch-title">SLOTS 穿透</div>
+      </div>
+
+      <div class="panel-row" style="align-items: stretch">
+        <div class="panel-box">
+          <div class="panel-header">
+            <span class="title-pink">方法一：遍历 $slots</span>
+          </div>
+          <div class="code-area cyan">
+            <pre
+              style="margin: 0; font-size: 14px; line-height: 1.6"
+            ><span class="s-pink">&lt;el-input</span> <span class="s-cyan">v-bind</span>=<span class="s-green">"{...props, ...$attrs}"</span><span class="s-pink">&gt;</span>
+  <span class="s-gray">&lt;!-- 遍历所有插槽并转发 --&gt;</span>
+  <span class="s-pink">&lt;template</span>
+    <span class="s-cyan">v-for</span>=<span class="s-green">"(index, name) in $slots"</span>
+    <span class="s-cyan">v-slot:[name]</span><span class="s-pink">&gt;</span>
+    <span class="s-pink">&lt;slot</span> <span class="s-cyan">:name</span>=<span class="s-green">"name"</span> <span class="s-pink">/&gt;</span>
+  <span class="s-pink">&lt;/template&gt;</span>
+<span class="s-pink">&lt;/el-input&gt;</span></pre>
+          </div>
+        </div>
+
+        <div class="vs-badge">VS</div>
+
+        <div class="panel-box">
+          <div class="panel-header">
+            <span class="icon-check">✓</span>
+            <span class="title-green">方法二：h 函数</span>
+          </div>
+          <div class="code-area green">
+            <pre
+              style="margin: 0; font-size: 14px; line-height: 1.6"
+            ><span class="s-gray">&lt;!-- h函数直接传递$slots --&gt;</span>
+<span class="s-pink">&lt;component</span>
+  <span class="s-cyan">:is</span>=<span class="s-green">"h(ElInput, 
+    { ...$attrs, ...props, ref: getRefInstance },
+    <span class="s-yellow">$slots</span>)"</span>
+<span class="s-pink">/&gt;</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <strong>h 函数参数：</strong> <code>h(组件, 属性对象, 插槽对象)</code> —
+        第三个参数直接传
+        <span class="s-yellow">$slots</span> 即可完成所有插槽的穿透
+      </div>
+
+      <div class="footer">
+        <span>03 / 04</span>
+        <span class="footer-tag">Slots Passthrough</span>
+      </div>
+    </div>
+
+    <!-- CARD 4: 方法暴露 -->
+    <div class="card">
+      <div class="glitch-wrapper">
+        <div class="glitch-title">EXPOSE 方法暴露</div>
+      </div>
+
+      <p
+        style="
+          color: #aaa;
+          font-size: 16px;
+          margin-bottom: 30px;
+          position: relative;
+          z-index: 10;
+        "
+      >
+        通过 <span class="s-cyan">ref</span> 获取内部组件实例，将其赋值给
+        <span class="s-yellow">vm.exposed</span> 暴露给父组件
+      </p>
+
+      <div class="full-code">
+        <span class="code-label" style="background: var(--neon-green)"
+          >完整代码</span
+        >
+        <pre><span class="s-pink">&lt;template&gt;</span>
+  <span class="s-pink">&lt;component</span>
+    <span class="s-cyan">:is</span>=<span class="s-green">"h(ElInput, { ...$attrs, ...props, <span class="s-yellow">ref: getRefInstance</span> }, $slots)"</span>
+  <span class="s-pink">/&gt;</span>
+<span class="s-pink">&lt;/template&gt;</span>
+
+<span class="s-pink">&lt;script setup lang="ts"&gt;</span>
+<span class="s-pink">import</span> { ElInput, InputInstance, InputProps } <span class="s-pink">from</span> <span class="s-green">"element-plus"</span>;
+<span class="s-pink">import</span> { getCurrentInstance, h } <span class="s-pink">from</span> <span class="s-green">"vue"</span>;
+
+<span class="s-pink">const</span> props = <span class="s-cyan">defineProps</span><span class="s-yellow">&lt;Partial&lt;InputProps&gt;&gt;</span>();
+<span class="s-pink">const</span> vm = <span class="s-cyan">getCurrentInstance</span>();
+
+<span class="s-gray">// 关键：将内部组件实例暴露给父组件</span>
+<span class="s-pink">const</span> <span class="s-cyan">getRefInstance</span> = (inputInstance: <span class="s-yellow">InputInstance</span>) => {
+  vm.<span class="s-yellow">exposed</span> = inputInstance || {};
+  vm.<span class="s-yellow">exposeProxy</span> = inputInstance || {};
+};
+<span class="s-pink">&lt;/script&gt;</span></pre>
+      </div>
+
+      <div class="success-banner">
+        ✓ 父组件现在可以通过 ref 调用内部组件的所有方法
+      </div>
+
+      <div class="footer">
+        <span>04 / 04</span>
+        <span class="footer-tag">Expose Methods</span>
+      </div>
+    </div>
+  </body>
+</html>
