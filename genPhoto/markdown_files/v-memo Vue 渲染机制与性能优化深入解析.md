@@ -62,7 +62,66 @@ Vue 的响应式系统是基于**组件（Component）**维度的。
 3. **判定机制**：由于我们没有给 `List` 传递任何 Props，或者传递的 Props 没有变化，Vue 判定该子组件**不需要更新**。
 4. **跳过渲染**：`List` 组件的 `render` 函数根本不会执行，因此其内部的 `getValue` 也不会运行。
 
-**结论**：子组件天然充当了“性能防火墙”，阻断了父组件无关状态变化带来的涟漪效应。
+#### Patch 阶段的判定机制详解
+
+1. 父组件传给子组件的 `props` 发生变化（值变化或引用变化）
+
+    例子：`<List :page="page" />`，`page++` 会触发 `List` 更新
+
+    例子：`<List :options="{ size: 10 }" />`（每次渲染都是新对象）也会触发更新
+
+2. `slot` 内容变化（尤其是动态插槽 / 非稳定插槽）
+
+    例子：`<List><template #default>{{ count }}</template></List>`，`count` 变化时子组件需要更新
+
+3. `key` 发生变化（通常不是“更新”，而是旧组件卸载 + 新组件重建）
+
+    例子：`<List :key="tab" />`，`tab` 从 `A` 切到 `B` 会导致 `List` 直接销毁重建
+
+4. `provide / inject` 的响应式来源发生变化（触发子组件自身依赖更新）
+
+    例子：子组件 `inject('theme')` 且 `theme` 是响应式值，`theme.value` 变化会触发子组件更新
+
+5. 结构性变化导致子树切换（如 `v-if` / `v-for` 条件切换）
+
+    例子：`<List v-if="visible" />`，`visible` 切换会导致组件卸载/重建（`v-show` 则只切换显示状态）
+
+    例子（`v-for` 条件切换）：
+
+    `filter` 变化会改变 `computed` 列表的内容，导致渲染出来的子节点集合发生变化（新增/删除/移动）。
+
+    ```vue
+    <template>
+      <button @click="filter = filter === 'all' ? 'done' : 'all'">toggle</button>
+      <div v-for="todo in filteredTodos" :key="todo.id">
+        {{ todo.text }}
+      </div>
+    </template>
+    ```
+
+ 6. `attrs` 变化（例如 `class` / `style` / `id` 等透传到子组件）
+
+     例子：父组件 `<List :class="{ red: active }" />`，当 `active` 变化时，如果子组件内部使用了 `$attrs`（如 `v-bind="$attrs"`），会触发对应更新
+
+ 7. 事件/指令绑定引用变化（本质上也属于传入数据变化）
+
+     例子：`<List @click="active ? onA : onB" />`，`active` 切换会导致 handler 引用变化，从而触发更新
+
+ 8. `KeepAlive` 影响“卸载/重建”的结论
+
+     例子：`<KeepAlive><List v-if="visible" /></KeepAlive>`，`visible` 切换时更可能表现为 deactivate/activate（缓存切换），而不是彻底销毁
+
+ 9. 子组件自身响应式依赖变化（与父组件是否更新无关）
+
+     例子：子组件内部依赖 `store` / `ref` / `computed`，当这些依赖变化时，子组件也会自行触发更新
+
+ **关键优化点**：
+
+- **编译时优化**：Vue 编译器会分析模板，为 VNode 打上 `patchFlag`，标记哪些内容是动态的。这样运行时只需检查标记的部分，而非全量对比。
+- **浅比较策略**：Props 对比采用浅比较（`===`），因此传递对象/数组时，即使内容相同但引用不同，也会触发更新。
+- **稳定插槽**：使用 `v-slot` 语法的插槽会被标记为稳定，避免不必要的子组件更新。
+
+**结论**：子组件天然充当了"性能防火墙"，阻断了父组件无关状态变化带来的涟漪效应。
 
 ### 2.3 为什么场景 B（未拆分）会更新？
 

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Worker Construction Cover</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Roboto+Mono:wght@500&display=swap');
+
+    :root {
+      --bg-color: #1a1a1a;
+      --safety-yellow: #ffcc00;
+      --safety-orange: #ff9900;
+      --steel-grey: #4a5568;
+      --text-color: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1200px;
+      height: 630px;
+      background-color: var(--bg-color);
+      font-family: 'Chakra Petch', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: var(--text-color);
+      position: relative;
+    }
+
+    /* Warning Stripes */
+    .stripes-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: repeating-linear-gradient(45deg,
+          var(--safety-yellow),
+          var(--safety-yellow) 20px,
+          #000 20px,
+          #000 40px);
+      z-index: 10;
+    }
+
+    .stripes-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: repeating-linear-gradient(45deg,
+          var(--safety-yellow),
+          var(--safety-yellow) 20px,
+          #000 20px,
+          #000 40px);
+      z-index: 10;
+    }
+
+    /* Industrial Background Grid */
+    .industrial-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 1;
+    }
+
+    /* Container for the 3D Threads */
+    .thread-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      z-index: 5;
+      width: 900px;
+      margin-top: 40px;
+    }
+
+    /* Main Thread Lane */
+    .lane {
+      position: relative;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid var(--steel-grey);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      overflow: hidden;
+    }
+
+    .lane-label {
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      background: var(--bg-color);
+      padding: 0 10px;
+      font-weight: 700;
+      color: #888;
+      font-size: 14px;
+      border: 1px solid var(--steel-grey);
+      border-radius: 4px;
+    }
+
+    .main-thread-lane {
+      border-color: #00d8ff;
+      box-shadow: 0 0 20px rgba(0, 216, 255, 0.1);
+    }
+
+    .main-thread-lane .lane-label {
+      color: #00d8ff;
+      border-color: #00d8ff;
+    }
+
+    .worker-thread-lane {
+      border-color: var(--safety-yellow);
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.1);
+    }
+
+    .worker-thread-lane .lane-label {
+      color: var(--safety-yellow);
+      border-color: var(--safety-yellow);
+    }
+
+    /* Moving Blocks */
+    .block {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      position: absolute;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* UI Blocks (Fast) */
+    .ui-block {
+      background: #00d8ff;
+      color: #000;
+      animation: moveFast 3s linear infinite;
+    }
+
+    .u1 {
+      animation-delay: 0s;
+    }
+
+    .u2 {
+      animation-delay: 1s;
+    }
+
+    .u3 {
+      animation-delay: 2s;
+    }
+
+    /* Worker Blocks (Heavy) */
+    .worker-block {
+      background: var(--safety-yellow);
+      color: #000;
+      width: 80px;
+      height: 80px;
+      border: 4px solid #000;
+      /* Heavy look */
+      animation: moveSlow 6s linear infinite;
+      /* Slower, heavier */
+    }
+
+    .w1 {
+      animation-delay: 0s;
+    }
+
+    .w2 {
+      animation-delay: 3s;
+    }
+
+    @keyframes moveFast {
+      0% {
+        left: -100px;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        left: 1000px;
+        opacity: 0;
+      }
+    }
+
+    @keyframes moveSlow {
+      0% {
+        left: -100px;
+        opacity: 0;
+        transform: rotate(0deg);
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        left: 1000px;
+        opacity: 0;
+        transform: rotate(90deg);
+      }
+    }
+
+    /* Offloading Arrow */
+    .offload-arrow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      color: #666;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .arrow-icon {
+      animation: bounceArrow 2s infinite;
+    }
+
+    @keyframes bounceArrow {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(10px);
+      }
+    }
+
+    /* Title Section */
+    .title-card {
+      z-index: 20;
+      text-align: center;
+      margin-bottom: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 30px 60px;
+      border: 4px solid var(--safety-orange);
+      transform: skew(-10deg);
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .main-title {
+      font-size: 72px;
+      font-weight: 700;
+      margin: 0;
+      color: #fff;
+      text-shadow: 4px 4px 0 var(--safety-orange);
+      transform: skew(10deg);
+      /* Unskew text */
+    }
+
+    .subtitle {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 20px;
+      color: #ccc;
+      margin-top: 10px;
+      letter-spacing: 2px;
+      transform: skew(10deg);
+      /* Unskew text */
+    }
+
+    /* Code Badge */
+    .code-badge {
+      position: absolute;
+      bottom: 60px;
+      right: 60px;
+      background: #1e1e1e;
+      border-left: 5px solid var(--safety-yellow);
+      padding: 15px 25px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 18px;
+      color: #d4d4d4;
+      z-index: 20;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .keyword {
+      color: #569cd6;
+    }
+
+    .string {
+      color: #ce9178;
+    }
+
+    .fn {
+      color: #dcdcaa;
+    }
+
+    /* Gear decoration */
+    .gear {
+      position: absolute;
+      opacity: 0.1;
+      animation: spinGear 20s linear infinite;
+    }
+
+    .g1 {
+      top: -50px;
+      left: -50px;
+      width: 300px;
+      height: 300px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 15a3 3 0 100-6 3 3 0 000 6zm0-8a5 5 0 110 10 5 5 0 010-10zm0-7C6.48 0 2 4.48 2 10s4.48 10 10 10 10-4.48 10-10S17.52 0 12 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
+      background-size: contain;
+    }
+
+    .g2 {
+      bottom: -100px;
+      right: -50px;
+      width: 400px;
+      height: 400px;
+      animation-direction: reverse;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84a.484.484 0 00-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.488.488 0 00-.59.22L2.79 8.87a.49.49 0 00.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32a.488.488 0 00.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96a.488.488 0 00.59-.22l1.92-3.32a.49.49 0 00-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>');
+      background-size: contain;
+    }
+
+    @keyframes spinGear {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cover-container"
+    style="width: 1200px; height: 630px; position: relative; overflow: hidden; background-color: var(--bg-color); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div class="stripes-top"></div>
+    <div class="stripes-bottom"></div>
+    <div class="industrial-bg"></div>
+
+    <div class="gear g1"></div>
+    <div class="gear g2"></div>
+
+    <div class="title-card">
+      <h1 class="main-title">WEB WORKER</h1>
+      <div class="subtitle">BACKGROUND THREADING</div>
+    </div>
+
+    <div class="thread-container">
+
+      <!-- Main Thread -->
+      <div class="lane main-thread-lane">
+        <div class="lane-label">MAIN THREAD</div>
+        <div class="block ui-block u1">UI</div>
+        <div class="block ui-block u2">DOM</div>
+        <div class="block ui-block u3">EVT</div>
+      </div>
+
+      <div class="offload-arrow">
+        <div class="arrow-icon">⬇</div>
+      </div>
+
+      <!-- Worker Thread -->
+      <div class="lane worker-thread-lane">
+        <div class="lane-label">WORKER THREAD</div>
+        <div class="block worker-block w1">CALC</div>
+        <div class="block worker-block w2">JSON</div>
+      </div>
+
+    </div>
+
+    <div class="code-badge">
+      <span class="keyword">new</span> <span class="fn">Worker</span>(<span class="string">'heavy-task.js'</span>);
+    </div>
+
+  </div>
+
+</body>
+
+</html>

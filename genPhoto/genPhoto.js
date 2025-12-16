@@ -22,7 +22,7 @@ const fs = require("fs");
   // And this script is in ./genPhoto/genPhoto.js
   // So the relative path is ./html/useEffect-cover.html
 
-  const filePath = path.join(__dirname, "html", "object-is-identity-scanner-cover.html");
+  const filePath = path.join(__dirname, "html", "web-worker-construction-cover.html");
   const fileUrl = `file://${filePath}`;
 
   console.log(`Loading: ${fileUrl}`);
@@ -47,8 +47,8 @@ const fs = require("fs");
         fs.mkdirSync(outputDir, { recursive: true });
       }
 
-      const pngPath = path.join(outputDir, "object-is-identity-scanner-cover.png");
-      const webpPath = path.join(outputDir, "object-is-identity-scanner-cover.webp");
+      const pngPath = path.join(outputDir, "web-worker-construction-cover.png");
+      const webpPath = path.join(outputDir, "web-worker-construction-cover.webp");
 
       // 1. Save as PNG using Playwright
       await page.screenshot({
