@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object.defineProperty Control Panel Cover</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap');
+
+    :root {
+      --bg-color: #1e1e20;
+      --panel-color: #2b2b2e;
+      --accent-color: #ff9d00;
+      --text-color: #e0e0e0;
+      --knob-size: 60px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1200px;
+      height: 630px;
+      background-color: var(--bg-color);
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: var(--text-color);
+      position: relative;
+    }
+
+    #cover-container {
+      width: 1200px;
+      height: 630px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background-image: repeating-linear-gradient(45deg,
+          hsla(0, 0%, 100%, 0.02) 0px,
+          hsla(0, 0%, 100%, 0.02) 1px,
+          transparent 1px,
+          transparent 10px);
+    }
+
+    /* Main Control Panel */
+    .panel-container {
+      background: var(--panel-color);
+      padding: 40px 60px;
+      border-radius: 12px;
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      border-top: 4px solid var(--accent-color);
+      position: relative;
+    }
+
+    /* Screws */
+    .panel-container::before,
+    .panel-container::after {
+      content: '+';
+      position: absolute;
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 24px;
+    }
+
+    .panel-container::before {
+      top: 10px;
+      left: 10px;
+    }
+
+    .panel-container::after {
+      top: 10px;
+      right: 10px;
+    }
+
+    .title {
+      font-family: 'Teko', sans-serif;
+      font-size: 64px;
+      text-transform: uppercase;
+      line-height: 0.9;
+      color: #fff;
+      text-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+      letter-spacing: 2px;
+      margin-top: 10px;
+    }
+
+    .subtitle {
+      color: var(--accent-color);
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      opacity: 0.8;
+      margin-top: -20px;
+    }
+
+    /* Switches Area */
+    .controls {
+      display: flex;
+      gap: 40px;
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .label {
+      font-size: 14px;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #444;
+      transition: .4s;
+      border-radius: 34px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .on .slider {
+      background-color: var(--accent-color);
+    }
+
+    .on .slider:before {
+      transform: translateX(26px);
+    }
+
+    .off .slider {
+      background-color: #552222;
+    }
+
+    /* Indicator Light */
+    .status-light {
+      width: 10px;
+      height: 10px;
+      background-color: #333;
+      border-radius: 50%;
+      margin-top: 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .on .status-light {
+      background-color: #55ff55;
+      box-shadow: 0 0 10px #55ff55;
+    }
+
+    .off .status-light {
+      background-color: #ff3333;
+      box-shadow: 0 0 10px #ff3333;
+    }
+
+    /* Object Property code */
+    .code-display {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #000;
+      color: var(--accent-color);
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 16px;
+      margin-top: 20px;
+      border-left: 4px solid #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cover-container">
+    <div class="panel-container">
+      <div class="title">Object.defineProperty</div>
+      <div class="subtitle">Fine-Grained Property Control</div>
+
+      <div class="controls">
+
+        <!-- Writable -->
+        <div class="control-item on">
+          <div class="label">Writable</div>
+          <div class="switch">
+            <span class="slider"></span>
+          </div>
+          <div class="status-light"></div>
+        </div>
+
+        <!-- Enumerable -->
+        <div class="control-item off">
+          <div class="label">Enumerable</div>
+          <div class="switch">
+            <span class="slider"></span>
+          </div>
+          <div class="status-light"></div>
+        </div>
+
+        <!-- Configurable -->
+        <div class="control-item on">
+          <div class="label">Configurable</div>
+          <div class="switch">
+            <span class="slider"></span>
+          </div>
+          <div class="status-light"></div>
+        </div>
+
+      </div>
+
+      <div class="code-display">
+        { value: "secret", writable: <span style="color:#fff">true</span>, enumerable: <span
+          style="color:#555">false</span> }
+      </div>
+
+    </div>
+  </div>
+
+</body>
+
+</html>
