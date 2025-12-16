@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Worker 详解 - 清新风格</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-light: #f8fafc;
+        --bg-white: #ffffff;
+        --text-dark: #1e293b;
+        --text-gray: #64748b;
+        --text-light: #94a3b8;
+        --accent-blue: #3b82f6;
+        --accent-cyan: #06b6d4;
+        --accent-green: #10b981;
+        --accent-purple: #8b5cf6;
+        --accent-pink: #ec4899;
+        --accent-orange: #f97316;
+        --accent-yellow: #eab308;
+        --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 50px;
+        background: linear-gradient(
+          135deg,
+          #e0e7ff 0%,
+          #fce7f3 50%,
+          #dbeafe 100%
+        );
+        font-family: "Nunito", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 60px;
+        min-height: 100vh;
+      }
+
+      .card {
+        width: 778px;
+        height: 1340px;
+        background: var(--bg-white);
+        border-radius: 32px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 45px;
+        box-shadow: var(--shadow-card);
+      }
+
+      /* Decorative blobs */
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.4;
+        z-index: 0;
+      }
+
+      .blob-1 {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(135deg, #a78bfa, #818cf8);
+        top: -80px;
+        right: -80px;
+      }
+
+      .blob-2 {
+        width: 250px;
+        height: 250px;
+        background: linear-gradient(135deg, #34d399, #6ee7b7);
+        bottom: -60px;
+        left: -60px;
+      }
+
+      .blob-3 {
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(135deg, #f472b6, #fb7185);
+        top: 50%;
+        right: -50px;
+      }
+
+      /* Header */
+      .header {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: var(--gradient-3);
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 700;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+      }
+
+      .title {
+        font-size: 42px;
+        font-weight: 800;
+        color: var(--text-dark);
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+
+      .title .highlight {
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: var(--text-gray);
+        font-weight: 500;
+      }
+
+      /* Section */
+      .section {
+        position: relative;
+        z-index: 10;
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: white;
+      }
+
+      .section-icon.blue {
+        background: var(--gradient-3);
+      }
+
+      .section-icon.purple {
+        background: var(--gradient-1);
+      }
+
+      .section-icon.green {
+        background: var(--gradient-4);
+      }
+
+      .section-icon.pink {
+        background: var(--gradient-2);
+      }
+
+      .section-icon.orange {
+        background: var(--gradient-5);
+      }
+
+      /* Panel */
+      .panel {
+        background: var(--bg-light);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .panel.gradient {
+        background: linear-gradient(
+          135deg,
+          rgba(99, 102, 241, 0.08) 0%,
+          rgba(168, 85, 247, 0.08) 100%
+        );
+        border: 1px solid rgba(99, 102, 241, 0.15);
+      }
+
+      .panel.success {
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.08) 0%,
+          rgba(52, 211, 153, 0.08) 100%
+        );
+        border: 1px solid rgba(16, 185, 129, 0.15);
+      }
+
+      .panel.warning {
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.08) 0%,
+          rgba(251, 191, 36, 0.08) 100%
+        );
+        border: 1px solid rgba(245, 158, 11, 0.15);
+      }
+
+      /* Code Block */
+      .code-block {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 18px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        color: #e2e8f0;
+        position: relative;
+        overflow: hidden;
+        margin: 12px 0;
+      }
+
+      .code-block::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-3);
+      }
+
+      .code-block pre {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      .code-label {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Syntax */
+      .s-blue {
+        color: #60a5fa;
+      }
+
+      .s-green {
+        color: #4ade80;
+      }
+
+      .s-purple {
+        color: #c084fc;
+      }
+
+      .s-orange {
+        color: #fb923c;
+      }
+
+      .s-pink {
+        color: #f472b6;
+      }
+
+      .s-gray {
+        color: #64748b;
+      }
+
+      .s-yellow {
+        color: #fbbf24;
+      }
+
+      /* Feature List */
+      .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 15px;
+        color: var(--text-dark);
+        line-height: 1.5;
+      }
+
+      .feature-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        flex-shrink: 0;
+        color: white;
+      }
+
+      .feature-icon.check {
+        background: var(--accent-green);
+      }
+
+      .feature-icon.cross {
+        background: var(--accent-pink);
+      }
+
+      .feature-icon.dot {
+        background: var(--accent-blue);
+      }
+
+      .feature-icon.warn {
+        background: var(--accent-orange);
+      }
+
+      /* Grid */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      /* Type Card */
+      .type-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .type-card .type-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: white;
+      }
+
+      .type-card .type-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 8px;
+      }
+
+      .type-card .type-desc {
+        font-size: 13px;
+        color: var(--text-gray);
+        line-height: 1.5;
+      }
+
+      /* Flow Diagram */
+      .flow-diagram {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        padding: 25px;
+        background: linear-gradient(
+          135deg,
+          rgba(99, 102, 241, 0.05) 0%,
+          rgba(236, 72, 153, 0.05) 100%
+        );
+        border-radius: 16px;
+        margin: 15px 0;
+      }
+
+      .flow-box {
+        background: white;
+        border-radius: 12px;
+        padding: 15px 22px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .flow-box.main {
+        color: #8b5cf6;
+        border: 2px solid #8b5cf6;
+      }
+
+      .flow-box.worker {
+        color: #10b981;
+        border: 2px solid #10b981;
+      }
+
+      .flow-arrow {
+        font-size: 24px;
+        color: var(--accent-blue);
+      }
+
+      .flow-label {
+        font-size: 11px;
+        color: var(--text-gray);
+        text-align: center;
+      }
+
+      /* Table */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      .data-table th {
+        text-align: left;
+        padding: 12px 15px;
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.1) 0%,
+          rgba(139, 92, 246, 0.1) 100%
+        );
+        color: var(--accent-blue);
+        font-weight: 700;
+        border-radius: 8px 8px 0 0;
+      }
+
+      .data-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        color: var(--text-dark);
+      }
+
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Tip Box */
+      .tip-box {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.08) 0%,
+          rgba(6, 182, 212, 0.08) 100%
+        );
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 12px;
+        padding: 15px 18px;
+        font-size: 14px;
+        color: var(--text-dark);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .tip-box .tip-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .tip-box.warning {
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.08) 0%,
+          rgba(251, 191, 36, 0.08) 100%
+        );
+        border-color: rgba(245, 158, 11, 0.2);
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: auto;
+        padding-top: 20px;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+      }
+
+      .footer-num {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-light);
+      }
+
+      .footer-tag {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent-purple);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Small inline code */
+      code {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--accent-purple);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- CARD 1: 什么是 Web Worker -->
+    <div class="card">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+
+      <div class="header">
+        <div class="badge">⚡ HTML5 多线程</div>
+        <h1 class="title">Web <span class="highlight">Worker</span></h1>
+        <p class="subtitle">后台运行脚本 · 避免阻塞主线程</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon blue">💡</span>
+          什么是 Web Worker
+        </div>
+        <div class="panel gradient">
+          <p style="color: var(--text-dark); font-size: 15px; line-height: 1.7">
+            Web Worker 是 HTML5 引入的机制，允许 JavaScript 在<strong
+              style="color: var(--accent-purple)"
+              >独立的后台线程</strong
+            >中运行脚本，从而避免阻塞主线程。适用于计算密集型任务。
+          </p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon purple">🎯</span>
+          为什么需要 Web Worker
+        </div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <span class="feature-icon dot">●</span>
+            <span><strong>复杂计算</strong> - 大数据量排序、加密解密运算</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon dot">●</span>
+            <span><strong>大文件处理</strong> - 文件读取、图片处理</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon dot">●</span>
+            <span><strong>数据转换</strong> - JSON 解析大型数据</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon dot">●</span>
+            <span><strong>实时处理</strong> - 音视频编解码</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon green">📦</span>
+          Worker 类型
+        </div>
+        <div class="grid-2">
+          <div class="type-card">
+            <div class="type-icon" style="background: var(--gradient-1)">
+              👤
+            </div>
+            <div class="type-name">Dedicated Worker</div>
+            <div class="type-desc">专用 Worker，与创建它的页面一一对应</div>
+            <div
+              class="code-block"
+              style="margin-top: 12px; padding: 12px; font-size: 12px"
+            >
+              <pre><span class="s-purple">const</span> w = <span class="s-blue">new Worker</span>(<span class="s-green">'worker.js'</span>);</pre>
+            </div>
+          </div>
+          <div class="type-card">
+            <div class="type-icon" style="background: var(--gradient-4)">
+              👥
+            </div>
+            <div class="type-name">Shared Worker</div>
+            <div class="type-desc">共享 Worker，可被多个页面共享</div>
+            <div
+              class="code-block"
+              style="margin-top: 12px; padding: 12px; font-size: 12px"
+            >
+              <pre><span class="s-purple">const</span> sw = <span class="s-blue">new SharedWorker</span>(<span class="s-green">'sw.js'</span>);</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon pink">🔄</span>
+          通信流程
+        </div>
+        <div class="flow-diagram">
+          <div class="flow-box main">Main Thread</div>
+          <div style="text-align: center">
+            <div class="flow-arrow">⇄</div>
+            <div class="flow-label">postMessage<br />onmessage</div>
+          </div>
+          <div class="flow-box worker">Worker Thread</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span class="footer-num">01 / 06</span>
+        <span class="footer-tag">Web Worker Basics</span>
+      </div>
+    </div>
+
+    <!-- CARD 2: 基本用法 -->
+    <div class="card">
+      <div
+        class="blob blob-1"
+        style="background: linear-gradient(135deg, #34d399, #6ee7b7)"
+      ></div>
+      <div
+        class="blob blob-2"
+        style="background: linear-gradient(135deg, #818cf8, #a78bfa)"
+      ></div>
+
+      <div class="header">
+        <div class="badge" style="background: var(--gradient-4)">
+          📝 Basic Usage
+        </div>
+        <h1 class="title">基本<span class="highlight">用法</span></h1>
+        <p class="subtitle">创建 Worker · 发送消息 · 接收结果</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon blue">📄</span>
+          主线程 main.js
+        </div>
+        <div class="code-block">
+          <span class="code-label">Main Thread</span>
+          <pre><span class="s-gray">// 创建 Worker</span>
+<span class="s-purple">const</span> worker = <span class="s-blue">new Worker</span>(<span class="s-green">'worker.js'</span>);
+
+<span class="s-gray">// 发送消息给 Worker</span>
+worker.<span class="s-blue">postMessage</span>({ 
+  type: <span class="s-green">'calculate'</span>, 
+  data: [1, 2, 3, 4, 5] 
+});
+
+<span class="s-gray">// 接收 Worker 返回的消息</span>
+worker.<span class="s-orange">onmessage</span> = <span class="s-purple">function</span>(event) {
+  console.log(<span class="s-green">'收到结果:'</span>, event.data);
+};
+
+<span class="s-gray">// 监听错误</span>
+worker.<span class="s-pink">onerror</span> = <span class="s-purple">function</span>(error) {
+  console.error(<span class="s-green">'Worker 错误:'</span>, error.message);
+};
+
+<span class="s-gray">// 终止 Worker</span>
+worker.<span class="s-pink">terminate</span>();</pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon green">⚙️</span>
+          Worker 脚本 worker.js
+        </div>
+        <div class="code-block" style="background: #0f172a">
+          <span class="code-label">Worker</span>
+          <pre><span class="s-gray">// 监听主线程发来的消息</span>
+<span class="s-blue">self</span>.<span class="s-orange">onmessage</span> = <span class="s-purple">function</span>(event) {
+  <span class="s-purple">const</span> { type, data } = event.data;
+  
+  <span class="s-purple">if</span> (type === <span class="s-green">'calculate'</span>) {
+    <span class="s-gray">// 执行耗时计算</span>
+    <span class="s-purple">const</span> result = data.<span class="s-blue">reduce</span>((sum, n) => sum + n, 0);
+    
+    <span class="s-gray">// 返回结果给主线程</span>
+    <span class="s-blue">self</span>.<span class="s-blue">postMessage</span>({ type: <span class="s-green">'result'</span>, result });
+  }
+};
+
+<span class="s-gray">// 主动关闭 Worker</span>
+<span class="s-blue">self</span>.<span class="s-pink">close</span>();</pre>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span class="footer-num">02 / 06</span>
+        <span class="footer-tag">Main & Worker Communication</span>
+      </div>
+    </div>
+
+    <!-- CARD 3: 数据传递方式 -->
+    <div class="card">
+      <div
+        class="blob blob-1"
+        style="background: linear-gradient(135deg, #f472b6, #fb7185)"
+      ></div>
+      <div
+        class="blob blob-2"
+        style="background: linear-gradient(135deg, #60a5fa, #3b82f6)"
+      ></div>
+
+      <div class="header">
+        <div class="badge" style="background: var(--gradient-2)">
+          📤 Data Transfer
+        </div>
+        <h1 class="title">数据<span class="highlight">传递</span></h1>
+        <p class="subtitle">结构化克隆 · 可转移对象 · 共享内存</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon blue">1️⃣</span>
+          结构化克隆 Structured Clone
+        </div>
+        <div class="panel gradient">
+          <p
+            style="
+              color: var(--text-dark);
+              font-size: 14px;
+              line-height: 1.6;
+              margin-bottom: 12px;
+            "
+          >
+            默认情况下，数据通过<strong style="color: var(--accent-purple)"
+              >结构化克隆算法</strong
+            >复制传递，发送的是数据的副本
+          </p>
+          <div class="code-block" style="margin: 0">
+            <pre><span class="s-purple">const</span> data = { name: <span class="s-green">'test'</span>, values: [1, 2, 3] };
+worker.<span class="s-blue">postMessage</span>(data);  <span class="s-gray">// data 被克隆后发送</span>
+data.name = <span class="s-green">'modified'</span>;  <span class="s-gray">// 不影响 Worker 收到的数据</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon green">2️⃣</span>
+          可转移对象 Transferable Objects
+        </div>
+        <div class="panel success">
+          <p
+            style="
+              color: var(--text-dark);
+              font-size: 14px;
+              line-height: 1.6;
+              margin-bottom: 12px;
+            "
+          >
+            对于大型二进制数据，使用<strong style="color: var(--accent-green)"
+              >所有权转移</strong
+            >方式，性能更高
+          </p>
+          <div class="code-block" style="margin: 0">
+            <pre><span class="s-purple">const</span> buffer = <span class="s-blue">new ArrayBuffer</span>(1024 * 1024); <span class="s-gray">// 1MB</span>
+
+<span class="s-gray">// 转移 buffer 所有权给 Worker</span>
+worker.<span class="s-blue">postMessage</span>(buffer, <span class="s-orange">[buffer]</span>);
+
+<span class="s-gray">// 转移后，主线程的 buffer.byteLength 变为 0</span>
+console.log(buffer.byteLength); <span class="s-gray">// 0</span></pre>
+          </div>
+          <div class="feature-list" style="margin-top: 12px">
+            <div class="feature-item">
+              <span class="feature-icon check">✓</span> ArrayBuffer /
+              MessagePort / ImageBitmap
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon orange">3️⃣</span>
+          共享内存 SharedArrayBuffer
+        </div>
+        <div class="panel warning">
+          <p
+            style="
+              color: var(--text-dark);
+              font-size: 14px;
+              line-height: 1.6;
+              margin-bottom: 12px;
+            "
+          >
+            实现主线程和 Worker 之间的<strong
+              style="color: var(--accent-orange)"
+              >内存共享</strong
+            >
+          </p>
+          <div class="code-block" style="margin: 0">
+            <pre><span class="s-gray">// 主线程</span>
+<span class="s-purple">const</span> shared = <span class="s-blue">new SharedArrayBuffer</span>(1024);
+<span class="s-purple">const</span> arr = <span class="s-blue">new Int32Array</span>(shared);
+worker.<span class="s-blue">postMessage</span>({ buffer: shared });
+
+<span class="s-gray">// Worker 中使用 Atomics 进行原子操作</span>
+<span class="s-blue">Atomics</span>.<span class="s-blue">add</span>(sharedArray, 0, 10);</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box warning">
+        <span class="tip-icon">⚠️</span>
+        <span>使用 SharedArrayBuffer 需要页面启用 COOP 和 COEP 响应头</span>
+      </div>
+
+      <div class="footer">
+        <span class="footer-num">03 / 06</span>
+        <span class="footer-tag">Data Transfer Methods</span>
+      </div>
+    </div>
+
+    <!-- CARD 4: 可用 API -->
+    <div class="card">
+      <div
+        class="blob blob-1"
+        style="background: linear-gradient(135deg, #fbbf24, #f59e0b)"
+      ></div>
+      <div
+        class="blob blob-2"
+        style="background: linear-gradient(135deg, #34d399, #10b981)"
+      ></div>
+
+      <div class="header">
+        <div class="badge" style="background: var(--gradient-5)">
+          🔧 Worker API
+        </div>
+        <h1 class="title">可用<span class="highlight">API</span></h1>
+        <p class="subtitle">Worker 运行在独立全局上下文 WorkerGlobalScope</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon green">✅</span>
+          可以使用的 API
+        </div>
+        <div class="panel success">
+          <table class="data-table">
+            <tr>
+              <th>API</th>
+              <th>说明</th>
+            </tr>
+            <tr>
+              <td><code>fetch() / XMLHttpRequest</code></td>
+              <td>网络请求</td>
+            </tr>
+            <tr>
+              <td><code>setTimeout() / setInterval()</code></td>
+              <td>定时器</td>
+            </tr>
+            <tr>
+              <td><code>Promise / async-await</code></td>
+              <td>异步操作</td>
+            </tr>
+            <tr>
+              <td><code>WebSocket</code></td>
+              <td>WebSocket 连接</td>
+            </tr>
+            <tr>
+              <td><code>IndexedDB</code></td>
+              <td>本地数据库</td>
+            </tr>
+            <tr>
+              <td><code>crypto</code></td>
+              <td>加密 API</td>
+            </tr>
+            <tr>
+              <td><code>importScripts()</code></td>
+              <td>导入外部脚本</td>
+            </tr>
+            <tr>
+              <td><code>Blob / FileReader</code></td>
+              <td>文件处理</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon pink">❌</span>
+          不能使用的 API
+        </div>
+        <div
+          class="panel"
+          style="
+            background: linear-gradient(
+              135deg,
+              rgba(236, 72, 153, 0.08) 0%,
+              rgba(244, 114, 182, 0.08) 100%
+            );
+            border: 1px solid rgba(236, 72, 153, 0.15);
+          "
+        >
+          <table class="data-table">
+            <tr>
+              <th
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    rgba(236, 72, 153, 0.1) 0%,
+                    rgba(244, 114, 182, 0.1) 100%
+                  );
+                  color: var(--accent-pink);
+                "
+              >
+                API
+              </th>
+              <th
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    rgba(236, 72, 153, 0.1) 0%,
+                    rgba(244, 114, 182, 0.1) 100%
+                  );
+                  color: var(--accent-pink);
+                "
+              >
+                说明
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <code
+                  style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-pink);
+                  "
+                  >document</code
+                >
+              </td>
+              <td>DOM 对象</td>
+            </tr>
+            <tr>
+              <td>
+                <code
+                  style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-pink);
+                  "
+                  >window</code
+                >
+              </td>
+              <td>全局 window 对象</td>
+            </tr>
+            <tr>
+              <td>
+                <code
+                  style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-pink);
+                  "
+                  >localStorage / sessionStorage</code
+                >
+              </td>
+              <td>同步存储</td>
+            </tr>
+            <tr>
+              <td>
+                <code
+                  style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-pink);
+                  "
+                  >alert() / confirm()</code
+                >
+              </td>
+              <td>弹窗方法</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <span class="tip-icon">💡</span>
+        <span
+          ><strong>核心限制:</strong> Worker 无法访问 DOM，所有 UI 操作必须通过
+          postMessage 通知主线程完成</span
+        >
+      </div>
+
+      <div class="footer">
+        <span class="footer-num">04 / 06</span>
+        <span class="footer-tag">Available APIs</span>
+      </div>
+    </div>
+
+    <!-- CARD 5: 最佳实践 -->
+    <div class="card">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+
+      <div class="header">
+        <div class="badge" style="background: var(--gradient-1)">
+          ⭐ Best Practices
+        </div>
+        <h1 class="title">最佳<span class="highlight">实践</span></h1>
+        <p class="subtitle">注意事项 · 最佳实践 · 浏览器兼容性</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon orange">⚠️</span>
+          注意事项
+        </div>
+        <div class="panel warning">
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="feature-icon warn">!</span>
+              <span
+                ><strong>同源限制</strong> - Worker 脚本必须与主页面同源</span
+              >
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon warn">!</span>
+              <span
+                ><strong>文件协议</strong> - 在 file:// 协议下 Worker
+                可能无法正常工作</span
+              >
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon warn">!</span>
+              <span
+                ><strong>脚本类型</strong> - Worker 接收的是脚本
+                URL，不是模块路径</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon green">✅</span>
+          最佳实践
+        </div>
+        <div class="panel success">
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="feature-icon check">✓</span>
+              <span
+                ><strong>合理评估</strong> - 简单任务不需要
+                Worker，避免过度设计</span
+              >
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon check">✓</span>
+              <span
+                ><strong>减少通信</strong> - 批量发送数据，减少 postMessage
+                调用次数</span
+              >
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon check">✓</span>
+              <span
+                ><strong>Transferable</strong> -
+                大型二进制数据使用可转移对象</span
+              >
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon check">✓</span>
+              <span
+                ><strong>及时终止</strong> - 任务完成后调用 terminate()
+                释放资源</span
+              >
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon check">✓</span>
+              <span
+                ><strong>Worker 池</strong> - 频繁创建开销大，考虑使用 Worker
+                池复用</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon blue">🌐</span>
+          浏览器兼容性
+        </div>
+        <div class="panel gradient">
+          <table class="data-table">
+            <tr>
+              <th>浏览器</th>
+              <th>Dedicated</th>
+              <th>Shared</th>
+              <th>Module</th>
+            </tr>
+            <tr>
+              <td>Chrome</td>
+              <td style="color: var(--accent-green)">✓ 4+</td>
+              <td style="color: var(--accent-green)">✓ 4+</td>
+              <td style="color: var(--accent-green)">✓ 80+</td>
+            </tr>
+            <tr>
+              <td>Firefox</td>
+              <td style="color: var(--accent-green)">✓ 3.5+</td>
+              <td style="color: var(--accent-green)">✓ 29+</td>
+              <td style="color: var(--accent-green)">✓ 114+</td>
+            </tr>
+            <tr>
+              <td>Safari</td>
+              <td style="color: var(--accent-green)">✓ 4+</td>
+              <td style="color: var(--accent-orange)">⚠ 部分</td>
+              <td style="color: var(--accent-green)">✓ 15+</td>
+            </tr>
+            <tr>
+              <td>Edge</td>
+              <td style="color: var(--accent-green)">✓ 12+</td>
+              <td style="color: var(--accent-green)">✓ 79+</td>
+              <td style="color: var(--accent-green)">✓ 80+</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span class="footer-num">05 / 06</span>
+        <span class="footer-tag">Best Practices & Compatibility</span>
+      </div>
+    </div>
+
+    <!-- CARD 6: Vue 3 使用示例 -->
+    <div class="card">
+      <div
+        class="blob blob-1"
+        style="background: linear-gradient(135deg, #34d399, #10b981)"
+      ></div>
+      <div
+        class="blob blob-2"
+        style="background: linear-gradient(135deg, #818cf8, #6366f1)"
+      ></div>
+      <div
+        class="blob blob-3"
+        style="background: linear-gradient(135deg, #f472b6, #ec4899)"
+      ></div>
+
+      <div class="header">
+        <div
+          class="badge"
+          style="background: linear-gradient(135deg, #42d392 0%, #647eff 100%)"
+        >
+          🍃 Vue 3 + Vite
+        </div>
+        <h1 class="title">Vue <span class="highlight">使用示例</span></h1>
+        <p class="subtitle">useWorker 组合式函数 · 组件封装</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon green">🔧</span>
+          useWorker.ts 组合式函数
+        </div>
+        <div class="code-block" style="font-size: 12px">
+          <span class="code-label">Composable</span>
+          <pre><span class="s-purple">import</span> { ref, onUnmounted, shallowRef } <span class="s-purple">from</span> <span class="s-green">'vue'</span>;
+
+<span class="s-purple">export function</span> <span class="s-blue">useWorker</span><span class="s-orange">&lt;T, R&gt;</span>(workerFactory: () => Worker) {
+  <span class="s-purple">const</span> workerRef = <span class="s-blue">shallowRef</span><span class="s-orange">&lt;Worker | null&gt;</span>(null);
+  <span class="s-purple">const</span> result = <span class="s-blue">ref</span><span class="s-orange">&lt;R | null&gt;</span>(null);
+  <span class="s-purple">const</span> loading = <span class="s-blue">ref</span>(false);
+  <span class="s-purple">const</span> error = <span class="s-blue">ref</span><span class="s-orange">&lt;Error | null&gt;</span>(null);
+
+  <span class="s-purple">const</span> <span class="s-blue">postMessage</span> = (data: T): <span class="s-orange">Promise&lt;R&gt;</span> => {
+    <span class="s-purple">return new</span> <span class="s-blue">Promise</span>((resolve, reject) => {
+      <span class="s-purple">if</span> (!workerRef.value) {
+        workerRef.value = <span class="s-blue">workerFactory</span>();
+      }
+      loading.value = <span class="s-orange">true</span>;
+      workerRef.value.<span class="s-orange">onmessage</span> = (e) => {
+        result.value = e.data;
+        loading.value = <span class="s-orange">false</span>;
+        <span class="s-blue">resolve</span>(e.data);
+      };
+      workerRef.value.<span class="s-blue">postMessage</span>(data);
+    });
+  };
+
+  <span class="s-blue">onUnmounted</span>(() => workerRef.value?.<span class="s-pink">terminate</span>());
+  <span class="s-purple">return</span> { result, loading, error, postMessage };
+}</pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon purple">📦</span>
+          组件使用 Calculator.vue
+        </div>
+        <div class="code-block" style="font-size: 12px">
+          <span class="code-label">Vue Component</span>
+          <pre><span class="s-pink">&lt;script setup lang="ts"&gt;</span>
+<span class="s-purple">import</span> { ref } <span class="s-purple">from</span> <span class="s-green">'vue'</span>;
+<span class="s-purple">import</span> { useWorker } <span class="s-purple">from</span> <span class="s-green">'./useWorker'</span>;
+
+<span class="s-gray">// Vite 特定语法：使用 new URL() + import.meta.url</span>
+<span class="s-purple">const</span> { result, loading, postMessage } = <span class="s-blue">useWorker</span><span class="s-orange">&lt;number, number&gt;</span>(
+  () => <span class="s-purple">new</span> <span class="s-blue">Worker</span>(
+    <span class="s-purple">new</span> <span class="s-blue">URL</span>(<span class="s-green">'./worker.ts'</span>, <span class="s-orange">import.meta.url</span>),
+    { type: <span class="s-green">'module'</span> }
+  )
+);
+
+<span class="s-purple">const</span> inputValue = <span class="s-blue">ref</span>(1000000);
+<span class="s-purple">const</span> <span class="s-blue">handleCalculate</span> = <span class="s-purple">async</span> () => {
+  <span class="s-purple">const</span> res = <span class="s-purple">await</span> <span class="s-blue">postMessage</span>(inputValue.value);
+  console.log(<span class="s-green">'计算结果:'</span>, res);
+};
+<span class="s-pink">&lt;/script&gt;</span>
+  
+    
+    </div>
+  </body>
+</html>
