@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suno AI 音乐生成指南</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #0f0f13;
+      --bg-card: #18181b;
+      --text-white: #ffffff;
+      --text-gray: #a1a1aa;
+      --accent-pink: #ec4899;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --accent-yellow: #eab308;
+      --gradient-main: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      --gradient-cyan: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+      --gradient-sunset: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+      --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.15);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 50px;
+      background: #000;
+      font-family: "Outfit", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+      min-height: 100vh;
+    }
+
+    .card {
+      width: 778px;
+      height: 1240px;
+      background: var(--bg-card);
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 45px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--glass-border);
+    }
+
+    /* Background Effects */
+    .bg-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 0% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+      z-index: 0;
+    }
+
+    .grid-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(var(--glass-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    /* Content Wrapper */
+    .content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-purple);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .title span {
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: var(--text-gray);
+      font-weight: 400;
+      max-width: 80%;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      padding: 24px;
+      border-radius: 20px;
+      transition: transform 0.2s;
+    }
+
+    .feature-card h3 {
+      color: var(--text-white);
+      font-size: 18px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-card p {
+      color: var(--text-gray);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Style Tag Chips */
+    .tag-group {
+      margin-bottom: 20px;
+    }
+
+    .tag-label {
+      font-size: 14px;
+      color: var(--text-gray);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      color: var(--text-white);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+    }
+
+    .tag.highlight {
+      background: rgba(236, 72, 153, 0.15);
+      border-color: rgba(236, 72, 153, 0.3);
+      color: var(--accent-pink);
+    }
+
+    /* Code Block */
+    .code-window {
+      background: #000;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .window-header {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .window-content {
+      padding: 20px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    .key {
+      color: var(--accent-purple);
+    }
+
+    .value {
+      color: var(--accent-cyan);
+    }
+
+    .string {
+      color: var(--accent-pink);
+    }
+
+    .comment {
+      color: var(--text-gray);
+    }
+
+    /* Visualizer Bar */
+    .visualizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 40px;
+      margin-top: 20px;
+    }
+
+    .bar {
+      width: 6px;
+      background: var(--gradient-main);
+      border-radius: 4px;
+      animation: dance 1s infinite ease-in-out alternate;
+    }
+
+    @keyframes dance {
+      0% {
+        height: 20%;
+        opacity: 0.5;
+      }
+
+      100% {
+        height: 100%;
+        opacity: 1;
+      }
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-gray);
+      font-size: 14px;
+    }
+
+    .page-number {
+      font-family: "JetBrains Mono";
+      color: var(--accent-purple);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- CARD 1: Introduction - The Hook -->
+  <div class="card">
+    <div class="bg-gradient"></div>
+    <div class="grid-pattern"></div>
+
+    <div class="content">
+      <div class="header">
+        <div class="badge">🔥 AI工具分享</div>
+        <h1 class="title">零基础<br><span>做音乐？</span></h1>
+        <p class="subtitle">Suno AI 让你的文字瞬间变歌曲。<br>不用学乐理，不用懂乐器，你就是制作人。</p>
+
+        <div class="visualizer">
+          <div class="bar" style="animation-delay: 0.1s"></div>
+          <div class="bar" style="animation-delay: 0.3s"></div>
+          <div class="bar" style="animation-delay: 0.5s"></div>
+          <div class="bar" style="animation-delay: 0.2s"></div>
+          <div class="bar" style="animation-delay: 0.4s"></div>
+          <div class="bar" style="animation-delay: 0.6s"></div>
+          <div class="bar" style="animation-delay: 0.1s"></div>
+          <div class="bar" style="animation-delay: 0.3s"></div>
+          <div class="bar" style="animation-delay: 0.5s"></div>
+          <div class="bar" style="animation-delay: 0.2s"></div>
+          <div class="bar" style="animation-delay: 0.4s"></div>
+          <div class="bar" style="animation-delay: 0.6s"></div>
+          <div class="bar" style="animation-delay: 0.1s"></div>
+          <div class="bar" style="animation-delay: 0.3s"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box" style="background: rgba(139, 92, 246, 0.2)">✨</div>
+          它能做什么？ Why Suno?
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>🤯 全能创作</h3>
+            <p>你给它一个主题，它还你一首完整的歌：作词、作曲、编曲、演唱全包圆！</p>
+          </div>
+          <div class="feature-card">
+            <h3>🎤 真人级演唱</h3>
+            <p>深情男嗓、甜美流行、硬核说唱...听起来简直就像真人在录音棚录的一样。</p>
+          </div>
+          <div class="feature-card">
+            <h3>⚡ 秒变神曲</h3>
+            <p>喝口水的功夫，两首高质量的 demo 就生成好了，不喜欢？随时重来。</p>
+          </div>
+          <div class="feature-card">
+            <h3>🌍 啥风格都行</h3>
+            <p>想听国风？想听 K-Pop？还是赛博朋克电音？只要你想得到，它就做得到。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box" style="background: rgba(236, 72, 153, 0.2)">�</div>
+          怎么玩？ How?
+        </div>
+        <div class="code-window">
+          <div class="window-content" style="font-size: 16px;">
+            <p style="color: var(--text-white); margin-bottom: 8px">只需在输入框告诉它：</p>
+            <span class="string">"写一首关于周五下班的快乐歌曲，轻快流行风"</span>
+            <p style="color: var(--text-gray); margin-top: 8px; font-size: 14px;">👇 点击 [Create]</p>
+            <p style="color: var(--accent-purple); font-weight: bold; margin-top: 8px;">✨ 你的专属单曲就诞生了！</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Created with GenPhoto</span>
+        <span class="page-number">01 / 04</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2: Easy Styles - The Formula -->
+  <div class="card">
+    <div class="bg-gradient" style="background: radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);"></div>
+    <div class="grid-pattern"></div>
+
+    <div class="content">
+      <div class="header">
+        <div class="badge"
+          style="color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3); background: rgba(6, 182, 212, 0.15)">
+          🔥 AI工具分享</div>
+        <h1 class="title">一句话<br><span
+            style="background: var(--gradient-cyan); -webkit-background-clip: text; background-clip: text;">生成神曲</span>
+        </h1>
+        <p class="subtitle">掌握这些“流量密码”，你的歌也能刷爆朋友圈。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box" style="color: var(--accent-cyan); border-color: var(--accent-cyan)"></div>
+          大家都爱听 Popular Styles
+        </div>
+        <div class="tag-group">
+          <div class="tag-label">💃 让人想抖腿</div>
+          <div class="tag-container">
+            <div class="tag highlight">upbeat pop</div>
+            <div class="tag">dance</div>
+            <div class="tag highlight">rock anthem</div>
+            <div class="tag">catchy</div>
+          </div>
+        </div>
+        <div class="tag-group">
+          <div class="tag-label">😭 让人想流泪</div>
+          <div class="tag-container">
+            <div class="tag highlight">emotional ballad</div>
+            <div class="tag">piano</div>
+            <div class="tag highlight">sad storytelling</div>
+            <div class="tag">cinematic</div>
+          </div>
+        </div>
+        <div class="tag-group">
+          <div class="tag-label">🍵 让人想发呆</div>
+          <div class="tag-container">
+            <div class="tag">lo-fi</div>
+            <div class="tag">coffee shop</div>
+            <div class="tag highlight">acoustic</div>
+            <div class="tag">relaxing</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box" style="color: var(--accent-pink); border-color: var(--accent-pink)"></div>
+          加点料 Advanced Tips
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card" style="padding: 20px">
+            <h3 style="font-size: 16px; color: var(--accent-pink)">指定歌手?</h3>
+            <p>虽然不能直接写"周杰伦"，但你可以写：<br>
+              <code
+                style="background:rgba(255,255,255,0.1); padding:2px 5px; border-radius:4px; margin-top:5px; display:inline-block">male vocals, r&b, mandarin, mumbling style</code>
+            </p>
+          </div>
+          <div class="feature-card" style="padding: 20px">
+            <h3 style="font-size: 16px; color: var(--accent-yellow)">结构更完整?</h3>
+            <p>在歌词里加上标签：<br>
+              <code
+                style="background:rgba(255,255,255,0.1); padding:2px 5px; border-radius:4px; margin-top:5px; display:inline-block">[Verse]</code>
+              (主歌)
+              <code
+                style="background:rgba(255,255,255,0.1); padding:2px 5px; border-radius:4px; margin-top:5px; display:inline-block">[Chorus]</code>
+              (副歌)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Created with GenPhoto</span>
+        <span class="page-number">02 / 04</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: Copy Paste Templates -->
+  <div class="card">
+    <div class="bg-gradient" style="background: radial-gradient(circle at 100% 0%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 0% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);"></div>
+    <div class="grid-pattern"></div>
+
+    <div class="content">
+      <div class="header">
+        <div class="badge"
+          style="color: var(--accent-yellow); border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.15)">
+          🔥 AI工具分享</div>
+        <h1 class="title">万能公式<br><span
+            style="background: var(--gradient-sunset); -webkit-background-clip: text; background-clip: text;">直接抄作业</span>
+        </h1>
+        <p class="subtitle">不知道写什么？复制这些去试试，效果炸裂！</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box">�</div>
+          古风·仙侠大片
+        </div>
+        <div class="code-window">
+          <div class="window-content">
+            <span class="key">Style</span>: <span class="value">chinese traditional, epic, orchestral, guzheng, female
+              vocals, ethereal</span><br>
+            <span class="key">Title</span>: <span class="string">剑指天涯</span><br>
+            <br>
+            <span class="comment">// 适合写江湖恩怨，仙侠情缘，画面感极强！</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box">🤘</div>
+          社畜·摇滚怒吼
+        </div>
+        <div class="code-window">
+          <div class="window-content">
+            <span class="key">Style</span>: <span class="value">hard rock, heavy drums, electric guitar, male vocals,
+              angry, shouting</span><br>
+            <span class="key">Title</span>: <span class="string">不想加班</span><br>
+            <br>
+            <span class="comment">// 周一早上听这个，瞬间清醒，解压神器。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box">�</div>
+          甜甜·恋爱循环
+        </div>
+        <div class="code-window">
+          <div class="window-content">
+            <span class="key">Style</span>: <span class="value">k-pop, cute, upbeat, bubblegum pop, female vocals,
+              catchy hook</span><br>
+            <span class="key">Title</span>: <span class="string">三分糖去冰</span><br>
+            <br>
+            <span class="comment">// 适合表白，或者做 Vlog 背景音乐，超级甜！</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Created with GenPhoto</span>
+        <span class="page-number">03 / 04</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4: Tool Links -->
+  <div class="card">
+    <div class="bg-gradient" style="background: radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);"></div>
+    <div class="grid-pattern"></div>
+
+    <div class="content">
+      <div class="header">
+        <div class="badge"
+          style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.15)">🔥 AI工具分享
+        </div>
+        <h1 class="title">工具<br><span
+            style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); -webkit-background-clip: text; background-clip: text;">传送门</span>
+        </h1>
+        <p class="subtitle">收藏这些链接，随时开启创作。</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box" style="color: #10b981; border-color: #10b981">🌍</div>
+          官方平台 Official
+        </div>
+        <div class="feature-card"
+          style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+          <div>
+            <h3 style="margin-bottom: 4px; font-size: 20px">Suno AI 官网</h3>
+            <p style="font-size: 14px; color: var(--text-gray)">app.suno.ai</p>
+          </div>
+          <div
+            style="background: #ffffff; color: #000; padding: 10px 20px; border-radius: 10px; font-weight: 800; font-size: 14px; letter-spacing: 1px;">
+            VISIT ↗</div>
+        </div>
+        <div class="feature-card" style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <h3 style="margin-bottom: 4px; font-size: 20px">Discord 社区</h3>
+            <p style="font-size: 14px; color: var(--text-gray)">获取最新资讯和灵感</p>
+          </div>
+          <div
+            style="background: rgba(255,255,255,0.1); color: #ffffff; padding: 10px 20px; border-radius: 10px; font-weight: 800; font-size: 14px; letter-spacing: 1px;">
+            JOIN ↗</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <div class="icon-box" style="color: var(--accent-cyan); border-color: var(--accent-cyan)">📚</div>
+          学习资源 Resources
+        </div>
+        <div class="code-window">
+          <div class="window-content" style="padding: 25px;">
+            <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center;">
+              <span style="font-size: 24px">📖</span>
+              <div>
+                <div style="color: var(--text-white); font-weight: bold; font-size: 16px;">官方文档</div>
+                <div style="color: var(--text-gray); font-size: 13px;">docs.suno.ai - 详细的参数说明</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+              <span style="font-size: 24px">🎥</span>
+              <div>
+                <div style="color: var(--text-white); font-weight: bold; font-size: 16px;">视频教程</div>
+                <div style="color: var(--text-gray); font-size: 13px;">Bilibili / YouTube 搜索 "Suno AI"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="margin-top:auto; text-align: center; opacity: 0.8; margin-bottom: 40px;">
+        <div style="font-size: 80px; line-height: 1; margin-bottom: 20px;">🎹</div>
+        <p style="color: var(--text-white); font-weight: 600; font-size: 18px;">Ready to make some noise?</p>
+      </div>
+
+      <div class="footer">
+        <span>Created with GenPhoto</span>
+        <span class="page-number">04 / 04</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
