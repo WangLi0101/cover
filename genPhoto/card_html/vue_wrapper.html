@@ -3,22 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue 组件二次封装 - Cyberpunk Glitch</title>
+    <title>Vue 组件二次封装 - Racing Style</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Russo+One&family=JetBrains+Mono:wght@400;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg-black: #080808;
-        --bg-panel: rgba(20, 20, 25, 0.8);
-        --text-white: #f0f0f0;
-        --text-gray: #888;
-        --neon-pink: #ff2a6d;
-        --neon-cyan: #05d9e8;
-        --neon-yellow: #f9e01f;
-        --neon-green: #39ff14;
-        --grid-line: rgba(255, 255, 255, 0.03);
+        --bg-asphalt: #09090b;
+        --bg-track: #18181b;
+
+        --race-yellow: #facc15; /* High Vis Yellow */
+        --race-red: #ef4444; /* Stop Red */
+        --race-white: #ffffff;
+
+        --font-speed: "Russo One", sans-serif;
+        --font-condensed: "Teko", sans-serif;
+        --font-code: "JetBrains Mono", monospace;
       }
 
       * {
@@ -29,537 +30,666 @@
 
       body {
         margin: 0;
-        padding: 60px;
-        background-color: var(--bg-black);
-        font-family: "JetBrains Mono", monospace;
+        padding: 50px;
+        background-color: var(--bg-asphalt);
+        font-family: var(--font-speed);
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 80px;
+        gap: 60px;
         min-height: 100vh;
-        background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
-          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-        background-size: 50px 50px;
       }
 
       .card {
-        width: 1000px;
-        min-height: 620px;
-        background: rgba(10, 10, 14, 0.98);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 16px;
+        width: 778px;
+        height: 1340px;
+        background: var(--bg-asphalt);
         position: relative;
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        padding: 50px 60px;
-        box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+        padding: 50px;
+        /* 边框发光 */
+        box-shadow: 0 0 0 1px #333, 0 20px 50px rgba(0, 0, 0, 0.8);
+        border-radius: 20px;
       }
 
-      /* Noise texture */
-      .card::before {
-        content: "";
+      /* Background Track Lines (Perspective) */
+      .track-bg {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-        pointer-events: none;
+        background: linear-gradient(
+            105deg,
+            transparent 40%,
+            rgba(255, 255, 255, 0.03) 40%,
+            rgba(255, 255, 255, 0.03) 41%,
+            transparent 41%
+          ),
+          linear-gradient(
+            105deg,
+            transparent 45%,
+            rgba(255, 255, 255, 0.03) 45%,
+            rgba(255, 255, 255, 0.03) 46%,
+            transparent 46%
+          );
         z-index: 0;
       }
 
-      /* Glitch Title */
-      .glitch-wrapper {
-        position: relative;
-        margin-bottom: 50px;
-        text-align: center;
-        z-index: 10;
-      }
-      .glitch-title {
-        font-family: "Rubik Glitch", cursive;
-        font-size: 64px;
-        color: white;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        text-shadow: 3px 0 0 rgba(255, 42, 109, 0.7),
-          -3px 0 0 rgba(5, 217, 232, 0.7);
-      }
-
-      /* Panels */
-      .panel-row {
-        display: flex;
-        gap: 24px;
-        align-items: center;
-        position: relative;
-        z-index: 10;
-      }
-
-      .panel-box {
-        flex: 1;
-        background: rgba(25, 25, 30, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        padding: 28px;
-      }
-
-      .panel-header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 20px;
-        font-size: 18px;
-        font-weight: 600;
-      }
-      .icon-warn {
-        background: var(--neon-yellow);
-        color: #000;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: bold;
-      }
-      .icon-check {
-        background: var(--neon-green);
-        color: #000;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: bold;
-      }
-      .title-pink {
-        color: var(--neon-pink);
-      }
-      .title-cyan {
-        color: var(--neon-cyan);
-      }
-      .title-green {
-        color: var(--neon-green);
-      }
-
-      /* Code area */
-      .code-area {
-        background: rgba(0, 0, 0, 0.4);
-        border-left: 3px solid;
-        padding: 18px 20px;
-        border-radius: 4px;
-        font-size: 15px;
-        line-height: 1.7;
-        color: #ccc;
-      }
-      .code-area.pink {
-        border-color: var(--neon-pink);
-      }
-      .code-area.cyan {
-        border-color: var(--neon-cyan);
-      }
-      .code-area.green {
-        border-color: var(--neon-green);
-      }
-      .code-area.yellow {
-        border-color: var(--neon-yellow);
-      }
-
-      .comment {
-        color: #6a9955;
-        font-style: italic;
-      }
-      .result {
-        margin-top: 12px;
-      }
-      .arrow {
-        color: #888;
-      }
-      .val-pink {
-        color: var(--neon-pink);
-        font-weight: bold;
-      }
-      .val-green {
-        color: var(--neon-green);
-        font-weight: bold;
-      }
-      .val-cyan {
-        color: var(--neon-cyan);
-        font-weight: bold;
-      }
-
-      /* Syntax */
-      .s-pink {
-        color: var(--neon-pink);
-      }
-      .s-cyan {
-        color: var(--neon-cyan);
-      }
-      .s-green {
-        color: var(--neon-green);
-      }
-      .s-yellow {
-        color: var(--neon-yellow);
-      }
-      .s-white {
-        color: #fff;
-      }
-      .s-gray {
-        color: #888;
-      }
-
-      /* VS Badge */
-      .vs-badge {
-        font-weight: 900;
-        font-size: 24px;
-        color: var(--neon-yellow);
-        background: #000;
-        border: 2px solid var(--neon-yellow);
-        padding: 10px 16px;
-        transform: skewX(-8deg);
-        box-shadow: 0 0 20px rgba(249, 224, 31, 0.3);
-        z-index: 20;
-      }
-
-      /* Full width code block */
-      .full-code {
-        background: #0c0c0f;
-        border: 1px solid #222;
-        border-radius: 8px;
-        padding: 28px;
-        margin-top: 30px;
-        position: relative;
-        z-index: 10;
-      }
-      .full-code pre {
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.65;
-        color: #ddd;
-        white-space: pre-wrap;
-      }
-      .code-label {
+      /* Speed Lines Overlay */
+      .speed-lines {
         position: absolute;
-        top: -12px;
-        left: 20px;
-        background: var(--neon-cyan);
-        color: #000;
-        font-size: 11px;
-        font-weight: bold;
-        padding: 4px 12px;
-        border-radius: 4px;
+        top: 0;
+        right: 0;
+        width: 60%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 50px,
+          rgba(255, 255, 255, 0.02) 50px,
+          rgba(255, 255, 255, 0.02) 51px
+        );
+        mask-image: linear-gradient(to right, transparent, black);
+        z-index: 0;
+        transform: skewX(-20deg);
+      }
+
+      /* Checkered Flag Pattern */
+      .checkered-stripe {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 40px;
+        width: 30px;
+        background-image: linear-gradient(45deg, #333 25%, transparent 25%),
+          linear-gradient(-45deg, #333 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #333 75%),
+          linear-gradient(-45deg, transparent 75%, #333 75%);
+        background-size: 20px 20px;
+        background-color: #111;
+        opacity: 0.5;
+        z-index: 0;
+      }
+
+      /* Content */
+      .content {
+        position: relative;
+        z-index: 10;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Typography */
+      .header {
+        margin-bottom: 50px;
+      }
+
+      .label-badge {
+        display: inline-block;
+        background: var(--race-red);
+        color: white;
+        padding: 4px 16px;
+        font-family: var(--font-condensed);
+        font-weight: 700;
+        font-size: 24px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transform: skewX(-15deg);
+        box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+      }
+
+      .title {
+        font-family: var(--font-speed);
+        font-size: 80px;
+        color: var(--race-white);
+        line-height: 0.9;
+        text-transform: uppercase;
+        font-style: italic;
+        margin-bottom: 15px;
+        /* Speed Shadow Effect */
+        text-shadow: 4px 4px 0 var(--race-yellow), 8px 8px 0 rgba(0, 0, 0, 0.5);
+      }
+
+      .title .highlight {
+        color: var(--race-yellow);
+        text-shadow: 4px 4px 0 var(--race-white), 8px 8px 0 rgba(0, 0, 0, 0.5);
+      }
+
+      .subtitle {
+        font-family: var(--font-code);
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 16px;
+        margin-top: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .subtitle::before {
+        content: "";
+        width: 40px;
+        height: 2px;
+        background: var(--race-yellow);
+      }
+
+      /* Racing Cards/Panels */
+      .race-panel {
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 4px solid var(--race-yellow);
+        padding: 24px;
+        margin-bottom: 20px;
+        transform: skewX(-10deg); /* Racing skew */
+        position: relative;
+      }
+
+      /* Un-skew content inside */
+      .race-panel > * {
+        transform: skewX(10deg);
+      }
+
+      .rp-header {
+        color: var(--race-yellow);
+        font-family: var(--font-condensed);
+        font-size: 32px;
+        line-height: 1;
+        margin-bottom: 8px;
         text-transform: uppercase;
       }
 
-      /* Step blocks */
-      .step-row {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 40px;
-        position: relative;
-        z-index: 10;
+      .rp-desc {
+        color: #ddd;
+        font-family: var(--font-code);
+        font-size: 14px;
+        line-height: 1.5;
       }
-      .step-block {
-        flex: 1;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 16px 20px;
-        border-radius: 6px;
+
+      /* Code Box - Bottom Floating Style as per reference image */
+      .code-float {
+        margin-top: auto;
+        margin-bottom: 40px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid #333;
+        border-radius: 4px;
+        padding: 15px 20px;
+        font-family: var(--font-code);
+        font-size: 13px;
+        color: #efefef;
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
       }
-      .step-num {
-        background: var(--neon-cyan);
-        color: #000;
-        font-weight: bold;
-        width: 32px;
-        height: 32px;
+      .code-float::before {
+        content: "CODE";
+        background: #333;
+        color: #999;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 2px;
+      }
+
+      /* Stats Box (like RPM/Speed) */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      .stat-box {
+        background: #111;
+        border: 1px solid #333;
+        padding: 15px;
+        text-align: center;
+      }
+      .stat-val {
+        color: var(--race-white);
+        font-size: 36px;
+        font-family: var(--font-condensed);
+        line-height: 1;
+      }
+      .stat-label {
+        color: #666;
+        font-size: 12px;
+        font-family: var(--font-code);
+        text-transform: uppercase;
+        margin-top: 4px;
+      }
+
+      /* Dynamic Elements */
+      .racer {
+        position: absolute;
+        right: 80px;
+        top: 240px;
+        width: 120px;
+        height: 40px;
+        background: var(--race-yellow);
+        transform: skewX(-20deg);
+        box-shadow: 0 0 20px var(--race-yellow);
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 6px;
-        font-size: 16px;
+        color: black;
+        font-family: var(--font-condensed);
+        font-weight: 700;
+        font-size: 20px;
       }
-      .step-text {
-        font-size: 16px;
+      .racer::after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        right: -50px;
+        width: 40px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 18px 0 rgba(255, 255, 255, 0.5);
+      }
+
+      /* Syntax Highlighting */
+      .s-k {
+        color: var(--race-red);
+        font-weight: bold;
+      }
+      .s-f {
+        color: var(--race-yellow);
+        font-weight: bold;
+      }
+      .s-s {
         color: #fff;
       }
-
-      /* Tip box */
-      .tip-box {
-        background: rgba(5, 217, 232, 0.08);
-        border: 1px solid var(--neon-cyan);
-        border-radius: 8px;
-        padding: 18px 24px;
-        margin-top: 24px;
-        position: relative;
-        z-index: 10;
-        font-size: 15px;
-        color: #ccc;
-      }
-      .tip-box strong {
-        color: var(--neon-cyan);
-      }
-
-      /* Success banner */
-      .success-banner {
-        text-align: center;
-        color: var(--neon-green);
-        font-size: 22px;
-        font-weight: bold;
-        margin-top: 30px;
-        text-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
-        position: relative;
-        z-index: 10;
+      .s-c {
+        color: #555;
+        font-style: italic;
       }
 
       /* Footer */
       .footer {
-        margin-top: auto;
-        padding-top: 24px;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
         display: flex;
         justify-content: space-between;
-        color: #555;
-        font-size: 13px;
-        position: relative;
-        z-index: 10;
+        align-items: center;
+        border-top: 2px solid #333;
+        padding-top: 20px;
+        margin-top: 20px;
       }
-      .footer-tag {
-        color: var(--neon-cyan);
-        text-transform: uppercase;
-        letter-spacing: 2px;
+      .page-num {
+        color: var(--race-white);
+        font-family: var(--font-speed);
+        font-size: 24px;
+      }
+      .page-tag {
+        color: var(--race-red);
+        background: rgba(239, 68, 68, 0.1);
+        padding: 4px 8px;
+        font-family: var(--font-code);
+        font-size: 12px;
       }
     </style>
   </head>
   <body>
-    <!-- CARD 1: 概述 - 三个核心问题 -->
+    <!-- CARD 1: Overview -->
     <div class="card">
-      <div class="glitch-wrapper">
-        <div class="glitch-title">COMPONENT 二次封装</div>
-      </div>
+      <div class="track-bg"></div>
+      <div class="speed-lines"></div>
+      <div class="checkered-stripe"></div>
 
-      <p
-        style="
-          color: #aaa;
-          font-size: 18px;
-          text-align: center;
-          margin-bottom: 40px;
-          position: relative;
-          z-index: 10;
-        "
-      >
-        Vue 3 组件二次封装需要解决的 <span class="s-cyan">3 个核心问题</span>
-      </p>
+      <!-- Racer Element -->
+      <div class="racer">Vue 3</div>
 
-      <div class="step-row">
-        <div class="step-block">
-          <div class="step-num">1</div>
-          <div class="step-text">
-            <span class="s-cyan">Props</span> 如何穿透
-          </div>
+      <div class="content">
+        <div class="header">
+          <div class="label-badge">PERFORMANCE TUNING</div>
+          <h1 class="title">
+            组件<br /><span class="highlight">二次封装</span>
+          </h1>
+          <div class="subtitle">MAXIMIZE REUSABILITY // 极致复用</div>
         </div>
-        <div class="step-block">
-          <div class="step-num">2</div>
-          <div class="step-text"><span class="s-cyan">插槽</span> 如何穿透</div>
-        </div>
-        <div class="step-block">
-          <div class="step-num">3</div>
-          <div class="step-text"><span class="s-cyan">方法</span> 如何暴露</div>
-        </div>
-      </div>
 
-      <div class="panel-row">
-        <div class="panel-box">
-          <div class="panel-header">
-            <span class="icon-warn">⚠</span>
-            <span class="title-pink">$attrs</span>
+        <div style="margin-top: 20px">
+          <div class="race-panel">
+            <div class="rp-header">01 // 属性透传</div>
+            <div class="rp-desc">
+              PROPS PASSTHROUGH<br />如何无损传递父组件的所有属性？
+            </div>
           </div>
-          <div class="code-area pink">
-            <div>父组件传递的 <span class="s-cyan">未声明</span> 属性</div>
-            <div class="comment">// 未被 defineProps 声明的属性</div>
-            <div class="comment">// 包括未声明的事件监听器</div>
-          </div>
-        </div>
-        <div class="vs-badge">+</div>
-        <div class="panel-box">
-          <div class="panel-header">
-            <span class="icon-check">✓</span>
-            <span class="title-green">$slots</span>
-          </div>
-          <div class="code-area green">
-            <div>父组件传递的 <span class="s-cyan">所有插槽</span> 内容</div>
-            <div class="comment">// 包括默认插槽和具名插槽</div>
-            <div class="comment">// 需要手动转发给内部组件</div>
-          </div>
-        </div>
-      </div>
 
-      <div class="footer">
-        <span>01 / 04</span>
-        <span class="footer-tag">Vue Component Wrapping</span>
+          <div class="race-panel" style="border-left-color: var(--race-red)">
+            <div class="rp-header" style="color: var(--race-red)">
+              02 // 插槽转发
+            </div>
+            <div class="rp-desc">
+              SLOTS FORWARDING<br />如何自动渲染所有具名/作用域插槽？
+            </div>
+          </div>
+
+          <div class="race-panel" style="border-left-color: white">
+            <div class="rp-header" style="color: white">03 // 实例暴露</div>
+            <div class="rp-desc">
+              INSTANCE PROXY<br />如何让父组件调用内部组件的方法？
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-val" style="color: var(--race-yellow)">100%</div>
+            <div class="stat-label">兼容性</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" style="color: var(--race-red)">MIN</div>
+            <div class="stat-label">冗余代码</div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span class="page-num">01 / 04</span>
+          <span class="page-tag">RACE START</span>
+        </div>
       </div>
     </div>
 
-    <!-- CARD 2: Props 穿透 -->
+    <!-- CARD 2: Props -->
     <div class="card">
-      <div class="glitch-wrapper">
-        <div class="glitch-title">Props 穿透</div>
-      </div>
+      <div class="track-bg" style="transform: scaleX(-1)"></div>
+      <div class="speed-lines"></div>
 
-      <p
-        style="
-          color: #aaa;
-          font-size: 16px;
-          margin-bottom: 30px;
-          position: relative;
-          z-index: 10;
-        "
-      >
-        通过 <span class="s-cyan">$attrs</span> 透传未声明的属性，合并 props 和
-        $attrs 一起传递
-      </p>
-
-      <div class="full-code">
-        <span class="code-label">Template</span>
-        <pre><span class="s-pink">&lt;template&gt;</span>
-  <span class="s-gray">&lt;!-- 关键：合并 props 和 $attrs --&gt;</span>
-  <span class="s-pink">&lt;el-input</span> <span class="s-cyan">v-bind</span>=<span class="s-green">"{ ...props, ...$attrs }"</span> <span class="s-pink">/&gt;</span>
-<span class="s-pink">&lt;/template&gt;</span></pre>
-      </div>
-
-      <div class="full-code" style="margin-top: 24px">
-        <span
-          class="code-label"
-          style="background: var(--neon-yellow); color: #000"
-          >Script</span
-        >
-        <pre><span class="s-pink">&lt;script setup lang="ts"&gt;</span>
-<span class="s-pink">import</span> { InputProps } <span class="s-pink">from</span> <span class="s-green">"element-plus"</span>;
-
-<span class="s-gray">// 使用 Partial 获取完整的 TS 类型提示</span>
-<span class="s-pink">const</span> props = <span class="s-cyan">defineProps</span><span class="s-yellow">&lt;Partial&lt;InputProps&gt;&gt;</span>();
-<span class="s-pink">&lt;/script&gt;</span></pre>
-      </div>
-
-      <div class="tip-box">
-        <strong>TIP:</strong>
-        <code style="background: #222; padding: 2px 6px; border-radius: 3px"
-          >v-bind="{ ...props, ...$attrs }"</code
-        >
-        会将声明的 props 和未声明的 $attrs 一起透传给内部组件
-      </div>
-
-      <div class="footer">
-        <span>02 / 04</span>
-        <span class="footer-tag">$attrs Passthrough</span>
-      </div>
-    </div>
-
-    <!-- CARD 3: 插槽穿透 - 两种方法 -->
-    <div class="card">
-      <div class="glitch-wrapper">
-        <div class="glitch-title">SLOTS 穿透</div>
-      </div>
-
-      <div class="panel-row" style="align-items: stretch">
-        <div class="panel-box">
-          <div class="panel-header">
-            <span class="title-pink">方法一：遍历 $slots</span>
+      <div class="content">
+        <div class="header">
+          <div
+            class="label-badge"
+            style="background: var(--race-yellow); color: black"
+          >
+            CHECKPOINT 01
           </div>
-          <div class="code-area cyan">
-            <pre
-              style="margin: 0; font-size: 14px; line-height: 1.6"
-            ><span class="s-pink">&lt;el-input</span> <span class="s-cyan">v-bind</span>=<span class="s-green">"{...props, ...$attrs}"</span><span class="s-pink">&gt;</span>
-  <span class="s-gray">&lt;!-- 遍历所有插槽并转发 --&gt;</span>
-  <span class="s-pink">&lt;template</span>
-    <span class="s-cyan">v-for</span>=<span class="s-green">"(index, name) in $slots"</span>
-    <span class="s-cyan">v-slot:[name]</span><span class="s-pink">&gt;</span>
-    <span class="s-pink">&lt;slot</span> <span class="s-cyan">:name</span>=<span class="s-green">"name"</span> <span class="s-pink">/&gt;</span>
-  <span class="s-pink">&lt;/template&gt;</span>
-<span class="s-pink">&lt;/el-input&gt;</span></pre>
+          <h1 class="title">Props<br />无损透传</h1>
+          <div class="subtitle">v-bind="{ ...props, ...$attrs }"</div>
+        </div>
+
+        <!-- Graphic Visualization of Props passing through -->
+        <div
+          style="
+            position: relative;
+            height: 180px;
+            margin: 20px 0;
+            border: 1px solid #333;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div
+            style="
+              color: #666;
+              font-family: var(--font-code);
+              position: absolute;
+              top: 10px;
+              left: 10px;
+            "
+          >
+            DATA STREAM
+          </div>
+          <!-- Arrow -->
+          <div
+            style="
+              width: 80%;
+              height: 20px;
+              background: linear-gradient(
+                90deg,
+                transparent,
+                var(--race-yellow)
+              );
+              clip-path: polygon(
+                0% 20%,
+                90% 20%,
+                90% 0%,
+                100% 50%,
+                90% 100%,
+                90% 80%,
+                0% 80%
+              );
+            "
+          ></div>
+          <div
+            style="
+              position: absolute;
+              color: black;
+              font-weight: bold;
+              font-style: italic;
+              font-size: 20px;
+              right: 20%;
+            "
+          >
+            穿透 PASS
           </div>
         </div>
 
-        <div class="vs-badge">VS</div>
-
-        <div class="panel-box">
-          <div class="panel-header">
-            <span class="icon-check">✓</span>
-            <span class="title-green">方法二：h 函数</span>
-          </div>
-          <div class="code-area green">
-            <pre
-              style="margin: 0; font-size: 14px; line-height: 1.6"
-            ><span class="s-gray">&lt;!-- h函数直接传递$slots --&gt;</span>
-<span class="s-pink">&lt;component</span>
-  <span class="s-cyan">:is</span>=<span class="s-green">"h(ElInput, 
-    { ...$attrs, ...props, ref: getRefInstance },
-    <span class="s-yellow">$slots</span>)"</span>
-<span class="s-pink">/&gt;</span></pre>
+        <div class="code-float">
+          <div style="font-family: 'JetBrains Mono'; line-height: 1.6">
+            <span class="s-k">&lt;el-input</span> <br />
+            &nbsp;&nbsp;<span class="s-c">// 关键：批量绑定所有属性</span><br />
+            &nbsp;&nbsp;<span class="s-f">v-bind</span>=<span class="s-s"
+              >"{ ...props, ...$attrs }"</span
+            ><br />
+            <span class="s-k">/&gt;</span>
           </div>
         </div>
-      </div>
 
-      <div class="tip-box">
-        <strong>h 函数参数：</strong> <code>h(组件, 属性对象, 插槽对象)</code> —
-        第三个参数直接传
-        <span class="s-yellow">$slots</span> 即可完成所有插槽的穿透
-      </div>
+        <div
+          class="race-panel"
+          style="transform: none; border-left-color: var(--race-white)"
+        >
+          <div class="rp-desc" style="transform: none; color: #999">
+            <strong style="color: white; font-size: 16px">机制解析：</strong
+            ><br />
+            Vue 3 将所有未被 `defineProps` 声明的属性自动收集到
+            <strong style="color: var(--race-yellow)">$attrs</strong> 中。通过
+            v-bind 这里的解构，我们可以一次性把 class, style, id
+            等所有属性传给内部组件。
+          </div>
+        </div>
 
-      <div class="footer">
-        <span>03 / 04</span>
-        <span class="footer-tag">Slots Passthrough</span>
+        <div class="footer">
+          <span class="page-num">02 / 04</span>
+          <span class="page-tag">LAP TIME: FAST</span>
+        </div>
       </div>
     </div>
 
-    <!-- CARD 4: 方法暴露 -->
+    <!-- CARD 3: Slots -->
     <div class="card">
-      <div class="glitch-wrapper">
-        <div class="glitch-title">EXPOSE 方法暴露</div>
-      </div>
+      <div class="track-bg"></div>
+      <div class="checkered-stripe"></div>
 
-      <p
-        style="
-          color: #aaa;
-          font-size: 16px;
-          margin-bottom: 30px;
-          position: relative;
-          z-index: 10;
-        "
-      >
-        通过 <span class="s-cyan">ref</span> 获取内部组件实例，将其赋值给
-        <span class="s-yellow">vm.exposed</span> 暴露给父组件
-      </p>
+      <div class="content">
+        <div class="header">
+          <div class="label-badge">CHECKPOINT 02</div>
+          <h1 class="title">
+            Slots<br /><span class="highlight">插槽转发</span>
+          </h1>
+          <div class="subtitle">推荐使用渲染函数 (Render Function)</div>
+        </div>
 
-      <div class="full-code">
-        <span class="code-label" style="background: var(--neon-green)"
-          >完整代码</span
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+          "
         >
-        <pre><span class="s-pink">&lt;template&gt;</span>
-  <span class="s-pink">&lt;component</span>
-    <span class="s-cyan">:is</span>=<span class="s-green">"h(ElInput, { ...$attrs, ...props, <span class="s-yellow">ref: getRefInstance</span> }, $slots)"</span>
-  <span class="s-pink">/&gt;</span>
-<span class="s-pink">&lt;/template&gt;</span>
+          <!-- Comparison Item 1 -->
+          <div
+            style="
+              background: #111;
+              padding: 20px;
+              border: 1px solid #333;
+              opacity: 0.6;
+            "
+          >
+            <div
+              style="
+                color: #666;
+                font-size: 12px;
+                font-weight: bold;
+                margin-bottom: 5px;
+              "
+            >
+              方案 A：模板循环 (繁琐)
+            </div>
+            <div
+              style="
+                color: white;
+                font-family: var(--font-code);
+                font-size: 14px;
+              "
+            >
+              v-for="(n, name) in $slots"...
+            </div>
+            <div style="color: #666; font-size: 12px; margin-top: 5px">
+              需要手动遍历，代码量大
+            </div>
+          </div>
 
-<span class="s-pink">&lt;script setup lang="ts"&gt;</span>
-<span class="s-pink">import</span> { ElInput, InputInstance, InputProps } <span class="s-pink">from</span> <span class="s-green">"element-plus"</span>;
-<span class="s-pink">import</span> { getCurrentInstance, h } <span class="s-pink">from</span> <span class="s-green">"vue"</span>;
+          <!-- Comparison Item 2 -->
+          <div
+            style="
+              background: linear-gradient(
+                90deg,
+                rgba(239, 68, 68, 0.1),
+                transparent
+              );
+              padding: 20px;
+              border: 1px solid var(--race-red);
+              position: relative;
+            "
+          >
+            <div
+              style="
+                background: var(--race-red);
+                color: white;
+                position: absolute;
+                top: -10px;
+                right: 20px;
+                font-size: 10px;
+                padding: 2px 6px;
+                font-weight: bold;
+              "
+            >
+              WINNER
+            </div>
+            <div
+              style="
+                color: var(--race-red);
+                font-size: 12px;
+                font-weight: bold;
+                margin-bottom: 5px;
+              "
+            >
+              方案 B：H 函数 (极速)
+            </div>
+            <div
+              style="
+                color: white;
+                font-family: var(--font-code);
+                font-size: 16px;
+                font-weight: bold;
+              "
+            >
+              h(Comp, null, slots)
+            </div>
+            <div style="color: #999; font-size: 12px; margin-top: 5px">
+              无需遍历，自动处理作用域插槽
+            </div>
+          </div>
+        </div>
 
-<span class="s-pink">const</span> props = <span class="s-cyan">defineProps</span><span class="s-yellow">&lt;Partial&lt;InputProps&gt;&gt;</span>();
-<span class="s-pink">const</span> vm = <span class="s-cyan">getCurrentInstance</span>();
+        <div class="code-float">
+          <div style="font-family: 'JetBrains Mono'; line-height: 1.6">
+            <span class="s-k">return</span> <span class="s-f">()</span> =>
+            <span class="s-f">h</span>(Comp, <span class="s-s">null</span>,
+            slots)
+          </div>
+        </div>
 
-<span class="s-gray">// 关键：将内部组件实例暴露给父组件</span>
-<span class="s-pink">const</span> <span class="s-cyan">getRefInstance</span> = (inputInstance: <span class="s-yellow">InputInstance</span>) => {
-  vm.<span class="s-yellow">exposed</span> = inputInstance || {};
-  vm.<span class="s-yellow">exposeProxy</span> = inputInstance || {};
-};
-<span class="s-pink">&lt;/script&gt;</span></pre>
+        <div class="footer">
+          <span class="page-num">03 / 04</span>
+          <span class="page-tag">NEW RECORD</span>
+        </div>
       </div>
+    </div>
 
-      <div class="success-banner">
-        ✓ 父组件现在可以通过 ref 调用内部组件的所有方法
-      </div>
+    <!-- CARD 4: Expose -->
+    <div class="card">
+      <div class="track-bg"></div>
+      <div
+        class="speed-lines"
+        style="left: 0; right: auto; transform: skewX(20deg)"
+      ></div>
 
-      <div class="footer">
-        <span>04 / 04</span>
-        <span class="footer-tag">Expose Methods</span>
+      <div class="content">
+        <div class="header">
+          <div
+            class="label-badge"
+            style="background: var(--race-white); color: black"
+          >
+            FINISH LINE
+          </div>
+          <h1 class="title">Expose<br />实例暴露</h1>
+          <div class="subtitle">解锁内部组件的控制权</div>
+        </div>
+
+        <div class="stats-grid" style="margin-top: 20px; opacity: 0.8">
+          <div class="stat-box" style="border-color: var(--race-yellow)">
+            <div
+              class="stat-val"
+              style="color: var(--race-yellow); font-size: 24px"
+            >
+              FOCUS()
+            </div>
+            <div class="stat-label">方法调用</div>
+          </div>
+          <div class="stat-box" style="border-color: var(--race-yellow)">
+            <div
+              class="stat-val"
+              style="color: var(--race-yellow); font-size: 24px"
+            >
+              BLUR()
+            </div>
+            <div class="stat-label">方法调用</div>
+          </div>
+        </div>
+
+        <div
+          class="race-panel"
+          style="margin-top: 30px; border-left-color: var(--race-yellow)"
+        >
+          <div class="rp-desc" style="color: white; font-size: 16px">
+            <strong style="color: var(--race-yellow)">原理：</strong><br />
+            使用 `ref` 获取内部组件实例后，将其赋值给当前组件实例的 `exposed`
+            属性。
+          </div>
+        </div>
+
+        <div class="code-float">
+          <div style="font-family: 'JetBrains Mono'; line-height: 1.6">
+            <span class="s-c">// 将内部实例代理到外部</span><br />
+            vm.<span class="s-f">exposed</span> = inputRef<br />
+            vm.<span class="s-f">exposeProxy</span> = inputRef
+          </div>
+        </div>
+
+        <div class="footer">
+          <span class="page-num">04 / 04</span>
+          <span class="page-tag">MISSION COMPLETE</span>
+        </div>
       </div>
     </div>
   </body>

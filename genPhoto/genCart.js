@@ -10,7 +10,7 @@ const fs = require("fs");
         });
         const page = await context.newPage();
 
-        const inputHtmlPath = path.join(__dirname, "card_html", "suno.html");
+        const inputHtmlPath = path.join(__dirname, "card_html", "vue_wrapper.html");
         
         // Output directory
         const outputDir = path.join(__dirname, "card_photo");
@@ -34,7 +34,7 @@ const fs = require("fs");
         for (let i = 0; i < cards.length; i++) {
             const card = cards[i];
             const safeIndex = (i + 1).toString().padStart(2, '0');
-            const outputPath = path.join(outputDir, `suno_card_${safeIndex}.png`);
+            const outputPath = path.join(outputDir, `vue_wrapper_card_${safeIndex}.png`);
 
             await card.screenshot({
                 path: outputPath,
