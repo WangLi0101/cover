@@ -74,3 +74,24 @@ const getRefInstance = (inputInstance: InputInstance) => {
 };
 </script>
 ```
+
+#### 原理解析
+
+**1. `vm.exposed` 和 `vm.exposeProxy` 是什么？**
+
+这两个是 Vue 3 组件实例的内部属性，通常不需要手动操作，但在二次封装场景下非常有用。
+
+*   **`vm.exposed`**: 存储组件对外暴露的“公共接口”。
+*   **`vm.exposeProxy`**: `vm.exposed` 的代理，确保访问正确响应。
+
+代码逻辑 `vm.exposed = inputInstance || {}` 的作用是**将当前封装组件的“对外接口”直接替换成了内部 `el-input` 的实例**。这样父组件调用 `ref.value.focus()` 时，实际上直接调用的是内部 `el-input` 的 `focus()`。
+
+**2. 为什么不直接用 `defineExpose`？**
+
+*   **执行时机不同**：
+    *   `defineExpose` 在 `setup()` 阶段同步执行。此时子组件（Template 中的 `el-input`）**还未挂载**，拿不到实例。
+    *   `vm.exposed` 赋值是在 `getRefInstance` 回调中执行（Render 后），此时子组件已挂载完成，可以获取到实例。
+
+*   **使用场景**：
+    *   `defineExpose`：适用于暴露组件**自身定义**的方法（如 `const count = ref(0)`）。
+    *   `vm.exposed` Hack 方式：适用于**全量透传**内部组件实例，让封装组件对使用者来说是“透明”的。
